@@ -4,21 +4,47 @@
  * and open the template in the editor.
  */
 package obligatorio1p2;
-
+import java.util.*;
 /**
  *
  * @author ezequiellopez
  */
 public class Partida {
+    private ArrayList<Jugador> todosJug;
     private int cantJugadores;
-    private int avesRXjug;
-    private int avesAXjug;
-    private int avesMXjug;
-    private int avesVXjug;
+    private int avesXjug;
     private int fichasRotXJug;
     private int totalTab;
     private int tipoTerm;
+    private Tablero tablero;
+    private int cantTurnos;
 
+    public int getCantTurnos() {
+        return cantTurnos;
+    }
+
+    public void setCantTurnos(int cantTurnos) {
+        this.cantTurnos = cantTurnos;
+    }
+
+    public ArrayList<Jugador> getTodosJug() {
+        return todosJug;
+    }
+
+    public void setTodosJug(ArrayList<Jugador> todosJug) {
+        this.todosJug = todosJug;
+    }
+
+    public Tablero getTablero() {
+        return tablero;
+    }
+
+    public void setTablero(Tablero tablero) {
+        this.tablero = tablero;
+    }
+
+    
+    
     public int getCantJugadores() {
         return cantJugadores;
     }
@@ -27,36 +53,12 @@ public class Partida {
         this.cantJugadores = cantJugadores;
     }
 
-    public int getAvesRXjug() {
-        return avesRXjug;
+    public int getAvesXjug() {
+        return this.avesXjug;
     }
 
-    public void setAvesRXjug(int avesRXjug) {
-        this.avesRXjug = avesRXjug;
-    }
-
-    public int getAvesAXjug() {
-        return avesAXjug;
-    }
-
-    public void setAvesAXjug(int avesAXjug) {
-        this.avesAXjug = avesAXjug;
-    }
-
-    public int getAvesMXjug() {
-        return avesMXjug;
-    }
-
-    public void setAvesMXjug(int avesMXjug) {
-        this.avesMXjug = avesMXjug;
-    }
-
-    public int getAvesVXjug() {
-        return avesVXjug;
-    }
-
-    public void setAvesVXjug(int avesVXjug) {
-        this.avesVXjug = avesVXjug;
+    public void setAvesXjug(int avesVXjug) {
+        this.avesXjug = avesVXjug;
     }
 
     public int getFichasRotXJug() {
@@ -85,26 +87,24 @@ public class Partida {
 
 
 
-    public Partida(int cantJugadores, int avesRXjug, int avesAXjug, int avesMXjug, int avesVXjug, int fichasRotXJug, int totalTab, int tipoTerm) {
+    public Partida(int cantJugadores, int avesXjug, int fichasRotXJug, int totalTab, int tipoTerm, int cantTurnos) {
         this.cantJugadores = cantJugadores;
-        this.avesRXjug = avesRXjug;
-        this.avesAXjug = avesAXjug;
-        this.avesMXjug = avesMXjug;
-        this.avesVXjug = avesVXjug;
+        this.avesXjug = avesXjug;
         this.fichasRotXJug = fichasRotXJug;
         this.totalTab = totalTab;
         this.tipoTerm = tipoTerm;
+        this.cantTurnos = cantTurnos;
     }
     public Partida(){
         this.setCantJugadores(2);
-        this.setAvesRXjug(45);
-        this.setAvesAXjug(45);
-        this.setAvesMXjug(45);
-        this.setAvesVXjug(45);
+        this.setAvesXjug(45);
         this.setFichasRotXJug(5);
         this.setTotalTab(25);
         this.setTipoTerm(3);
+        this.setCantTurnos(10);
     }
+    
+    
     
     
     
