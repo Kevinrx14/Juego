@@ -6,8 +6,8 @@ public class Tableta {
     private String[][] colores = new String[2][2];
     private boolean[][] aves = new boolean[2][2];
 
-    public void setAves(int x, int y){
-        this.aves[x][y] = true;
+    public void setAves(int fila, int col){
+        this.aves[fila][col] = true;
     }
     
     public boolean[][] getAves() {
@@ -60,20 +60,13 @@ public class Tableta {
         return this.colores;
     }
     
-    //rotan a la izquierda pero deberian rotar a la derecha
     public void rotar90(){
         String[][] mat = this.colores;
-        int fila = mat.length;
-        int col = mat[0].length;
-        for (int i = 0; i < fila / 2; i++) {
-            for (int j = i; j < col - 1 - i; j++) {
-                String temp = mat[j][i];
-                mat[j][i] = mat[i][col - j - 1];
-                mat[i][col - j - 1] = mat[fila - j - 1][col - i - 1];
-                mat[fila - j - 1][col - i - 1] = mat[fila - i - 1][j];
-                mat[fila - i - 1][j] = temp;
-            }
-        }
+        String temp = mat[0][0];
+        mat[0][0] = mat[1][0];
+        mat[1][0] = mat[1][1];
+        mat[1][1] = mat[0][1];
+        mat[0][1] = temp;
     }
     
     public void rotar180(){
@@ -90,10 +83,22 @@ public class Tableta {
     
     @Override
     public String toString(){
+        String[][] colores = this.getColores();
+        boolean[][] aves = this.getAves();
+        String[][] tableta = new String[colores.length][colores[0].length];
         String devolverTableta = "";
-        for(int i = 0; i < this.colores.length; i++) {
-            for(int j = 0; j < this.colores[0].length; j++) {
-                devolverTableta = devolverTableta + colores[i][j];
+        for(int i = 0; i < tableta.length; i++) {
+            for(int j = 0; j < tableta[0].length; j++) {
+                if(aves[i][j]){
+                    tableta[i][j] = colores[i][j].replaceAll(" ", "x");
+                } else {
+                    tableta[i][j] = colores[i][j];
+                }
+            }
+        }
+        for(int i = 0; i < tableta.length; i++) {
+            for(int j = 0; j < tableta[0].length; j++) {
+                devolverTableta = devolverTableta + tableta[i][j];
             }
             if(i < (this.colores.length - 1)){
                 devolverTableta = devolverTableta + "\n";
