@@ -5,14 +5,18 @@ import java.util.*;
 public class Tablero {
     private Tableta[][] tablero = new Tableta[10][10];
    
-    public void setTablero(int fila, int col) {
+    public void setFicha(int fila, int col) {
         Tableta tableta = new Tableta();
-        tableta.setColores();
+        tableta.setFicha();
         this.tablero[fila][col] = tableta;
     }
     
     public Tableta[][] getTablero() {
         return this.tablero;
+    }
+    
+    public Tableta getFicha(int fila, int col) {
+        return this.tablero[fila][col];
     }
     
     @Override
