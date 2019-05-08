@@ -37,19 +37,19 @@ public class Tableta {
                 coloresAux[i][j] = num;
                 switch (coloresAux[i][j]) {
                     case 1:
-                        colores[i][j] = "\u001B[41m" + " "; //Color rojo
+                        colores[i][j] = "\u001B[41m" + " " + "\033[0m"; //Color rojo
                         break;
 
                     case 2:
-                        colores[i][j] = "\u001B[44m" + " "; //Color azul
+                        colores[i][j] = "\u001B[44m" + " " + "\033[0m"; //Color azul
                         break;
 
                     case 3:
-                        colores[i][j] = "\u001B[43m" + " "; //Color amarillo
+                        colores[i][j] = "\u001B[43m" + " " + "\033[0m"; //Color amarillo
                         break;
 
                     case 4:
-                        colores[i][j] = "\u001B[42m" + " "; //Color verde
+                        colores[i][j] = "\u001B[42m" + " " + "\033[0m"; //Color verde
                         break;
                 }
             }
@@ -107,4 +107,8 @@ public class Tableta {
         return devolverTableta;
     }
     
+    public String devolverUnColor(int fila, int col) {
+        String[][] colores = this.getColores();
+        return colores[fila][col];
+    }
 }
