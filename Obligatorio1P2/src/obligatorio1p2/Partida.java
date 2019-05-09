@@ -10,15 +10,18 @@ import java.util.*;
  * @author ezequiellopez
  */
 public class Partida {
-    private ArrayList<Jugador> todosJug;
-    private int cantJugadores;
-    private int avesXjug;
-    private int fichasRotXJug;
-    private int totalTab;
+    private ArrayList<Jugador> jugadores;
+    private int cantJug;
+    private int cantAves;
+    private int cantRot;
+    private int cantTab;
     private int tipoTerm;
-    private Tablero tablero;
+    /*rivate ArrayList<String> posInicial;*/ 
+            
     private int cantTurnos;
 
+    
+    
     public int getCantTurnos() {
         return cantTurnos;
     }
@@ -28,53 +31,53 @@ public class Partida {
     }
 
     public ArrayList<Jugador> getTodosJug() {
-        return todosJug;
+        return jugadores;
     }
 
     public void setTodosJug(ArrayList<Jugador> todosJug) {
-        this.todosJug = todosJug;
+        this.jugadores = todosJug;
     }
 
-    public Tablero getTablero() {
+    /*public Tablero getTablero() {
         return tablero;
-    }
+    }*/
 
-    public void setTablero(Tablero tablero) {
+   /* public void setTablero(Tablero tablero) {
         this.tablero = tablero;
-    }
+    }*/
 
     
     
-    public int getCantJugadores() {
-        return cantJugadores;
+    public int getCantJug() {
+        return cantJug;
     }
 
-    public void setCantJugadores(int cantJugadores) {
-        this.cantJugadores = cantJugadores;
+    public void setCantJug(int cantJugadores) {
+        this.cantJug = cantJugadores;
     }
 
-    public int getAvesXjug() {
-        return this.avesXjug;
+    public int getCantAves() {
+        return cantAves;
     }
 
-    public void setAvesXjug(int avesVXjug) {
-        this.avesXjug = avesVXjug;
+    public void setCantAves(int avesVXjug) {
+        this.cantAves = avesVXjug;
     }
 
-    public int getFichasRotXJug() {
-        return fichasRotXJug;
+    public int getCantRot() {
+        return cantRot;
     }
 
-    public void setFichasRotXJug(int fichasRotXJug) {
-        this.fichasRotXJug = fichasRotXJug;
+    public void setCantRot(int fichasRotXJug) {
+        this.cantRot = fichasRotXJug;
     }
 
-    public int getTotalTab() {
-        return totalTab;
+    public int getCantTab() {
+        return cantTab;
     }
 
-    public void setTotalTab(int totalTab) {
-        this.totalTab = totalTab;
+    public void setCantTab(int totalTab) {
+        this.cantTab = totalTab;
     }
 
     public int getTipoTerm() {
@@ -82,30 +85,53 @@ public class Partida {
     }
 
     public void setTipoTerm(int tipoTerm) {
+ 
         this.tipoTerm = tipoTerm;
     }
 
-
-
     public Partida(int cantJugadores, int avesXjug, int fichasRotXJug, int totalTab, int tipoTerm, int cantTurnos) {
-        this.cantJugadores = cantJugadores;
-        this.avesXjug = avesXjug;
-        this.fichasRotXJug = fichasRotXJug;
-        this.totalTab = totalTab;
+        this.cantJug = cantJugadores;
+        this.cantAves = avesXjug;
+        this.cantRot = fichasRotXJug;
+        this.cantTab = totalTab;
         this.tipoTerm = tipoTerm;
         this.cantTurnos = cantTurnos;
     }
     public Partida(){
-        this.setCantJugadores(2);
-        this.setAvesXjug(45);
-        this.setFichasRotXJug(5);
-        this.setTotalTab(25);
+        this.setCantJug(2);
+        this.setCantAves(45);
+        this.setCantRot(5);
+        this.setCantTab(25);
         this.setTipoTerm(3);
         this.setCantTurnos(10);
     }
-    
-    
-    
-    
-    
-}
+    public void iniciar(){
+        
+    }
+    public void empezarTurno(Jugador j, Tablero t, int accion, int fila, int columna, int grados){
+        boolean turno=true;
+        while(turno){
+            switch(accion){
+                case 1:
+                    t.agregarFicha(fila, columna);
+                    break;
+                case 2:
+                    //Conectar 2 puntos y poner aves
+                    break;
+                case 3:
+                    //Extender linea de aves
+                    break;
+                case 4:
+                    t.rotar(fila, columna,grados);
+                    break;
+                case 5:
+                    this.terminarPartida();
+                    break;
+            }
+            }
+        }
+        public void terminarPartida(){
+        
+        }
+    }
+
