@@ -13,26 +13,32 @@ import java.util.*;
 
 public class Aves {
 
-    private static ArrayList<Partida> partidas;
-    private static ArrayList<Jugador> jugadores;
+    private ArrayList<Partida> partidas;
+    private ArrayList<Jugador> jugadores;
+    private int[] configuracion;
+    public Aves() {
+        this.partidas = new ArrayList();
+        this.jugadores = new ArrayList();
+        this.configuracion=new int[]{2, 45, 5, 25, 3, 10};
+    }
 
-    public static ArrayList<Partida> getPartidas() {
+    public void setConfiguracion(int i, int configuracion) {
+        this.configuracion[i] = configuracion;
+    }
+    
+    public Partida configurarPart(int cantJug, int cantAves, int cantRot, int cantTab, int tipoTerm, int cantTurnos){
+        Partida p=new Partida(cantJug, cantAves, cantRot, cantTab, tipoTerm, cantTurnos);
+        return p;
+    }
+    public ArrayList<Partida> getPartidas() {
         return partidas;
     }
 
-    public void setPartidas(ArrayList<Partida> partidas) {
-        this.setPartidas(partidas);
-    }
-
-    public static ArrayList<Jugador> getJugadores() {
+    public ArrayList<Jugador> getJugadores() {
         return jugadores;
     }
 
-    public void setJugadores(ArrayList<Jugador> jugadores) {
-        this.setJugadores(jugadores);
-    }
-
-    public void agregarJugador(Jugador j) {
+    public void setJugadores(Jugador j) {
         boolean noEsta = true;
         for (int i = 0; i < getJugadores().size(); i++) {
             if (getJugadores().get(i).equals(j)) {
@@ -44,7 +50,7 @@ public class Aves {
         }
     }
 
-    public static void agregarPartida(Partida p) {
+    public  void setPartidas(Partida p) {
         boolean noEsta = true;
         for (int i = 0; i < getPartidas().size(); i++) {
             if (getPartidas().get(i).equals(p)) {
@@ -56,38 +62,40 @@ public class Aves {
         }
     }
 
-    // metodos de validacion de tipo primitivos
-    public static int excepcion() {
-        Scanner input = new Scanner(System.in);
-        boolean excep = true;
-        int retorno = 0;
-        int valor = 0;
-        do {
-            try {
-                valor = input.nextInt();
-                excep = false;
-            } catch (Exception e) {
-                System.out.println("Verifique el valor ingresado");
-                input.nextLine();
-            }
-        } while (excep);
-        retorno = valor;
-        return retorno;
-
+    public void crearJugador(String Nombre, int Edad, String Alias){
+        Jugador j=new Jugador(Nombre, Edad, Alias);
+        this.setJugadores(j);
     }
-
-    public static int validar(int min, int max, int valor) {
-        boolean valida = false;
-        if (valor >= min && valor <= max) {
-            valida = true;
-        }
-        while (!valida) {
-            System.out.println("verifique el valor ingresado");
-            valor = excepcion();
-            if (valor >= min && valor <= max) {
-                valida = true;
+    
+    public void getRanking() {
+        Collections.sort(jugadores);
+        for (int i = 0; i < getJugadores().size(); i++) {
+            int tres = 0;
+            int dos = 0;
+            int uno = 0;
+            String imprimo = i + 1 + "- " + getJugadores().get(i).toString();
+            for (int j = 0; j < partidas.size(); j++) {
+                for (int o = 0; o < partidas.get(j).getTodosJug().size(); o++) {
+                    if (partidas.get(j).getTodosJug().get(0).equals(getJugadores().get(i))) {
+                        if (partidas.get(j).getCantJug() == 4) {
+                            tres = tres + 1;
+                        }
+                        if (partidas.get(j).getCantJug() == 3) {
+                            dos = dos + 1;
+                        }
+                        if (partidas.get(j).getCantJug() == 2) {
+                            uno = uno + 1;
+                        }
+                    }
+                }
             }
+            imprimo = imprimo + " | Partidas contra 3 jugadores: " + tres + " | Partidas contra 2 jugadores: " + dos + " | Partidas contra 1 jugador: " + uno;
+            System.out.println(imprimo);
         }
-        return valor;
     }
+    public void empezar(){
+        Partida p=this.configurarPart(configuracion[0], configuracion[1], configuracion[2], configuracion[3], configuracion[4], configuracion[5]);
+        
+    }
+    
 }

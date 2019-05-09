@@ -1,21 +1,54 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package obligatorio1p2;
 
 import java.util.*;
 
+/**
+ *
+ * @author alumnoFI
+ */
 public class Interfaz {
 
-    /**
-     * @param args the command line arguments
-     */
-    int[] configuracion = {2, 45, 5, 25, 3, 10};
-    public void configurar(Partida p){
-        p.setCantJugadores(configuracion[0]);
-        p.setAvesXjug(configuracion[1]);
-        p.setFichasRotXJug(configuracion[2]);
-        p.setTotalTab(configuracion[3]);
-        p.setTipoTerm(configuracion[4]);
-        p.setCantTurnos(configuracion[5]);
+// Metodos de validacion de ingreso de datos
+    public static int excepcion() {
+        Scanner input = new Scanner(System.in);
+        boolean excep = true;
+        int retorno = 0;
+        int valor = 0;
+        do {
+            try {
+                valor = input.nextInt();
+                excep = false;
+            } catch (Exception e) {
+                System.out.println("Verifique el valor ingresado");
+                input.nextLine();
+            }
+        } while (excep);
+        retorno = valor;
+        return retorno;
+
     }
+
+    public static int validar(int min, int max, int valor) {
+        boolean valida = false;
+        if (valor >= min && valor <= max) {
+            valida = true;
+        }
+        while (!valida) {
+            System.out.println("verifique el valor ingresado");
+            valor = excepcion();
+            if (valor >= min && valor <= max) {
+                valida = true;
+            }
+        }
+        return valor;
+    }
+    //
+
     public static void menuPrincipal() {
         System.out.println("+-!-!-!-!- >|< AVES! 1.0 (Beta) >|< -!-!-!-!- +");
         System.out.println("|><    ><    ><    ><    ><    ><    ><    >< |");
@@ -24,28 +57,28 @@ public class Interfaz {
         System.out.println("+---------Ingresa la opcion deseada---------- +");
         System.out.println("|><    ><    ><    ><    ><    ><    ><    >< |");
         System.out.println("|   ><    ><    ><    ><    ><    ><    ><    |");
-        System.out.println("|A-           Registrar Jugador               |");
+        System.out.println("|1-           Registrar Jugador               |");
         System.out.println("+---------------------------------------------+");
-        System.out.println("|B-             Configuracion                 |");
+        System.out.println("|2-             Configuracion                 |");
         System.out.println("+---------------------------------------------+");
-        System.out.println("|C-             ><  JUGAR ><                  |");
+        System.out.println("|3-             ><  JUGAR ><                  |");
         System.out.println("+---------------------------------------------+");
-        System.out.println("|D-          Ranking de Jugadores             |");
+        System.out.println("|4-          Ranking de Jugadores             |");
         System.out.println("+---------------------------------------------+");
-        System.out.println("|E-                 Salir                     |");
+        System.out.println("|5-                 Salir                     |");
         System.out.println("+---------------------------------------------+");
         System.out.println("+------------By Kevin & Ezequiel--------------+");
     }
 
-    public static void registrarJugador() {
+    public static void registrarJugador(Aves a) {
         Scanner input = new Scanner(System.in);
-        System.out.println("Ingrese tu nombre");
+        System.out.println("Ingresa tu nombre");
         String nombre = input.nextLine();
-        System.out.println("Ingrese tu Edad");
-        int edad = input.nextInt();
+        System.out.println("Ingresa tu Edad");
+        int edad = excepcion();
         System.out.println("Escribe tu Alias");
         String alias = input.nextLine();
-        Jugador j = new Jugador(nombre, edad, alias);
+        a.crearJugador(nombre, edad, alias);
         System.out.println("Bienvenido a Aves " + alias);
     }
 
@@ -56,49 +89,49 @@ public class Interfaz {
         System.out.println("Ingresa la opcion deseada");
         System.out.println("");
         System.out.println("========================");
-        System.out.println("A- Cantidad de jugadores");
+        System.out.println("1- Cantidad de jugadores");
         System.out.println("");
-        System.out.println("B- Aves por jugador");
+        System.out.println("2- Aves por jugador");
         System.out.println("");
-        System.out.println("C- Rotaciones por jugador");
+        System.out.println("3- Rotaciones por jugador");
         System.out.println("");
-        System.out.println("D- Tabletas por jugador");
+        System.out.println("4- Tabletas por jugador");
         System.out.println("");
-        System.out.println("E- Terminacion");
+        System.out.println("5- Terminacion");
         System.out.println("");
-        System.out.println("F- Volver al menu");
+        System.out.println("6- Volver al menu");
         System.out.println("========================");
     }
 
-    public void configCantJugadores() {
+    public void configCantJugadores(Aves a) {
         Scanner input = new Scanner(System.in);
         System.out.println("Ingresa la cantidad de jugadores");
-        int cantJug = input.nextInt();
-        configuracion[0]=cantJug;
+        int cantJug = validar(2, 4, excepcion());
+        a.setConfiguracion(0, cantJug);
     }
 
-    public void configAves() {
+    public void configAves(Aves a) {
         Scanner input = new Scanner(System.in);
         System.out.println("Ingresa la cantidad de aves por jugador");
-        int cantAves = input.nextInt();
-        configuracion[1]=cantAves;
+        int cantAves = validar(5, 45, excepcion());
+        a.setConfiguracion(1, cantAves);
     }
 
-    public void configRot() {
+    public void configRot(Aves a) {
         Scanner input = new Scanner(System.in);
         System.out.println("Ingresa la cantidad de rotaciones por jugador");
-        int cantRot = input.nextInt();
-        configuracion[2]=cantRot;
+        int cantRot = validar(0, 5, excepcion());
+        a.setConfiguracion(2, cantRot);
     }
 
-    public void configTabs() {
+    public void configTabs(Aves a) {
         Scanner input = new Scanner(System.in);
         System.out.println("Ingresa la cantidad de tabletas por Jugador");
-        int cantTab = input.nextInt();
-        configuracion[3]=cantTab;
+        int cantTab = validar(5, 25, excepcion());
+        a.setConfiguracion(3, cantTab);
     }
 
-    public static void configTerm() {
+    public void configTerm(Aves a) {
         Scanner input = new Scanner(System.in);
         System.out.println("Selecciona el tipo de terminacion");
         System.out.println("=================================");
@@ -108,45 +141,74 @@ public class Interfaz {
         System.out.println("");
         System.out.println("3- Cantidad de turnos");
         System.out.println("=================================");
-        int selBE = input.nextInt();
+        int selBE = validar(1, 3, excepcion());
         switch (selBE) {
             case 1:
-
+                a.setConfiguracion(4, 1);
                 break;
             case 2:
-
+                a.setConfiguracion(4, 2);
                 break;
             case 3:
-
+                a.setConfiguracion(4, 3);
+                System.out.println("Ingrese la cantidad de turnos a definir");
+                int cantTurn=input.nextInt();
+                a.setConfiguracion(5, cantTurn);
+                System.out.println("La partida tendra "+cantTurn+" turnos");
                 break;
         }
+
         System.out.println("Se ha configurado el tipo de terminacion " + selBE);
     }
 
-    public static void getRanking(ArrayList<Jugador> Jugadores, ArrayList<Partida> Partidas) {
-        Collections.sort(Jugadores);
-        for (int i = 0; i < Jugadores.size(); i++) {
-            int tres = 0;
-            int dos = 0;
-            int uno = 0;
-            String imprimo = i + 1 + "- " + Jugadores.get(i).toString();
-            for (int j = 0; j < Partidas.size(); j++) {
-                for (int o = 0; o < Partidas.get(j).getTodosJug().size(); o++) {
-                    if (Partidas.get(j).getTodosJug().get(0).equals(Jugadores.get(i))) {
-                        if (Partidas.get(j).getCantJugadores() == 4) {
-                            tres = tres + 1;
-                        }
-                        if (Partidas.get(j).getCantJugadores() == 3) {
-                            dos = dos + 1;
-                        }
-                        if (Partidas.get(j).getCantJugadores() == 2) {
-                            uno = uno + 1;
+    public void start() {
+        Aves a= new Aves();
+        boolean runing = true;
+        while (runing) {
+            this.menuPrincipal();
+            int selPrincipal = validar(1, 6, excepcion());
+            switch (selPrincipal) {
+                case 1:
+                    this.registrarJugador(a);
+                    break;
+                case 2:
+                    boolean inConf = true;
+                    while (inConf) {
+                        this.menuConfig();
+                        int selConfig = validar(1, 6, excepcion());
+                        switch (selConfig) {
+                            case 1:
+                                this.configCantJugadores(a);
+                                break;
+                            case 2:
+                                this.configAves(a);
+                                break;
+                            case 3:
+                                this.configRot(a);
+                                break;
+                            case 4:
+                                this.configTabs(a);
+                                break;
+                            case 5:
+                                this.configTerm(a);
+                                break;
+                            case 6:
+                                inConf = false;
+                                break;
                         }
                     }
-                }
+                    break;
+                case 3:
+                    //a.empezar();
+                    break;
+                case 4:
+                    a.getRanking();
+                    break;
+                case 5:
+                    runing=false;
+                    System.out.println("Gracias por Jugar Aves :D");
+                    break;
             }
-            imprimo = imprimo + " | Partidas contra 3 jugadores: " + tres + " | Partidas contra 2 jugadores: " + dos + " | Partidas contra 1 jugador: " + uno;
-            System.out.println(imprimo);
         }
     }
 }
