@@ -3,68 +3,97 @@ package obligatorio1p2;
 import java.util.*;
 
 public class Tableta {
-    private String[][] colores = new String[2][2];
-    private boolean[][] aves = new boolean[2][2];
+    private String[][] ficha = new String[2][2];
 
-    public void setAves(int x, int y){
-        this.aves[x][y] = true;
+    public void setAves(int fila, int col, String color){
+        this.ficha[fila][col] = color;
+        this.ficha[fila][col] = this.ficha[fila][col].replaceAll(" ", "x");
     }
     
-    public boolean[][] getAves() {
-        return this.aves;
-    }
-    
-    public void setColores(){
+    public void setFicha(){
         Random rand = new Random();
+        int[][] fichaAux = new int[2][2];
         int num;
-        String color = "";
         boolean validador;
-        int[][] coloresAux = new int[2][2];
         
-        for(int i = 0; i < coloresAux.length; i++){
-            for(int j = 0; j < coloresAux[0].length; j++){
-                do{
+        for (int i = 0; i < fichaAux.length; i++) {
+            for (int j = 0; j < fichaAux[0].length; j++) {
+                do {
                     validador = true;
                     num = rand.nextInt(4);
                     num++;
-                    for(int x = 0; x < i; x++){
-                        for(int y = 0; y < j; y++){
-                            if(coloresAux[x][y] == num){
+                    for (int x = 0; x < fichaAux.length; x++) {
+                        for (int y = 0; y < fichaAux[0].length; y++) {
+                            if (fichaAux[x][y] == num) {
                                 validador = false;
                             }
                         }
-                    }    
-                }while(validador == false);
-                coloresAux[i][j] = num;
-                switch (num) {
-                        case 1:
-                            color = "\u001B[41m"; //Color rojo
-                            break;
+                    }
+                } while (validador == false);
+                fichaAux[i][j] = num;
+                switch (fichaAux[i][j]) {
+                    case 1:
+                        this.ficha[i][j] = "\u001B[41m" + " " + "\033[0m"; //Color rojo
+                        break;
 
-                        case 2:
-                            color = "\u001B[44m"; //Color azul
-                            break;
+                    case 2:
+                        this.ficha[i][j] = "\u001B[44m" + " " + "\033[0m"; //Color azul
+                        break;
 
-                        case 3:
-                            color = "\u001B[43m"; //Color amarillo
-                            break;
+                    case 3:
+                        this.ficha[i][j] = "\u001B[43m" + " " + "\033[0m"; //Color amarillo
+                        break;
 
-                        case 4:
-                            color = "\u001B[42m"; //Color verde
-                            break;
+                    case 4:
+                        this.ficha[i][j] = "\u001B[42m" + " " + "\033[0m"; //Color verde
+                        break;
                 }
-                this.colores[i][j] = color;
-            }   
+            }
         }
     }
     
-    public String[][] getColores(){
-        return this.colores;
+    public String[][] getFicha(){
+        return this.ficha;
+    }
+    
+    public void rotar90(){
+        String[][] mat = this.ficha;
+        String temp = mat[0][0];
+        mat[0][0] = mat[1][0];
+        mat[1][0] = mat[1][1];
+        mat[1][1] = mat[0][1];
+        mat[0][1] = temp;
+    }
+    
+    public void rotar180(){
+        for(int i = 0; i < 2; i++){
+            this.rotar90();
+        }
+    }
+    
+    public void rotar270(){
+        for(int i = 0; i < 3; i++){
+            this.rotar90();
+        }
     }
     
     @Override
     public String toString(){
-        return "test";
+        String[][] ficha = this.getFicha();
+        String devolverTableta = "";
+        for(int i = 0; i < ficha.length; i++) {
+            for(int j = 0; j < ficha[0].length; j++) {
+                devolverTableta = devolverTableta + ficha[i][j];
+            }
+            if(i < (ficha.length - 1)){
+                devolverTableta = devolverTableta + "\n";
+            }
+        }
+        return devolverTableta;
     }
     
+    public String devolverUnColor(int fila, int col) {
+        String[][] ficha = this.getFicha();
+        return ficha[fila][col];
+    }
 }
