@@ -5,7 +5,8 @@ import java.util.*;
 public class Tableta {
     private String[][] ficha = new String[2][2];
 
-    public void setAves(int fila, int col){
+    public void setAves(int fila, int col, String color){
+        this.ficha[fila][col] = color;
         this.ficha[fila][col] = this.ficha[fila][col].replaceAll(" ", "x");
     }
     
