@@ -99,4 +99,69 @@ public class Tablero {
         
         return mat;
     }
+    
+    public boolean sePuedePonerFicha(int fila, int col) {
+        boolean validador = false;
+        
+        if(getFicha(fila, col) == null) {
+            if(hayLugarDisponible(fila, col)) {
+                if(hayFichaCerca(fila, col)) {
+                    validador = true;
+                }
+            }
+        }
+        
+        return validador;
+    }
+    
+    public boolean hayLugarDisponible(int fila, int col) {
+        Tableta[][] tablero = this.getTablero();
+        boolean validador = false;
+        int largoFila = tablero.length;
+        int largoCol = tablero[0].length;
+        int cantFichasFila = 0;
+        int cantFichasCol = 0;
+        
+        for(int j = 0; j < largoCol; j++) {
+            if(getFicha(fila, j) != null) {
+                cantFichasCol++;
+            }
+        }
+        
+        for(int i = 0; i < largoFila; i++) {
+            if(getFicha(i, col) != null) {
+                cantFichasCol++;
+            }
+        }
+        
+        if(cantFichasFila < 5 && cantFichasCol < 5) {
+            validador = true;
+        }
+        
+        return validador;
+    }
+    
+    public boolean hayFichaCerca(int fila, int col) {
+        boolean validador = false;
+        
+        if(getFicha(fila - 1, col) != null) {
+            validador = true;
+        }
+        
+        if(getFicha(fila + 1, col) != null) {
+            validador = true;
+        }   
+        
+        if(getFicha(fila, col - 1) != null) {
+            validador = true;
+        }   
+        
+        if(getFicha(fila, col + 1) != null) {
+            validador = true;
+        }   
+        
+        return validador;
+    }
+    
+    
 }
