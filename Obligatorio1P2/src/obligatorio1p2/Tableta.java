@@ -10,6 +10,16 @@ public class Tableta {
         this.ficha[fila][col] = this.ficha[fila][col].replaceAll(" ", "x");
     }
     
+    public boolean hayAves(int fila, int col) {
+        boolean validador = false;
+        
+        if(devolverUnColor(fila, col).indexOf('x') == 5) {
+            validador = true;
+        }
+        
+        return validador;
+    }
+    
     public void setFicha(){
         Random rand = new Random();
         int[][] fichaAux = new int[2][2];
