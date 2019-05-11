@@ -21,7 +21,7 @@ public class Interfaz {
                 System.out.println("Verifique el valor ingresado");
                 input.nextLine();
             }
-        } while (validador);
+        } while (!validador);
 
         return valor;
     }
@@ -122,7 +122,7 @@ public class Interfaz {
         System.out.println("Escribe tu Alias");
         alias = ingresarString();
 
-        this.aves.crearJugador(nombre, edad, alias);
+        this.aves.setJugador(nombre, edad, alias);
         System.out.println("Bienvenido a Aves " + alias);
     }
 
@@ -220,11 +220,12 @@ public class Interfaz {
     }
 
     public void start() {
+        int selPrincipal;
         boolean running = true;
 
-        this.menuPrincipalTemplate();
-        int selPrincipal = ingresarInt("menuPrincipal");
         do {
+            this.menuPrincipalTemplate();
+            selPrincipal = ingresarInt("menuPrincipal");
             switch (selPrincipal) {
                 //Registar jugador
                 case 1:
@@ -238,7 +239,7 @@ public class Interfaz {
 
                 //Jugar
                 case 3:
-                    //a.empezar();
+                    this.aves.jugar();
                     break;
 
                 //Ranking de jugadores
