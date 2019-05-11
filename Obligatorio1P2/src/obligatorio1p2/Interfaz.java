@@ -1,55 +1,95 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package obligatorio1p2;
 
 import java.util.*;
 
-/**
- *
- * @author alumnoFI
- */
 public class Interfaz {
 
-// Metodos de validacion de ingreso de datos
-    public static int excepcion() {
+    private Aves aves = new Aves();
+
+//  Metodos de validacion de ingreso de datos 
+    public int ingresarInt(String tipoDato) {
         Scanner input = new Scanner(System.in);
-        boolean excep = true;
-        int retorno = 0;
+        boolean validador = false;
         int valor = 0;
+
         do {
             try {
                 valor = input.nextInt();
-                excep = false;
+                input.nextLine();
+                validador = validarInt(valor, tipoDato);
             } catch (Exception e) {
                 System.out.println("Verifique el valor ingresado");
                 input.nextLine();
             }
-        } while (excep);
-        retorno = valor;
-        return retorno;
+        } while (validador);
 
-    }
-
-    public static int validar(int min, int max, int valor) {
-        boolean valida = false;
-        if (valor >= min && valor <= max) {
-            valida = true;
-        }
-        while (!valida) {
-            System.out.println("verifique el valor ingresado");
-            valor = excepcion();
-            if (valor >= min && valor <= max) {
-                valida = true;
-            }
-        }
         return valor;
     }
-    //
 
-    public static void menuPrincipal() {
+    /*  Tipo de datos:
+    menuPrincipal = valida la opcion del menu principal (1 - 5)
+    menuConfig = valida la opcion del menu de configuraciones (1 - 6)
+    cantJug = valida la cantidad de jugadores (2 - 4)
+    cantAves = valida la cantidad de aves (5 - 45)
+    cantRot = valida la cantidad de rotaciones (0 - 5)
+    cantTabs = valida la cantidad de Tabletas (5 - 25)
+    configTerm = valida la opcion del menu configuracion de terminacion (1 - 3)
+     */
+    public boolean validarInt(int valor, String tipoDato) {
+        boolean validador = false;
+
+        switch (tipoDato) {
+            case "menuPrincipal":
+                if (valor > 0 && valor < 6) {
+                    validador = true;
+                }
+                break;
+
+            case "menuConfig":
+                if (valor > 0 && valor < 7) {
+                    validador = true;
+                }
+                break;
+
+            case "cantJug":
+                if (valor > 1 && valor < 5) {
+                    validador = true;
+                }
+
+            case "cantAves":
+                if (valor > 4 && valor < 46) {
+                    validador = true;
+                }
+
+            case "cantRot":
+                if (valor >= 0 && valor < 6) {
+                    validador = true;
+                }
+
+            case "cantTabs":
+                if (valor > 4 && valor < 25) {
+                    validador = true;
+                }
+
+            case "configTerm":
+                if (valor > 0 && valor < 4) {
+                    validador = true;
+                }
+        }
+
+        return validador;
+    }
+
+    public String ingresarString() {
+        Scanner input = new Scanner(System.in);
+        String dato = "";
+
+        dato = input.nextLine();
+
+        return dato;
+    }
+
+    public void menuPrincipalTemplate() {
         System.out.println("+-!-!-!-!- >|< AVES! 1.0 (Beta) >|< -!-!-!-!- +");
         System.out.println("|><    ><    ><    ><    ><    ><    ><    >< |");
         System.out.println("|   ><    ><    ><    ><    ><    ><    ><    |");
@@ -70,19 +110,23 @@ public class Interfaz {
         System.out.println("+------------By Kevin & Ezequiel--------------+");
     }
 
-    public static void registrarJugador(Aves a) {
-        Scanner input = new Scanner(System.in);
+    public void registrarJugador() {
+        String nombre;
+        String alias;
+        int edad;
+
         System.out.println("Ingresa tu nombre");
-        String nombre = input.nextLine();
+        nombre = ingresarString();
         System.out.println("Ingresa tu Edad");
-        int edad = excepcion();
+        edad = ingresarInt("edad");
         System.out.println("Escribe tu Alias");
-        String alias = input.nextLine();
-        a.crearJugador(nombre, edad, alias);
+        alias = ingresarString();
+
+        this.aves.crearJugador(nombre, edad, alias);
         System.out.println("Bienvenido a Aves " + alias);
     }
 
-    public static void menuConfig() {
+    public void menuConfigTemplate() {
         System.out.println("CONFIGURACION DE PARTIDA");
         System.out.println("========================");
         System.out.println("");
@@ -103,36 +147,43 @@ public class Interfaz {
         System.out.println("========================");
     }
 
-    public void configCantJugadores(Aves a) {
-        Scanner input = new Scanner(System.in);
+    public void configCantJugadores() {
+        int cantJug;
+
         System.out.println("Ingresa la cantidad de jugadores");
-        int cantJug = validar(2, 4, excepcion());
-        a.setConfiguracion(0, cantJug);
+        cantJug = ingresarInt("cantJug");
+
+        this.aves.setConfiguracion(0, cantJug);
     }
 
-    public void configAves(Aves a) {
-        Scanner input = new Scanner(System.in);
+    public void configAves() {
+        int cantAves;
+
         System.out.println("Ingresa la cantidad de aves por jugador");
-        int cantAves = validar(5, 45, excepcion());
-        a.setConfiguracion(1, cantAves);
+        cantAves = ingresarInt("cantAves");
+
+        this.aves.setConfiguracion(1, cantAves);
     }
 
-    public void configRot(Aves a) {
-        Scanner input = new Scanner(System.in);
+    public void configRot() {
+        int cantRot;
+
         System.out.println("Ingresa la cantidad de rotaciones por jugador");
-        int cantRot = validar(0, 5, excepcion());
-        a.setConfiguracion(2, cantRot);
+        cantRot = ingresarInt("cantRot");
+
+        this.aves.setConfiguracion(2, cantRot);
     }
 
-    public void configTabs(Aves a) {
-        Scanner input = new Scanner(System.in);
+    public void configTabs() {
+        int cantTab;
+
         System.out.println("Ingresa la cantidad de tabletas por Jugador");
-        int cantTab = validar(5, 25, excepcion());
-        a.setConfiguracion(3, cantTab);
+        cantTab = ingresarInt("cantTabs");
+
+        this.aves.setConfiguracion(3, cantTab);
     }
 
-    public void configTerm(Aves a) {
-        Scanner input = new Scanner(System.in);
+    public void menuConfigTermTemplate() {
         System.out.println("Selecciona el tipo de terminacion");
         System.out.println("=================================");
         System.out.println("1- Completar Tablero");
@@ -141,74 +192,96 @@ public class Interfaz {
         System.out.println("");
         System.out.println("3- Cantidad de turnos");
         System.out.println("=================================");
-        int selBE = validar(1, 3, excepcion());
-        switch (selBE) {
+    }
+
+    public void configTerm() {
+        int opcSel;
+        int cantTurn;
+
+        menuConfigTermTemplate();
+        opcSel = ingresarInt("configTerm");
+        switch (opcSel) {
             case 1:
-                a.setConfiguracion(4, 1);
+                this.aves.setConfiguracion(4, 1);
                 break;
             case 2:
-                a.setConfiguracion(4, 2);
+                this.aves.setConfiguracion(4, 2);
                 break;
             case 3:
-                a.setConfiguracion(4, 3);
+                this.aves.setConfiguracion(4, 3);
                 System.out.println("Ingrese la cantidad de turnos a definir");
-                int cantTurn=input.nextInt();
-                a.setConfiguracion(5, cantTurn);
-                System.out.println("La partida tendra "+cantTurn+" turnos");
+                cantTurn = ingresarInt("cantTurn");
+                this.aves.setConfiguracion(5, cantTurn);
+                System.out.println("La partida tendra " + cantTurn + " turnos");
                 break;
         }
 
-        System.out.println("Se ha configurado el tipo de terminacion " + selBE);
+        System.out.println("Se ha configurado el tipo de terminacion " + opcSel);
     }
 
     public void start() {
-        Aves a= new Aves();
-        boolean runing = true;
-        while (runing) {
-            this.menuPrincipal();
-            int selPrincipal = validar(1, 6, excepcion());
+        boolean running = true;
+
+        this.menuPrincipalTemplate();
+        int selPrincipal = ingresarInt("menuPrincipal");
+        do {
             switch (selPrincipal) {
+                //Registar jugador
                 case 1:
-                    this.registrarJugador(a);
+                    registrarJugador();
                     break;
+
+                //Menu configuracion
                 case 2:
-                    boolean inConf = true;
-                    while (inConf) {
-                        this.menuConfig();
-                        int selConfig = validar(1, 6, excepcion());
-                        switch (selConfig) {
-                            case 1:
-                                this.configCantJugadores(a);
-                                break;
-                            case 2:
-                                this.configAves(a);
-                                break;
-                            case 3:
-                                this.configRot(a);
-                                break;
-                            case 4:
-                                this.configTabs(a);
-                                break;
-                            case 5:
-                                this.configTerm(a);
-                                break;
-                            case 6:
-                                inConf = false;
-                                break;
-                        }
-                    }
+                    menuConfig();
                     break;
+
+                //Jugar
                 case 3:
                     //a.empezar();
                     break;
+
+                //Ranking de jugadores
                 case 4:
-                    a.getRanking();
+                    this.aves.getRanking();
                     break;
+
+                //Salir
                 case 5:
-                    runing=false;
+                    running = false;
                     System.out.println("Gracias por Jugar Aves :D");
                     break;
             }
-        }
+        } while (running);
+    }
+
+    public void menuConfig() {
+        int opcSel;
+        boolean running = true;
+
+        menuConfigTemplate();
+        opcSel = ingresarInt("menuConfig");
+        do {
+            switch (opcSel) {
+                case 1:
+                    configCantJugadores();
+                    break;
+                case 2:
+                    configAves();
+                    break;
+                case 3:
+                    configRot();
+                    break;
+                case 4:
+                    configTabs();
+                    break;
+                case 5:
+                    configTerm();
+                    break;
+                case 6:
+                    running = false;
+                    break;
+            }
+        } while (running);
     }
 }
