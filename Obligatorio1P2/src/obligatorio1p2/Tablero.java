@@ -109,14 +109,14 @@ public class Tablero {
     public void rotar(int fila, int columna, int grados) {
         switch (grados) {
             case 90:
-                this.getTablero()[fila][columna].rotar90();
-                break;
+            this.getTablero()[fila][columna].rotar90();
+            break;
             case 180:
-                this.getTablero()[fila][columna].rotar180();
-                break;
+            this.getTablero()[fila][columna].rotar180();
+            break;
             case 270:
-                this.getTablero()[fila][columna].rotar270();
-                break;
+            this.getTablero()[fila][columna].rotar270();
+            break;
         }
 
     }
@@ -129,7 +129,7 @@ public class Tablero {
         boolean alineados = true;
         boolean tieneColor1 = false;
         boolean tieneColor2 = false;
-        boolean noHayAves = false;
+        boolean noHayAves = true;
         boolean enLinea = false;
         // Validamos que esten en la misma fila y columna
         if (fila1 == fila2 || columna1 == columna2) {
@@ -149,12 +149,13 @@ public class Tablero {
         }
 
         //validamos que esten los colores en las fichas ingresadas y que los colores esten en linea
+        int filaf1 = 0;
+        int filaf2 = 0;
+        int columnaf1 = -1;
+        int columnaf2 = -1;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                int filaf1 = 0;
-                int filaf2 = 0;
-                int columnaf1 = -1;
-                int columnaf2 = -1;
+
                 if (color.equals(this.getFicha(fila1, columna1).getColores()[i][j])) {
                     tieneColor1 = true;
                     filaf1 = i;
@@ -172,26 +173,30 @@ public class Tablero {
 
             }
         }
-        for (int i =   ) {
+        // Validamos que no hayan aves en el camino
+        if(tieneColor1 && tieneColor2 && alineados && enLinea){
+            for (int i = Math.min(columna1, columna2); i < this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
+               for (int k = 0; k < 2; k++) {
+                for (int j = 0; j < 2; j++) {
+                    if (fila1==fila2){
+                       if(filaf1==filaf2 && this.getFicha(fila1, columna1).devolverUnColor(k,j).equals("x")){
+                            noHayAves==false;
+                       } 
+                    }
 
-        }
-    for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-            if () {
-
+                    }  
+                }
             }
+            return (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
         }
-    }
-    return (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
-}
 
-else {
+        else {
             retorno = false;
+        }
+        return retorno ;
     }
-    return retorno ;
-}
 
-public void conectar() {
+    public void conectar() {
 
     }
 }
