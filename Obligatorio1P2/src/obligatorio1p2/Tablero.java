@@ -155,7 +155,7 @@ public class Tablero {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
 
-                if (color.equals(this.getFicha(fila1, columna1).getColores()[i][j])) {
+                if (color.equals(this.getFicha(fila1, columna1).getFicha()[i][j])) {
                     tieneColor1 = true;
                     filaf1 = i;
                     columnaf1 = j;
@@ -179,20 +179,15 @@ public class Tablero {
                 for (int j = 0; j < 2; j++) {
                     if (fila1==fila2){
                        if(filaf1==filaf2 && this.getFicha(fila1, columna1).devolverUnColor(k,j).equals("x")){
-                            noHayAves==false;
+                            noHayAves=false;
                        } 
                     }
 
                     }  
                 }
             }
-            return (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
         }
-
-        else {
-            retorno = false;
-        }
-        return retorno ;
+        return (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
 
     public void conectar() {
