@@ -20,10 +20,38 @@ public class Tableta {
         return validador;
     }
     
-    public void setFicha(){
+    public void setFicha(char colores[]) {
+        int x = 0;
+        for (int i = 0; i < this.ficha.length; i++) {
+            for (int j = 0; j < this.ficha[0].length; j++) {
+                switch (colores[x]) {
+                    case 'R':
+                        this.ficha[i][j] = "\u001B[41m" + " " + "\033[0m"; //Color rojo
+                        break;
+
+                    case 'A':
+                        this.ficha[i][j] = "\u001B[44m" + " " + "\033[0m"; //Color azul
+                        break;
+
+                    case 'M':
+                        this.ficha[i][j] = "\u001B[43m" + " " + "\033[0m"; //Color amarillo
+                        break;
+
+                    case 'V':
+                        this.ficha[i][j] = "\u001B[42m" + " " + "\033[0m"; //Color verde
+                        break;
+                }
+                x++;
+            }
+        }
+    }
+    
+    public void setFichaRandom(){
         Random rand = new Random();
         int[][] fichaAux = new int[2][2];
+        char[] colores = new char[2];
         int num;
+        int indice = 0;
         boolean validador;
         
         for (int i = 0; i < fichaAux.length; i++) {
@@ -43,21 +71,22 @@ public class Tableta {
                 fichaAux[i][j] = num;
                 switch (fichaAux[i][j]) {
                     case 1:
-                        this.ficha[i][j] = "\u001B[41m" + " " + "\033[0m"; //Color rojo
+                        colores[indice] = 'R'; //Color rojo
                         break;
 
                     case 2:
-                        this.ficha[i][j] = "\u001B[44m" + " " + "\033[0m"; //Color azul
+                        colores[indice] = 'A'; //Color azul
                         break;
 
                     case 3:
-                        this.ficha[i][j] = "\u001B[43m" + " " + "\033[0m"; //Color amarillo
+                        colores[indice] = 'M'; //Color amarillo
                         break;
 
                     case 4:
-                        this.ficha[i][j] = "\u001B[42m" + " " + "\033[0m"; //Color verde
+                        colores[indice] = 'V'; //Color verde
                         break;
                 }
+                indice++;
             }
         }
     }

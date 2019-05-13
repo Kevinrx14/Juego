@@ -80,13 +80,28 @@ public class Interfaz {
         return validador;
     }
 
-    public String ingresarString() {
+    public String ingresarString(String tipoString) {
         Scanner input = new Scanner(System.in);
         String dato = "";
+        boolean validador = false;
 
-        dato = input.nextLine();
+        do {
+            dato = input.nextLine();
+            if(!dato.isEmpty()) {
+                validador = true;
+            }
+            if(validarString(dato, tipoString)) {
+                
+            }
+        } while(!validador);
 
         return dato;
+    }
+    
+    public boolean validarString(String dato, String tipoString) {
+        boolean validador = true;
+        
+        return validador;
     }
 
     public void menuPrincipalTemplate() {
