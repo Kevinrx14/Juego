@@ -1,26 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package obligatorio1p2;
 import java.util.*;
-/**
- *
- * @author ezequiellopez
- */
+
 public class Partida {
     private ArrayList<Jugador> jugadores;
+    private Tablero tablero;
     private int cantJug;
     private int cantAves;
     private int cantRot;
     private int cantTab;
     private int tipoTerm;
-    /*rivate ArrayList<String> posInicial;*/ 
-            
     private int cantTurnos;
 
-    
+    public Partida(int cantJugadores, int avesXjug, int fichasRotXJug, int totalTab, int tipoTerm, int cantTurnos) {
+        this.cantJug = cantJugadores;
+        this.cantAves = avesXjug;
+        this.cantRot = fichasRotXJug;
+        this.cantTab = totalTab;
+        this.tipoTerm = tipoTerm;
+        this.cantTurnos = cantTurnos;
+        this.tablero = new Tablero();
+    }
+    public Partida(){
+        this.setCantJug(2);
+        this.setCantAves(45);
+        this.setCantRot(5);
+        this.setCantTab(25);
+        this.setTipoTerm(3);
+        this.setCantTurnos(10);
+        this.tablero = new Tablero();
+    }
     
     public int getCantTurnos() {
         return cantTurnos;
@@ -89,25 +97,23 @@ public class Partida {
         this.tipoTerm = tipoTerm;
     }
 
-    public Partida(int cantJugadores, int avesXjug, int fichasRotXJug, int totalTab, int tipoTerm, int cantTurnos) {
-        this.cantJug = cantJugadores;
-        this.cantAves = avesXjug;
-        this.cantRot = fichasRotXJug;
-        this.cantTab = totalTab;
-        this.tipoTerm = tipoTerm;
-        this.cantTurnos = cantTurnos;
-    }
-    public Partida(){
-        this.setCantJug(2);
-        this.setCantAves(45);
-        this.setCantRot(5);
-        this.setCantTab(25);
-        this.setTipoTerm(3);
-        this.setCantTurnos(10);
-    }
-    public void iniciar(){
+    public void iniciar() {
+        Scanner input = new Scanner(System.in);
+        boolean running = true;
         
+        do {
+            System.out.println(tablero.toString());
+            
+            //test
+            System.out.println("instruccion");
+            String instruccion = input.nextLine();
+            if(instruccion.equals("x")) {
+                running = false;
+                System.out.println(running);
+            }
+        } while(running);
     }
+    
     public void empezarTurno(Jugador j, Tablero t, int accion, int fila, int columna, int grados){
         boolean turno=true;
         while(turno){
