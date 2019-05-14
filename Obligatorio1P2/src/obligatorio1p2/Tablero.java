@@ -164,10 +164,6 @@ public class Tablero {
 
     }
 
-    public void agregarFicha(int fila, int columna) {
-        this.setFicha(fila, columna);
-    }
-
     public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color) {
         boolean alineados = true;
         boolean tieneColor1 = false;
@@ -235,5 +231,74 @@ public class Tablero {
 
     public void conectar() {
 
+    }
+
+    public boolean sePuedePonerFicha(int fila, int col) {
+        Tableta[][] tablero = this.getTablero();
+        boolean validador = false;
+
+        if (tablero[fila][col] == null) {
+            if (hayFichaAlLado(fila, col)) {
+                if (!hayCincoFichas(fila, col)) {
+                    validador = true;
+                } else {
+                    System.out.println("Ya hay 5 fichas en esa fila o columna");
+                }
+            } else {
+                System.out.println("No hay ninguna ficha al lado");
+            }
+        } else {
+            System.out.println("Ya hay una ficha en ese lugar");
+        }
+
+        return validador;
+    }
+
+    public boolean hayFichaAlLado(int fila, int col) {
+        Tableta[][] tablero = this.getTablero();
+        boolean validador = false;
+
+        if (tablero[fila - 1][col] != null) {
+            validador = true;
+        }
+
+        if (tablero[fila + 1][col] != null) {
+            validador = true;
+        }
+
+        if (tablero[fila][col - 1] != null) {
+            validador = true;
+        }
+
+        if (tablero[fila][col + 1] != null) {
+            validador = true;
+        }
+
+        return validador;
+    }
+
+    public boolean hayCincoFichas(int fila, int col) {
+        Tableta[][] tablero = this.getTablero();
+        boolean validador = false;
+        int contadorFila = 0;
+        int contadorCol = 0;
+
+        for (int i = 0; i < tablero.length; i++) {
+            if(tablero[i][col] != null) {
+                contadorFila++;
+            }
+        }
+        
+        for (int i = 0; i < tablero[0].length; i++) {
+            if(tablero[fila][i] != null) {
+                contadorCol++;
+            }
+        }
+        
+        if(contadorFila > 4 || contadorCol > 4) {
+            validador = true;
+        }
+
+        return validador;
     }
 }
