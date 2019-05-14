@@ -87,20 +87,73 @@ public class Interfaz {
 
         do {
             dato = input.nextLine();
-            if(!dato.isEmpty()) {
-                validador = true;
+            if (!dato.isEmpty()) {
+                if (validarString(dato, tipoString)) {
+                    validador = true;
+                }
             }
-            if(validarString(dato, tipoString)) {
-                
-            }
-        } while(!validador);
+        } while (!validador);
 
         return dato;
     }
-    
+
     public boolean validarString(String dato, String tipoString) {
-        boolean validador = true;
-        
+        char movimiento;
+        boolean validador = false;
+
+        switch (tipoString) {
+            case "jugada":
+                movimiento = dato.charAt(0);
+                if (validarJugadaIngresada(dato, movimiento)) {
+                    validador = true;
+                } else {
+                    System.out.println("La jugada ingresada no es correcta");
+                }
+                break;
+        }
+
+        return validador;
+    }
+
+    public boolean validarJugadaIngresada(String jugada, char movimiento) {
+        boolean validador = false;
+
+        switch (movimiento) {
+            //Rotar
+            case 'R':
+
+                break;
+            //Conectar
+            case 'C':
+//                if (jugada.length() > 6 && jugada.length() < 10) {
+//                    if (validadorDePosicion(jugada.sub)) {
+//                        validador = true;
+//                    }
+//                }
+                break;
+            //Poner ficha 
+            case 'P':
+                if (jugada.length() > 3 && jugada.length() < 6) {
+                    if (validadorDePosicion(jugada.substring(2))) {
+                        validador = true;
+                    }
+                }
+                break;
+            //Extender 
+            case 'E':
+
+                break;
+            //Salir    
+            case 'X':
+                if (jugada.length() == 1) {
+                    validador = true;
+                } else {
+                    System.out.println("La jugada no fue ingresada correctamente");
+                    System.out.println("Para salir solamente ingrese X");
+                }
+                break;
+        }
+
         return validador;
     }
 
@@ -299,5 +352,29 @@ public class Interfaz {
                     break;
             }
         } while (running);
+    }
+
+    public boolean validadorDePosicion(String posicion) {
+        String[] listaPosiciones = new String[100];
+        int[] indicesCol = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        char[] indicesFilas = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+        boolean validador = false;
+        int indice = 0;
+
+        for (int i = 0; i < indicesFilas.length; i++) {
+            for (int j = 0; j < indicesCol.length; j++) {
+                listaPosiciones[indice] = Character.toString(indicesFilas[i]) + Integer.toString(indicesCol[j]);
+                indice++;
+            }
+        }
+
+        for (int i = 0; i < listaPosiciones.length; i++) {
+            if (posicion.equals(listaPosiciones[i])) {
+                validador = true;
+                break;
+            }
+        }
+
+        return validador;
     }
 }
