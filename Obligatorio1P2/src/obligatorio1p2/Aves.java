@@ -16,57 +16,61 @@ public class Aves {
     private ArrayList<Partida> partidas;
     private ArrayList<Jugador> jugadores;
     private int[] configuracion;
+
     public Aves() {
         this.partidas = new ArrayList();
         this.jugadores = new ArrayList();
-        this.configuracion=new int[]{2, 45, 5, 25, 3, 10};
+        this.configuracion = new int[]{2, 45, 5, 25, 3, 10};
     }
 
     public void setConfiguracion(int i, int configuracion) {
         this.configuracion[i] = configuracion;
     }
-    
-    public Partida configurarPart(int cantJug, int cantAves, int cantRot, int cantTab, int tipoTerm, int cantTurnos){
-        Partida p=new Partida(cantJug, cantAves, cantRot, cantTab, tipoTerm, cantTurnos);
+
+    public Partida configurarPart(
+            int cantJug,
+            int cantAves,
+            int cantRot,
+            int cantTab,
+            int tipoTerm,
+            int cantTurnos
+    ) {
+        Partida p = new Partida(cantJug, cantAves, cantRot, cantTab, tipoTerm, cantTurnos);
         return p;
     }
+
     public ArrayList<Partida> getPartidas() {
         return partidas;
+    }
+
+    public void setPartida() {
+        partidas.add(new Partida(
+                configuracion[0],
+                configuracion[1],
+                configuracion[2],
+                configuracion[3],
+                configuracion[4],
+                configuracion[5]
+        ));
     }
 
     public ArrayList<Jugador> getJugadores() {
         return jugadores;
     }
 
-    public void setJugadores(Jugador j) {
-        boolean noEsta = true;
+    public void setJugador(String nombre, int edad, String alias) {
+        boolean existe = false;
+
         for (int i = 0; i < getJugadores().size(); i++) {
-            if (getJugadores().get(i).equals(j)) {
-                noEsta = false;
+            if (getJugadores().get(i).getAlias().equals(alias)) {
+                existe = true;
             }
         }
-        if (noEsta) {
-            getJugadores().add(j);
+        if (!existe) {
+            getJugadores().add(new Jugador(nombre, edad, alias));
         }
     }
 
-    public  void setPartidas(Partida p) {
-        boolean noEsta = true;
-        for (int i = 0; i < getPartidas().size(); i++) {
-            if (getPartidas().get(i).equals(p)) {
-                noEsta = false;
-            }
-        }
-        if (noEsta) {
-            getPartidas().add(p);
-        }
-    }
-
-    public void crearJugador(String Nombre, int Edad, String Alias){
-        Jugador j=new Jugador(Nombre, Edad, Alias);
-        this.setJugadores(j);
-    }
-    
     public void getRanking() {
         Collections.sort(jugadores);
         for (int i = 0; i < getJugadores().size(); i++) {
@@ -93,9 +97,12 @@ public class Aves {
             System.out.println(imprimo);
         }
     }
-    public void empezar(){
-        Partida p=this.configurarPart(configuracion[0], configuracion[1], configuracion[2], configuracion[3], configuracion[4], configuracion[5]);
-        
+
+    public void jugar() {
+        setPartida();
+        int indice = this.partidas.size() - 1;
+        Partida partida = this.partidas.get(indice);
+
+        partida.iniciar();
     }
-    
 }

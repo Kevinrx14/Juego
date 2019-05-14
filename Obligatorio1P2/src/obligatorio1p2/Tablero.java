@@ -1,16 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package obligatorio1p2;
 
 import java.util.*;
 
 public class Tablero {
+    private Tableta[][] tablero;
 
-    private Tableta[][] tablero = new Tableta[10][10];
-
+    public Tablero() {
+        this.tablero = new Tableta[10][10];
+    }
+    
     public void setFicha(int fila, int col) {
         Tableta tableta = new Tableta();
         tableta.setFicha();
@@ -44,6 +42,7 @@ public class Tablero {
                 devolverTablero = devolverTablero + "\n";
             }
         }
+        
         return devolverTablero;
     }
 
@@ -89,16 +88,16 @@ public class Tablero {
         int col = fichas[0].length;
         for (int i = 0; i < fila; i++) {
             for (int j = 0; j < col; j++) {
-                try {
+                if(fichas[i][j] != null) {
                     mat[i * 3 + 1][j * 3 + 1] = fichas[i][j].devolverUnColor(0, 0);
                     mat[i * 3 + 1][j * 3 + 2] = fichas[i][j].devolverUnColor(0, 1);
                     mat[i * 3 + 2][j * 3 + 1] = fichas[i][j].devolverUnColor(1, 0);
                     mat[i * 3 + 2][j * 3 + 2] = fichas[i][j].devolverUnColor(1, 1);
-                } catch (NullPointerException e) {
+                } else {
                     mat[i * 3 + 1][j * 3 + 1] = " ";
                     mat[i * 3 + 1][j * 3 + 2] = " ";
                     mat[i * 3 + 2][j * 3 + 1] = " ";
-                    mat[i * 3 + 2][j * 3 + 2] = " ";
+                    mat[i * 3 + 2][j * 3 + 2] = " ";                    
                 }
             }
         }
@@ -231,6 +230,9 @@ public bolean canExtend(int fila, int columna, String color, int direccion) {
                                 enLinea=true;
                             }   
                         }
+                       if(filaf1==filaf2 && this.getFicha(fila1, columna1).devolverUnColor(k,j).equals("x")){
+                            noHayAves=false;
+                       } 
                     }
                 }
             }
@@ -331,6 +333,8 @@ public bolean canExtend(int fila, int columna, String color, int direccion) {
             }
             break;
         }
+        }
+        return (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
     return (hayFichas && hayExtremo && tieneColor && enLinea);
 }
