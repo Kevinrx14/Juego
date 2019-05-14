@@ -89,6 +89,7 @@ public class Tableta {
                 indice++;
             }
         }
+        setFicha(colores);
     }
     
     public String[][] getFicha(){
