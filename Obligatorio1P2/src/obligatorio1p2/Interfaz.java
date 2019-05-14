@@ -131,11 +131,11 @@ public class Interfaz {
         int edad;
 
         System.out.println("Ingresa tu nombre");
-        nombre = ingresarString();
+        nombre = ingresarString("nombreJug");
         System.out.println("Ingresa tu Edad");
-        edad = ingresarInt("edad");
+        edad = ingresarInt("edadJug");
         System.out.println("Escribe tu Alias");
-        alias = ingresarString();
+        alias = ingresarString("aliasJug");
 
         this.aves.setJugador(nombre, edad, alias);
         System.out.println("Bienvenido a Aves " + alias);
