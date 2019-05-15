@@ -152,13 +152,13 @@ public class Tablero {
     public void rotar(int fila, int columna, int grados) {
         switch (grados) {
             case 90:
-                this.getTablero()[fila][columna].rotar90();
+                this.tablero[fila][columna].rotar90();
                 break;
             case 180:
-                this.getTablero()[fila][columna].rotar180();
+                this.tablero[fila][columna].rotar180();
                 break;
             case 270:
-                this.getTablero()[fila][columna].rotar270();
+                this.tablero[fila][columna].rotar270();
                 break;
         }
 
@@ -258,20 +258,28 @@ public class Tablero {
         Tableta[][] tablero = this.getTablero();
         boolean validador = false;
 
-        if (tablero[fila - 1][col] != null) {
-            validador = true;
+        if (fila > 0) {
+            if (tablero[fila - 1][col] != null) {
+                validador = true;
+            }
         }
 
-        if (tablero[fila + 1][col] != null) {
-            validador = true;
+        if (fila < 9) {
+            if (tablero[fila + 1][col] != null) {
+                validador = true;
+            }
         }
 
-        if (tablero[fila][col - 1] != null) {
-            validador = true;
+        if (col > 0) {
+            if (tablero[fila][col - 1] != null) {
+                validador = true;
+            }
         }
 
-        if (tablero[fila][col + 1] != null) {
-            validador = true;
+        if (col < 9) {
+            if (tablero[fila][col + 1] != null) {
+                validador = true;
+            }
         }
 
         return validador;
@@ -284,18 +292,18 @@ public class Tablero {
         int contadorCol = 0;
 
         for (int i = 0; i < tablero.length; i++) {
-            if(tablero[i][col] != null) {
+            if (tablero[i][col] != null) {
                 contadorFila++;
             }
         }
-        
+
         for (int i = 0; i < tablero[0].length; i++) {
-            if(tablero[fila][i] != null) {
+            if (tablero[fila][i] != null) {
                 contadorCol++;
             }
         }
-        
-        if(contadorFila > 4 || contadorCol > 4) {
+
+        if (contadorFila > 4 || contadorCol > 4) {
             validador = true;
         }
 

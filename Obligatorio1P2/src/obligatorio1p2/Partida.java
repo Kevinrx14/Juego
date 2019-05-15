@@ -95,7 +95,6 @@ public class Partida {
     }
 
     public void setTipoTerm(int tipoTerm) {
-
         this.tipoTerm = tipoTerm;
     }
 
@@ -125,64 +124,54 @@ public class Partida {
         String movimiento;
         String indicacion1 = "";
         String indicacion2 = "";
+        int rotacion;
         char tipoMovimiento;
         boolean salidaEmergencia = false;
 
         movimiento = this.interfaz.ingresarString("jugada");
         tipoMovimiento = movimiento.charAt(0);
         if (tipoMovimiento != 'X') {
-            indices = this.interfaz.getIndicesDeIndicacion(1, movimiento);
-            System.out.println("inicio" + indices[0] + " final" + indices[1] + " total" + movimiento.length());
-            indicacion1 = movimiento.substring(indices[0], indices[1]);
-            if (tipoMovimiento != 'P') {
+            if (tipoMovimiento == 'P') {
+                indicacion1 = movimiento.substring(2);
+            } else {
+                indices = this.interfaz.getIndicesDeIndicacion(1, movimiento);
+                indicacion1 = movimiento.substring(indices[0], indices[1]);
                 indices = this.interfaz.getIndicesDeIndicacion(2, movimiento);
                 indicacion2 = movimiento.substring(indices[0], indices[1]);
             }
+
+            switch (tipoMovimiento) {
+                //Rotar
+                case 'R':
+                    posicion1 = traducirPosicion(indicacion1);
+                    rotacion = Integer.parseInt(indicacion2);
+
+                    this.tablero.rotar(posicion1[0], posicion1[1], rotacion);
+
+                    break;
+                //Conectar
+                case 'C':
+                    posicion1 = traducirPosicion(indicacion1);
+                    posicion2 = traducirPosicion(indicacion2);
+                    this.tablero.canConect(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indicacion2);
+                    break;
+                //Poner ficha 
+                case 'P':
+                    posicion1 = traducirPosicion(indicacion1);
+                    if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                        this.tablero.setFicha(posicion1[0], posicion1[1]);
+                    }
+                    break;
+                //Extender 
+                case 'E':
+
+                    break;
+                //Salir    
+                case 'X':
+                    salidaEmergencia = true;
+                    break;
+            }
         }
-
-        switch (tipoMovimiento) {
-            //Rotar
-            case 'R':
-                posicion1 = traducirPosicion(indicacion1);
-                switch (indicacion2) {
-                    case "90":
-                        this.tablero.rotar(posicion1[0], posicion1[1], 90);
-                        break;
-
-                    case "180":
-                        this.tablero.rotar(posicion1[0], posicion1[1], 180);
-                        break;
-
-                    case "270":
-                        this.tablero.rotar(posicion1[0], posicion1[1], 270);
-                        break;
-                }
-
-                break;
-            //Conectar
-            case 'C':
-                posicion1 = traducirPosicion(indicacion1);
-                posicion2 = traducirPosicion(indicacion2);
-                this.tablero.canConect(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indicacion2);
-                break;
-            //Poner ficha 
-            case 'P':
-                System.out.println("flag 1");
-                posicion1 = traducirPosicion(indicacion1);
-                if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
-                    this.tablero.setFicha(posicion1[0], posicion1[1]);
-                }
-                break;
-            //Extender 
-            case 'E':
-
-                break;
-            //Salir    
-            case 'X':
-                salidaEmergencia = true;
-                break;
-        }
-
         return salidaEmergencia;
     }
 

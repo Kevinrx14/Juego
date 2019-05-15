@@ -49,7 +49,7 @@ public class Tableta {
     public void setFichaRandom(){
         Random rand = new Random();
         int[][] fichaAux = new int[2][2];
-        char[] colores = new char[2];
+        char[] colores = new char[4];
         int num;
         int indice = 0;
         boolean validador;
@@ -69,6 +69,7 @@ public class Tableta {
                     }
                 } while (validador == false);
                 fichaAux[i][j] = num;
+                System.out.println(indice);
                 switch (fichaAux[i][j]) {
                     case 1:
                         colores[indice] = 'R'; //Color rojo

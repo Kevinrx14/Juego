@@ -88,32 +88,25 @@ public class Interfaz {
         do {
             dato = input.nextLine();
             if (!dato.isEmpty()) {
-                System.out.println("flag 3");
                 if (tipoString.equals("jugada")) {
-                    System.out.println("flag 10");
                     dato = dato.toUpperCase();
                 }
                 if (validarString(dato, tipoString)) {
-                    System.out.println("flag 4");
                     validador = true;
                 }
             }
         } while (!validador);
-        System.out.println("flag 2");
         return dato;
     }
 
     public boolean validarString(String dato, String tipoString) {
         char movimiento;
         boolean validador = false;
-        
-        System.out.println("flag 11");
+
         switch (tipoString) {
             case "jugada":
-                System.out.println("flag 9");
                 movimiento = dato.charAt(0);
                 if (validarJugadaIngresada(dato, movimiento)) {
-                    System.out.println("flag 5");
                     validador = true;
                 } else {
                     System.out.println("La jugada ingresada no es correcta");
@@ -129,12 +122,23 @@ public class Interfaz {
         String indicacion1;
         String indicacion2;
         boolean validador = false;
-        System.out.println(jugada);
-        
+
         switch (movimiento) {
             //Rotar
             case 'R':
-
+                if (jugada.length() > 6 && jugada.length() < 10) {
+                    indices = getIndicesDeIndicacion(1, jugada);
+                    indicacion1 = jugada.substring(indices[0], indices[1]);
+                    indices = getIndicesDeIndicacion(2, jugada);
+                    indicacion2 = jugada.substring(indices[0], indices[1]);
+                    if (validadorDePosicion(indicacion1)) {
+                        if (validadorDeRotacion(indicacion2)) {
+                            validador = true;
+                        }
+                    } else {
+                        System.out.println("La posicion indicada no es correcta");
+                    }
+                }
                 break;
             //Conectar
             case 'C':
@@ -153,11 +157,8 @@ public class Interfaz {
                 break;
             //Poner ficha 
             case 'P':
-                System.out.println("flag 6");
                 if (jugada.length() > 3 && jugada.length() < 6) {
-                    System.out.println("flag 7");
                     if (validadorDePosicion(jugada.substring(2))) {
-                        System.out.println("flag 8");
                         validador = true;
                     }
                 }
@@ -222,6 +223,30 @@ public class Interfaz {
                 validador = true;
                 break;
             }
+        }
+
+        return validador;
+    }
+
+    public boolean validadorDeRotacion(String rotacion) {
+        boolean validador = false;
+
+        switch (rotacion) {
+            case "90":
+                validador = true;
+                break;
+
+            case "180":
+                validador = true;
+                break;
+
+            case "270":
+                validador = true;
+                break;
+
+            default:
+                System.out.println("No se puede rotar " + rotacion + " grados");
+                break;
         }
 
         return validador;
