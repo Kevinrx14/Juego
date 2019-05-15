@@ -21,7 +21,7 @@ public class Partida {
         this.cantTab = totalTab;
         this.tipoTerm = tipoTerm;
         this.cantTurnos = cantTurnos;
-        this.tablero = new Tablero();
+        this.setTablero();
     }
 
     public Partida() {
@@ -31,7 +31,7 @@ public class Partida {
         this.setCantTab(25);
         this.setTipoTerm(3);
         this.setCantTurnos(10);
-        this.tablero = new Tablero();
+        this.setTablero();
     }
 
     public int getCantTurnos() {
@@ -50,15 +50,16 @@ public class Partida {
         this.jugadores = todosJug;
     }
 
-    /*public Tablero getTablero() {
-        return tablero;
-    }*/
+    public Tablero getTablero() {
+        return this.tablero;
+    }
 
- /* public void setTablero(Tablero tablero) {
-        this.tablero = tablero;
-    }*/
+    public void setTablero() {
+        this.tablero = new Tablero();
+    }
+
     public int getCantJug() {
-        return cantJug;
+        return this.cantJug;
     }
 
     public void setCantJug(int cantJugadores) {
@@ -66,7 +67,7 @@ public class Partida {
     }
 
     public int getCantAves() {
-        return cantAves;
+        return this.cantAves;
     }
 
     public void setCantAves(int avesVXjug) {
@@ -74,7 +75,7 @@ public class Partida {
     }
 
     public int getCantRot() {
-        return cantRot;
+        return this.cantRot;
     }
 
     public void setCantRot(int fichasRotXJug) {
@@ -82,7 +83,7 @@ public class Partida {
     }
 
     public int getCantTab() {
-        return cantTab;
+        return this.cantTab;
     }
 
     public void setCantTab(int totalTab) {
@@ -90,51 +91,24 @@ public class Partida {
     }
 
     public int getTipoTerm() {
-        return tipoTerm;
+        return this.tipoTerm;
     }
 
     public void setTipoTerm(int tipoTerm) {
-
         this.tipoTerm = tipoTerm;
     }
 
     public void iniciar() {
-        Scanner input = new Scanner(System.in);
-        boolean running = true;
+        boolean salidaEmergencia = false;
 
-        do {
-            System.out.println(tablero.toString());
-
-            //test
-            System.out.println("instruccion");
-            String instruccion = input.nextLine();
-            movimiento();
-            if (instruccion.equals("x")) {
-                running = false;
-                System.out.println(running);
-            }
-        } while (running);
-    }
-
-    public void empezarTurno(Jugador j, Tablero t, int accion, int fila, int columna, int grados) {
-        boolean turno = true;
-        while (turno) {
-            switch (accion) {
-                case 1:
-                    t.agregarFicha(fila, columna);
+        for (int turno = 1; turno <= cantTurnos; turno++) {
+            for (int jug = 1; jug <= cantJug; jug++) {
+                System.out.println(tablero.toString());
+                salidaEmergencia = movimiento();
+                if (salidaEmergencia) {
+                    this.cantTurnos = 0;
                     break;
-                case 2:
-                    //Conectar 2 puntos y poner aves
-                    break;
-                case 3:
-                    //Extender linea de aves
-                    break;
-                case 4:
-                    t.rotar(fila, columna, grados);
-                    break;
-                case 5:
-                    this.terminarPartida();
-                    break;
+                }
             }
         }
     }
@@ -143,57 +117,62 @@ public class Partida {
 
     }
 
-    public void movimiento() {
-        int[] posicion;
+    public boolean movimiento() {
+        int[] indices;
+        int[] posicion1;
+        int[] posicion2;
         String movimiento;
-        String indicacion1;
-        String indicacion2;
+        String indicacion1 = "";
+        String indicacion2 = "";
+        int rotacion;
         char tipoMovimiento;
+        boolean salidaEmergencia = false;
 
-        movimiento = this.interfaz.ingresarString("movimiento");
-        movimiento = movimiento.toUpperCase();
+        movimiento = this.interfaz.ingresarString("jugada");
         tipoMovimiento = movimiento.charAt(0);
-        indicacion1 = movimiento.substring(2, 4);
-        indicacion2 = movimiento.substring(5);
+        if (tipoMovimiento != 'X') {
+            if (tipoMovimiento == 'P') {
+                indicacion1 = movimiento.substring(2);
+            } else {
+                indices = this.interfaz.getIndicesDeIndicacion(1, movimiento);
+                indicacion1 = movimiento.substring(indices[0], indices[1]);
+                indices = this.interfaz.getIndicesDeIndicacion(2, movimiento);
+                indicacion2 = movimiento.substring(indices[0], indices[1]);
+            }
 
-        switch (tipoMovimiento) {
-            //Rotar
-            case 'R':
-                posicion = traducirPosicion(indicacion1);
-                switch (indicacion2) {
-                    case "90":
-                        this.tablero.rotar(posicion[0], posicion[1], 90);
-                        break;
-                        
-                    case "180":
-                        this.tablero.rotar(posicion[0], posicion[1], 180);
-                        break;
-                        
-                    case "270":
-                        this.tablero.rotar(posicion[0], posicion[1], 270);
-                        break;
-                }
-                
-                break;
-            //Conectar
-            case 'C':
+            switch (tipoMovimiento) {
+                //Rotar
+                case 'R':
+                    posicion1 = traducirPosicion(indicacion1);
+                    rotacion = Integer.parseInt(indicacion2);
 
-                break;
-            //Poner ficha 
-            case 'P':
+                    this.tablero.rotar(posicion1[0], posicion1[1], rotacion);
 
-                break;
-            //Extender 
-            case 'E':
+                    break;
+                //Conectar
+                case 'C':
+                    posicion1 = traducirPosicion(indicacion1);
+                    posicion2 = traducirPosicion(indicacion2);
+                    this.tablero.canConect(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indicacion2);
+                    break;
+                //Poner ficha 
+                case 'P':
+                    posicion1 = traducirPosicion(indicacion1);
+                    if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                        this.tablero.setFicha(posicion1[0], posicion1[1]);
+                    }
+                    break;
+                //Extender 
+                case 'E':
 
-                break;
-            //Salir    
-            case 'X':
-
-                break;
+                    break;
+                //Salir    
+                case 'X':
+                    salidaEmergencia = true;
+                    break;
+            }
         }
-        System.out.println(tipoMovimiento + " " + indicacion1 + " " + indicacion2);
-
+        return salidaEmergencia;
     }
 
     public int[] traducirPosicion(String posicion) {
@@ -201,7 +180,7 @@ public class Partida {
         char fila;
 
         fila = posicion.charAt(0);
-        devolverPosicion[1] = Integer.parseInt(posicion.substring(1));
+        devolverPosicion[1] = Integer.parseInt(posicion.substring(1)) - 1;
 
         switch (fila) {
             case 'A':

@@ -1,17 +1,20 @@
 package obligatorio1p2;
 
-import java.util.*;
-
 public class Tablero {
+
     private Tableta[][] tablero;
 
     public Tablero() {
         this.tablero = new Tableta[10][10];
+        this.tablero[4][4] = new Tableta();
+        this.tablero[4][4].setFicha(new char[]{'R', 'A', 'V', 'M'});
+        this.tablero[4][5] = new Tableta();
+        this.tablero[4][5].setFicha(new char[]{'V', 'M', 'R', 'A'});
     }
-    
+
     public void setFicha(int fila, int col) {
         Tableta tableta = new Tableta();
-        tableta.setFicha();
+        tableta.setFichaRandom();
         this.tablero[fila][col] = tableta;
     }
 
@@ -25,8 +28,8 @@ public class Tablero {
 
     @Override
     public String toString() {
-        String devolverTablero = "";
         Tableta[][] tablero = this.getTablero();
+        String devolverTablero = "";
         int fila = tablero.length;
         int filaAux = fila * 3 + 1;
         int col = tablero[0].length;
@@ -34,15 +37,16 @@ public class Tablero {
 
         String[][] matAux = crearTablero(filaAux, colAux);
         matAux = rellenarTablero(matAux);
-        for (int i = 0; i < filaAux; i++) {
-            for (int j = 0; j < colAux; j++) {
+        matAux = ponerIndiceTablero(matAux);
+        for (int i = 0; i < filaAux + 1; i++) {
+            for (int j = 0; j < colAux + 1; j++) {
                 devolverTablero = devolverTablero + matAux[i][j];
             }
-            if (i < (filaAux - 1)) {
+            if (i < (filaAux)) {
                 devolverTablero = devolverTablero + "\n";
             }
         }
-        
+
         return devolverTablero;
     }
 
@@ -82,13 +86,53 @@ public class Tablero {
         return mat;
     }
 
+    public String[][] ponerIndiceTablero(String[][] mat) {
+        String[][] matAux = new String[mat.length + 1][mat[0].length + 1];
+        int[] indicesCol = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        char[] indicesFilas = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+        int indice = 0;
+        int x = 0;
+
+        for (int i = 0; i < matAux[0].length; i++) {
+            x++;
+            if (x == 3) {
+                matAux[0][i] = Integer.toString(indicesCol[indice]);
+                x = 0;
+                indice++;
+            } else {
+                matAux[0][i] = " ";
+            }
+        }
+
+        x = 0;
+        indice = 0;
+        for (int i = 0; i < matAux.length; i++) {
+            x++;
+            if (x == 3) {
+                matAux[i][0] = Character.toString(indicesFilas[indice]);
+                x = 0;
+                indice++;
+            } else {
+                matAux[i][0] = " ";
+            }
+        }
+
+        for (int i = 1; i < matAux.length; i++) {
+            for (int j = 1; j < matAux[0].length; j++) {
+                matAux[i][j] = mat[i - 1][j - 1];
+            }
+        }
+
+        return matAux;
+    }
+
     public String[][] rellenarTablero(String[][] mat) {
         Tableta[][] fichas = this.getTablero();
         int fila = fichas.length;
         int col = fichas[0].length;
         for (int i = 0; i < fila; i++) {
             for (int j = 0; j < col; j++) {
-                if(fichas[i][j] != null) {
+                if (fichas[i][j] != null) {
                     mat[i * 3 + 1][j * 3 + 1] = fichas[i][j].devolverUnColor(0, 0);
                     mat[i * 3 + 1][j * 3 + 2] = fichas[i][j].devolverUnColor(0, 1);
                     mat[i * 3 + 2][j * 3 + 1] = fichas[i][j].devolverUnColor(1, 0);
@@ -97,7 +141,7 @@ public class Tablero {
                     mat[i * 3 + 1][j * 3 + 1] = " ";
                     mat[i * 3 + 1][j * 3 + 2] = " ";
                     mat[i * 3 + 2][j * 3 + 1] = " ";
-                    mat[i * 3 + 2][j * 3 + 2] = " ";                    
+                    mat[i * 3 + 2][j * 3 + 2] = " ";
                 }
             }
         }
@@ -108,20 +152,16 @@ public class Tablero {
     public void rotar(int fila, int columna, int grados) {
         switch (grados) {
             case 90:
-            this.getTablero()[fila][columna].rotar90();
-            break;
+                this.tablero[fila][columna].rotar90();
+                break;
             case 180:
-            this.getTablero()[fila][columna].rotar180();
-            break;
+                this.tablero[fila][columna].rotar180();
+                break;
             case 270:
-            this.getTablero()[fila][columna].rotar270();
-            break;
+                this.tablero[fila][columna].rotar270();
+                break;
         }
 
-    }
-
-    public void agregarFicha(int fila, int columna) {
-        this.setFicha(fila, columna);
     }
 
     public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color) {
@@ -173,7 +213,7 @@ public class Tablero {
             }
         }
         // Validamos que no hayan aves en el camino
-        if(tieneColor1 && tieneColor2 && alineados && enLinea){
+        if (tieneColor1 && tieneColor2 && alineados && enLinea) {
             for (int i = Math.min(columna1, columna2); i < this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
              for (int k = 0; k < 2; k++) {
                 for (int j = 0; j < 2; j++) {
@@ -341,5 +381,82 @@ public bolean canExtend(int fila, int columna, String color, int direccion) {
 
 public void conectar() {
 
-}
+    }
+
+    public boolean sePuedePonerFicha(int fila, int col) {
+        Tableta[][] tablero = this.getTablero();
+        boolean validador = false;
+
+        if (tablero[fila][col] == null) {
+            if (hayFichaAlLado(fila, col)) {
+                if (!hayCincoFichas(fila, col)) {
+                    validador = true;
+                } else {
+                    System.out.println("Ya hay 5 fichas en esa fila o columna");
+                }
+            } else {
+                System.out.println("No hay ninguna ficha al lado");
+            }
+        } else {
+            System.out.println("Ya hay una ficha en ese lugar");
+        }
+
+        return validador;
+    }
+
+    public boolean hayFichaAlLado(int fila, int col) {
+        Tableta[][] tablero = this.getTablero();
+        boolean validador = false;
+
+        if (fila > 0) {
+            if (tablero[fila - 1][col] != null) {
+                validador = true;
+            }
+        }
+
+        if (fila < 9) {
+            if (tablero[fila + 1][col] != null) {
+                validador = true;
+            }
+        }
+
+        if (col > 0) {
+            if (tablero[fila][col - 1] != null) {
+                validador = true;
+            }
+        }
+
+        if (col < 9) {
+            if (tablero[fila][col + 1] != null) {
+                validador = true;
+            }
+        }
+
+        return validador;
+    }
+
+    public boolean hayCincoFichas(int fila, int col) {
+        Tableta[][] tablero = this.getTablero();
+        boolean validador = false;
+        int contadorFila = 0;
+        int contadorCol = 0;
+
+        for (int i = 0; i < tablero.length; i++) {
+            if (tablero[i][col] != null) {
+                contadorFila++;
+            }
+        }
+
+        for (int i = 0; i < tablero[0].length; i++) {
+            if (tablero[fila][i] != null) {
+                contadorCol++;
+            }
+        }
+
+        if (contadorFila > 4 || contadorCol > 4) {
+            validador = true;
+        }
+
+        return validador;
+    }
 }
