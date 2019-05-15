@@ -136,4 +136,8 @@ public class Tableta {
         String[][] ficha = this.getFicha();
         return ficha[fila][col];
     }
+    
+    public void setUnColor(int fila, int col, String color){
+        this.ficha[fila][col]=color;
+    }
 }

@@ -170,12 +170,6 @@ public class Tablero {
         boolean tieneColor2 = false;
         boolean noHayAves = true;
         boolean enLinea = false;
-        boolean retorno;
-        int filaf1 = 0;
-        int filaf2 = 0;
-        int columnaf1 = -1;
-        int columnaf2 = -1;
-
         // Validamos que esten en la misma fila o columna
         if (fila1 == fila2 || columna1 == columna2) {
             if (fila1 == fila2) {
@@ -194,6 +188,10 @@ public class Tablero {
         }
 
         //validamos que esten los colores en las fichas ingresadas y que los colores esten en linea
+        int filaf1 = 0;
+        int filaf2 = 0;
+        int columnaf1 = -1;
+        int columnaf2 = -1;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
 
@@ -228,15 +226,14 @@ public class Tablero {
                     }
                 }
             }
-            retorno = (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
-        } else {
-            retorno = false;
         }
-        return retorno;
+
+        return (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
 
-    public boolean canExtend(int fila, int columna, String color, int direccion) {
-        //direccion: 1- arriba 2- abajo 3-derecha 4-izquierda
+    public boolean canExtend(int fila, int columna, String color, char direccion) {
+        //direccion: A- arriba B- abajo D-derecha I-izquierda
+
         boolean hayFichas = true;
         boolean hayExtremo = false;
         boolean enLinea = false;
@@ -256,10 +253,11 @@ public class Tablero {
         }
         if (tieneColor) {
             switch (direccion) {
-                case 1:
+                case 'A':
                     for (int i = fila; i > 0; i--) {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
+
                                 if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x")) {
                                     hayExtremo = true;
                                     filaExt = j;
@@ -283,7 +281,7 @@ public class Tablero {
                         }
                     }
                     break;
-                case 2:
+                case 'B':
                     for (int i = fila; i < 10; i++) {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
@@ -311,7 +309,7 @@ public class Tablero {
                         }
                     }
                     break;
-                case 3:
+                case 'D':
                     for (int i = columna; i < 10; i++) {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
@@ -339,7 +337,7 @@ public class Tablero {
                         }
                     }
                     break;
-                case 4:
+                case 'I':
                     for (int i = columna; i > 0; i--) {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
@@ -370,6 +368,38 @@ public class Tablero {
             }
         }
         return (hayFichas && hayExtremo && tieneColor && enLinea);
+    }
+
+    public void conectar(int fila1, int fila2, int columna1, int columna2, String color) {
+        int columnaColor = -1;
+        int filaColor = -1;
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                if (color.equals(this.getFicha(fila1, columna2).devolverUnColor(j, k))) {
+                    filaColor = j;
+                    columnaColor = k;
+                }
+            }
+        }
+        while (canConect(fila1, fila2, columna1, columna2, color)) {
+            int orientacion = 0;
+            if (fila1 == fila2) {
+                orientacion = 1;
+            }
+            if (orientacion == 1) {
+                for (int i = Math.min(columna1, columna2); i < this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        this.getFicha(fila1, i).setUnColor(filaColor, j, color + "x");
+                    }
+                }
+            } else {
+                for (int i = Math.min(fila1, fila2); i < this.getTablero()[Math.max(fila1, fila2)].length - this.getTablero()[Math.min(fila1, fila2)].length; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        this.getFicha(i, columna1).setUnColor(j, columnaColor, color + "x");
+                    }
+                }
+            }
+        }
     }
 
     public boolean sePuedePonerFicha(int fila, int col) {
@@ -448,6 +478,80 @@ public class Tablero {
 
         return validador;
     }
+
+    public void extender(int fila, int columna, String color, char direccion) {
+        while (canExtend(fila, columna, color, direccion)) {
+            int columnaColor = -1;
+            int filaColor = -1;
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    if (color.equals(this.getFicha(fila, columna).devolverUnColor(j, k))) {
+                        filaColor = j;
+                        columnaColor = k;
+                    }
+                }
+            }
+            switch (direccion) {
+                case 'A':
+                    for (int i = fila; i > 0; i--) {
+                        for (int k = 0; k < 2; k++) {
+                            if (color.equals(this.getFicha(i, columna).devolverUnColor(k, columnaColor)) && this.getFicha(i, columna).devolverUnColor(k, columnaColor).contains("x")) {
+                                for (int l = fila; l > i; l--) {
+                                    for (int j = 0; j < 2; j++) {
+                                        this.getFicha(l, columna).setUnColor(filaColor, j, color + "x");
+                                    }
+                                }
+                                i = 0;
+                            }
+                        }
+                    }
+                    break;
+                case 'B':
+                    for (int i = fila; i < 10; i++) {
+                        for (int k = 0; k < 2; k++) {
+                            if (color.equals(this.getFicha(i, columna).devolverUnColor(k,filaColor)) && this.getFicha(i, columna).devolverUnColor(k,filaColor).contains("x")) {
+                                for (int l = fila; l < i; l++) {
+                                    for (int j = 0; j < 2; j++) {
+                                        this.getFicha(l, columna).setUnColor(filaColor, j, color + "x");
+                                    }
+                                }
+                                i = 0;
+                            }
+                        }
+                    }
+                    break;
+                case 'D':
+                    for (int i = columna; i < 0; i++) {
+                        for (int k = 0; k < 2; k++) {
+                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila,i).devolverUnColor(filaColor, k).contains("x")) {
+                                for (int l = fila; l < i; l++) {
+                                    for (int j = 0; j < 2; j++) {
+                                        this.getFicha(fila, l).setUnColor(j, columnaColor, color + "x");
+                                    }
+                                }
+                                i = 0;
+                            }
+                        }
+                    }
+                    break;
+                case 'I':
+                    for (int i = columna; i > 10; i--) {
+                        for (int k = 0; k < 2; k++) {
+                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila,i).devolverUnColor(filaColor, k).contains("x")) {
+                                for (int l = fila; l > i; l--) {
+                                    for (int j = 0; j < 2; j++) {
+                                        this.getFicha(fila, l).setUnColor(j, columnaColor, color + "x");
+                                    }
+                                }
+                                i = 0;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+}
 
 //    public int[] coordenadasTablero5por5() {
 //        int[] coordenadas = new int({-1, -1, -1, -1});
