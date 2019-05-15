@@ -57,6 +57,7 @@ public class Partida {
     public void setTablero() {
         this.tablero = new Tablero();
     }
+
     public int getCantJug() {
         return this.cantJug;
     }
@@ -105,7 +106,7 @@ public class Partida {
             for (int jug = 1; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = movimiento();
-                if(salidaEmergencia) {
+                if (salidaEmergencia) {
                     this.cantTurnos = 0;
                     break;
                 }
@@ -118,19 +119,26 @@ public class Partida {
     }
 
     public boolean movimiento() {
+        int[] indices;
         int[] posicion1;
         int[] posicion2;
         String movimiento;
-        String indicacion1;
-        String indicacion2;
+        String indicacion1 = "";
+        String indicacion2 = "";
         char tipoMovimiento;
         boolean salidaEmergencia = false;
 
-        movimiento = this.interfaz.ingresarString("movimiento");
-        movimiento = movimiento.toUpperCase();
+        movimiento = this.interfaz.ingresarString("jugada");
         tipoMovimiento = movimiento.charAt(0);
-        indicacion1 = movimiento.substring(2, 4);
-        indicacion2 = movimiento.substring(5);
+        if (tipoMovimiento != 'X') {
+            indices = this.interfaz.getIndicesDeIndicacion(1, movimiento);
+            System.out.println("inicio" + indices[0] + " final" + indices[1] + " total" + movimiento.length());
+            indicacion1 = movimiento.substring(indices[0], indices[1]);
+            if (tipoMovimiento != 'P') {
+                indices = this.interfaz.getIndicesDeIndicacion(2, movimiento);
+                indicacion2 = movimiento.substring(indices[0], indices[1]);
+            }
+        }
 
         switch (tipoMovimiento) {
             //Rotar
@@ -159,8 +167,9 @@ public class Partida {
                 break;
             //Poner ficha 
             case 'P':
+                System.out.println("flag 1");
                 posicion1 = traducirPosicion(indicacion1);
-                if(this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
                     this.tablero.setFicha(posicion1[0], posicion1[1]);
                 }
                 break;
@@ -173,7 +182,7 @@ public class Partida {
                 salidaEmergencia = true;
                 break;
         }
-        
+
         return salidaEmergencia;
     }
 
