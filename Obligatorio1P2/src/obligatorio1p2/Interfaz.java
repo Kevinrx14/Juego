@@ -173,7 +173,7 @@ public class Interfaz {
                     validador = true;
                 } else {
                     System.out.println("La jugada no fue ingresada correctamente");
-                    System.out.println("Para salir solamente ingrese X");
+                    System.out.println("Para terminar el juego solamente ingrese X");
                 }
                 break;
         }
@@ -364,12 +364,15 @@ public class Interfaz {
         menuConfigTermTemplate();
         opcSel = ingresarInt("configTerm");
         switch (opcSel) {
+            //Completar tablero
             case 1:
                 this.aves.setConfiguracion(4, 1);
                 break;
+            //Termianr aves
             case 2:
                 this.aves.setConfiguracion(4, 2);
                 break;
+            //Cantidad de turnos
             case 3:
                 this.aves.setConfiguracion(4, 3);
                 System.out.println("Ingrese la cantidad de turnos a definir");

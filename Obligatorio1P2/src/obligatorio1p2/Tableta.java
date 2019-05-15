@@ -69,7 +69,6 @@ public class Tableta {
                     }
                 } while (validador == false);
                 fichaAux[i][j] = num;
-                System.out.println(indice);
                 switch (fichaAux[i][j]) {
                     case 1:
                         colores[indice] = 'R'; //Color rojo
