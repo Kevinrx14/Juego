@@ -6,10 +6,21 @@ public class Tablero {
 
     public Tablero() {
         this.tablero = new Tableta[10][10];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 4; j++) {
+                this.tablero[i][j] = new Tableta();
+                this.tablero[i][j].setFicha(new char[]{'V', 'M', 'R', 'A'});
+            }
+        }
+//        this.tablero[1][4] = new Tableta();
+//        this.tablero[1][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[2][4] = new Tableta();
+        this.tablero[2][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[3][4] = new Tableta();
+        this.tablero[3][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[4][4] = new Tableta();
-        this.tablero[4][4].setFicha(new char[]{'R', 'A', 'V', 'M'});
-        this.tablero[4][5] = new Tableta();
-        this.tablero[4][5].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[4][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+
     }
 
     public void setFicha(int fila, int col) {
@@ -509,7 +520,7 @@ public class Tablero {
                 case 'B':
                     for (int i = fila; i < 10; i++) {
                         for (int k = 0; k < 2; k++) {
-                            if (color.equals(this.getFicha(i, columna).devolverUnColor(k,filaColor)) && this.getFicha(i, columna).devolverUnColor(k,filaColor).contains("x")) {
+                            if (color.equals(this.getFicha(i, columna).devolverUnColor(k, filaColor)) && this.getFicha(i, columna).devolverUnColor(k, filaColor).contains("x")) {
                                 for (int l = fila; l < i; l++) {
                                     for (int j = 0; j < 2; j++) {
                                         this.getFicha(l, columna).setUnColor(filaColor, j, color + "x");
@@ -523,7 +534,7 @@ public class Tablero {
                 case 'D':
                     for (int i = columna; i < 0; i++) {
                         for (int k = 0; k < 2; k++) {
-                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila,i).devolverUnColor(filaColor, k).contains("x")) {
+                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila, i).devolverUnColor(filaColor, k).contains("x")) {
                                 for (int l = fila; l < i; l++) {
                                     for (int j = 0; j < 2; j++) {
                                         this.getFicha(fila, l).setUnColor(j, columnaColor, color + "x");
@@ -537,7 +548,7 @@ public class Tablero {
                 case 'I':
                     for (int i = columna; i > 10; i--) {
                         for (int k = 0; k < 2; k++) {
-                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila,i).devolverUnColor(filaColor, k).contains("x")) {
+                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila, i).devolverUnColor(filaColor, k).contains("x")) {
                                 for (int l = fila; l > i; l--) {
                                     for (int j = 0; j < 2; j++) {
                                         this.getFicha(fila, l).setUnColor(j, columnaColor, color + "x");
@@ -551,28 +562,93 @@ public class Tablero {
             }
         }
     }
-}
 
-//    public int[] coordenadasTablero5por5() {
-//        int[] coordenadas = new int({-1, -1, -1, -1});
-//        Tableta[][] tablero = getTablero();
-//        int contadorCol = 0;
-//        int contadorFila = 0;
-//        int indice = 0;
-//
-//        for (int i = 0; i < tablero.length; i++) {
-//            for (int j = 0; j < tablero[0].length; j++) {
-//                if (tablero[i][j] != null) {
-//                    contadorCol++;
-//                }
-//            }
-//            if ()
-//            if (contadorCol == 5) {
-//                
-//
-//            }
-//        }
-//
-//        return coordenadas;
-//    }
+    public int[] coordTablero5por5(String posicion) {
+        int[] coordenadas = new int[]{-1, -1};
+        Tableta[][] tablero = getTablero();
+        int inicio = 0;
+        int fin = 0;
+        int contador = 0;
+        boolean noEstanTodasLasCoordenadas = false;
+
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero[0].length; j++) {
+                if (posicion.equals("filas")) {
+                    if (tablero[j][i] != null) {
+                        contador++;
+                        if (contador == 1) {
+                            inicio = j;
+                        }
+                        if (contador == 5) {
+                            fin = j;
+                        }
+                    }
+                } else {
+                    if (posicion.equals("columnas")) {
+                        if (tablero[i][j] != null) {
+                            contador++;
+                            if (contador == 0) {
+                                inicio = j;
+                            }
+                            if (contador == 5) {
+                                fin = j;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (contador == 5) {
+                if (coordenadas[0] == -1 && coordenadas[1] == -1) {
+                    coordenadas[0] = inicio;
+                    coordenadas[1] = fin;
+                }
+            }
+            contador = 0;
+        }
+
+        if (coordenadas[0] == -1 || coordenadas[1] == -1) {
+            noEstanTodasLasCoordenadas = true;
+        }
+
+        if (noEstanTodasLasCoordenadas) {
+            coordenadas[0] = 0;
+            coordenadas[1] = 0;
+        }
+
+        return coordenadas;
+    }
+
+    public boolean validarSiPerteneceA5por5(int[] coordenadas) {
+        Tableta[][] tablero = getTablero();
+        boolean validador = false;
+
+        return validador;
+    }
+
+    public boolean validarSiTablero5por5EstaLleno(int[] coordenadasFilas, int[] coordenadasCol) {
+        Tableta[][] tablero = getTablero();
+        boolean validador = true;
+
+        if (coordenadasFilas[0] == coordenadasFilas[1]) {
+            validador = false;
+        }
+
+        if (coordenadasCol[0] == coordenadasCol[1]) {
+            validador = false;
+        }
+
+        if (validador) {
+            for (int i = coordenadasFilas[0]; i <= coordenadasFilas[1]; i++) {
+                for (int j = coordenadasCol[0]; j <= coordenadasCol[1]; j++) {
+                    if (tablero[i][j] == null) {
+                        validador = false;
+                    }
+
+                }
+            }
+        }
+
+        return validador;
+    }
 }

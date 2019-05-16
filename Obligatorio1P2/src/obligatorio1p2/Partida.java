@@ -121,6 +121,9 @@ public class Partida {
             for (int jug = 1; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = movimiento();
+                int[] aux = tablero.coordTablero5por5("filas");
+                int[] aux2 = tablero.coordTablero5por5("columnas");
+                System.out.println(tablero.validarSiTablero5por5EstaLleno(aux, aux2));
                 if (salidaEmergencia) {
                     turno = this.cantTurnos + 1;
                     jug = this.cantJug + 1;
