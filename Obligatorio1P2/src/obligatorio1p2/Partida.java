@@ -191,7 +191,7 @@ public class Partida {
                 case 'C':
                     posicion1 = traducirPosicion(indicacion1);
                     posicion2 = traducirPosicion(indicacion2);
-                    this.tablero.canConect(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indicacion2);
+                    this.tablero.conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], ("\u001B[44m" + " " + "\033[0m"));
                     running = false;
                     break;
                 //Poner ficha 
