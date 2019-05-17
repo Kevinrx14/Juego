@@ -19,7 +19,23 @@ public class Tableta {
         
         return validador;
     }
-    
+    public void dibujarAve(int fila, int columna, String color){
+        switch (color){
+            case ("\u001B[41m" + " " + "\033[0m"):
+                this.ficha[fila][columna]="\u001B[41m" + "x" + "\033[0m";
+                break;
+            case ("\u001B[44m" + " " + "\033[0m"):
+                this.ficha[fila][columna]="\u001B[44m" + "x" + "\033[0m";
+                break;
+            case ("\u001B[43m" + " " + "\033[0m"):
+                this.ficha[fila][columna]="\u001B[43m" + "x" + "\033[0m";
+                break;
+            case ("\u001B[42m" + " " + "\033[0m"):
+                this.ficha[fila][columna]="\u001B[42m" + "x" + "\033[0m";
+                break;
+        }        
+      
+    }
     public void setFicha(char colores[]) {
         int x = 0;
         for (int i = 0; i < this.ficha.length; i++) {
