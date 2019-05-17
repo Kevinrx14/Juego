@@ -10,7 +10,6 @@ public class Tablero {
         this.tablero[4][4].setFicha(new char[]{'R', 'A', 'V', 'M'});
         this.tablero[4][5] = new Tableta();
         this.tablero[4][5].setFicha(new char[]{'V', 'M', 'R', 'A'});
-
     }
 
     public void setFicha(int fila, int col) {
@@ -174,13 +173,13 @@ public class Tablero {
         // Validamos que esten en la misma fila o columna
         if (fila1 == fila2 || columna1 == columna2) {
             if (fila1 == fila2) {
-                for (int i = Math.min(columna1, columna2); i < this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
+                for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
                     if (this.getTablero()[fila1][i] == null) {
                         alineados = false;
                     }
                 }
             } else {
-                for (int i = Math.min(fila1, fila2); i < this.getTablero()[Math.max(fila1, fila2)].length - this.getTablero()[Math.min(fila1, fila2)].length; i++) {
+                for (int i = Math.min(fila1, fila2); i <=Math.max(fila1, fila2); i++) {
                     if (this.getTablero()[i][columna1] == null) {
                         alineados = false;
                     }
@@ -216,7 +215,7 @@ public class Tablero {
         }
         // Validamos que no hayan aves en el camino
         if (tieneColor1 && tieneColor2 && alineados && enLinea) {
-            for (int i = Math.min(columna1, columna2); i < this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
+            for (int i = Math.min(columna1, columna2); i < Math.max(columna1, columna2); i++) {
                 for (int k = 0; k < 2; k++) {
                     for (int j = 0; j < 2; j++) {
                         if (fila1 == fila2) {
@@ -372,37 +371,35 @@ public class Tablero {
         return (hayFichas && hayExtremo && tieneColor && enLinea);
     }
 
-    public void conectar(int fila1, int fila2, int columna1, int columna2, String color) {
+    public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
         int columnaColor = -1;
         int filaColor = -1;
-        if (canConect(fila1, fila2, columna1, columna2, color)) {
+        if (canConect(fila1, columna1, fila2, columna2, color)) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
-                    System.out.println("columna "+columna1+" fila "+fila1+ this.getFicha(fila1, columna1));
+   
                     if (color.equals(this.getFicha(fila1, columna1).devolverUnColor(j, k))) {
                         filaColor = j;
                         columnaColor = k;
-                        System.out.println(this.getFicha(fila1, columna1).devolverUnColor(j, k));
+                       
                     }
                 }
-                System.out.println("Hola" + j);
             }
-            System.out.println("paso 1");
             int orientacion = 0;
             if (fila1 == fila2) {
                 orientacion = 1;
             }
-            System.out.println("paso 2");
+            System.out.println("orientacion "+orientacion);
             if (orientacion == 1) {
-                for (int i = Math.min(columna1, columna2); i < this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
+                for (int i = Math.min(columna1, columna2); i <= this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
                     for (int j = 0; j < 2; j++) {
-                        this.getFicha(fila1, i).setUnColor(filaColor, j, color + "x");
+                        this.getFicha(fila1, i).dibujarAve(filaColor, j, color);
                     }
                 }
-            } else {
-                for (int i = Math.min(fila1, fila2); i < this.getTablero()[Math.max(fila1, fila2)].length - this.getTablero()[Math.min(fila1, fila2)].length; i++) {
+            } else{
+                for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
                     for (int j = 0; j < 2; j++) {
-                        this.getFicha(i, columna1).setUnColor(j, columnaColor, color + "x");
+                        this.getFicha(i, columna1).dibujarAve(j, columnaColor, color); 
                     }
                 }
             }
