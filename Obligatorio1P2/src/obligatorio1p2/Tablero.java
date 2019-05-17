@@ -6,6 +6,18 @@ public class Tablero {
 
     public Tablero() {
         this.tablero = new Tableta[10][10];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 4; j++) {
+                this.tablero[i][j] = new Tableta();
+                this.tablero[i][j].setFicha(new char[]{'V', 'M', 'R', 'A'});
+            }
+        }
+//        this.tablero[1][4] = new Tableta();
+//        this.tablero[1][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[2][4] = new Tableta();
+        this.tablero[2][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[3][4] = new Tableta();
+        this.tablero[3][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[4][4] = new Tableta();
         this.tablero[4][4].setFicha(new char[]{'R', 'A', 'V', 'M'});
         this.tablero[4][5] = new Tableta();
@@ -412,12 +424,18 @@ public class Tablero {
 
     public boolean sePuedePonerFicha(int fila, int col) {
         Tableta[][] tablero = this.getTablero();
+        int[] coordFila = this.getCoordTablero5por5("filas");
+        int[] coordCol = this.getCoordTablero5por5("columnas");
         boolean validador = false;
 
         if (tablero[fila][col] == null) {
-            if (hayFichaAlLado(fila, col)) {
-                if (!hayCincoFichas(fila, col)) {
-                    validador = true;
+            if (this.hayFichaAlLado(fila, col)) {
+                if (!this.hayCincoFichas(fila, col)) {
+                    if (this.validarSiPerteneceA5por5(coordFila, coordCol, new int[]{fila, col})) {
+                        validador = true;
+                    } else {
+                        System.out.println("No se encuentra dentro del tablero 5x5");
+                    }
                 } else {
                     System.out.println("Ya hay 5 fichas en esa fila o columna");
                 }
@@ -559,28 +577,107 @@ public class Tablero {
             }
         }
     }
+
+    public int[] getCoordTablero5por5(String posicion) {
+        int[] coordenadas = new int[]{-1, -1};
+        Tableta[][] tablero = getTablero();
+        int inicio = 0;
+        int fin = 0;
+        int contador = 0;
+        boolean noEstanTodasLasCoordenadas = false;
+
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero[0].length; j++) {
+                if (posicion.equals("filas")) {
+                    if (tablero[j][i] != null) {
+                        contador++;
+                        if (contador == 1) {
+                            inicio = j;
+                        }
+                        if (contador == 5) {
+                            fin = j;
+                        }
+                    }
+                } else {
+                    if (posicion.equals("columnas")) {
+                        if (tablero[i][j] != null) {
+                            contador++;
+                            if (contador == 0) {
+                                inicio = j;
+                            }
+                            if (contador == 5) {
+                                fin = j;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (contador == 5) {
+                if (coordenadas[0] == -1 && coordenadas[1] == -1) {
+                    coordenadas[0] = inicio;
+                    coordenadas[1] = fin;
+                }
+            }
+            contador = 0;
+        }
+
+        if (coordenadas[0] == -1 || coordenadas[1] == -1) {
+            noEstanTodasLasCoordenadas = true;
+        }
+
+        if (noEstanTodasLasCoordenadas) {
+            coordenadas[0] = 0;
+            coordenadas[1] = 0;
+        }
+
+        return coordenadas;
+    }
+
+    public boolean validarSiPerteneceA5por5(int[] coordFila, int[] coordCol, int[] coordFicha) {
+        boolean validador = true;
+
+        /* 
+        Chequeo si la fila en la que esta la ficha no se encuentra entre
+        la fila que comienza el tablero de 5x5 y la fila en la que termina.
+         */
+        if (coordFicha[0] < coordFila[0] || coordFicha[0] > coordFila[1]) {
+            validador = false;
+        }
+
+        /*
+        Hago el mismo chequeo que arriba pero para las columnas
+         */
+        if (coordFicha[1] < coordCol[0] || coordFicha[1] > coordCol[1]) {
+            validador = false;
+        }
+
+        return validador;
+    }
+
+    public boolean validarSiTablero5por5EstaLleno(int[] coordenadasFilas, int[] coordenadasCol) {
+        Tableta[][] tablero = getTablero();
+        boolean validador = true;
+
+        if (coordenadasFilas[0] == coordenadasFilas[1]) {
+            validador = false;
+        }
+
+        if (coordenadasCol[0] == coordenadasCol[1]) {
+            validador = false;
+        }
+
+        if (validador) {
+            for (int i = coordenadasFilas[0]; i <= coordenadasFilas[1]; i++) {
+                for (int j = coordenadasCol[0]; j <= coordenadasCol[1]; j++) {
+                    if (tablero[i][j] == null) {
+                        validador = false;
+                    }
+
+                }
+            }
+        }
+
+        return validador;
+    }
 }
-
-//    public int[] coordenadasTablero5por5() {
-//        int[] coordenadas = new int({-1, -1, -1, -1});
-//        Tableta[][] tablero = getTablero();
-//        int contadorCol = 0;
-//        int contadorFila = 0;
-//        int indice = 0;
-//
-//        for (int i = 0; i < tablero.length; i++) {
-//            for (int j = 0; j < tablero[0].length; j++) {
-//                if (tablero[i][j] != null) {
-//                    contadorCol++;
-//                }
-//            }
-//            if ()
-//            if (contadorCol == 5) {
-//                
-//
-//            }
-//        }
-//
-//        return coordenadas;
-//    }
-
