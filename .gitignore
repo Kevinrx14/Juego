@@ -5,3 +5,8 @@ Obligatorio1P2/nbproject/private/private.xml
 *.properties
 *.class
 Obligatorio1P2/build/classes/obligatorio1p2/Tablero.class
+*.class
+*.class
+Obligatorio1P2/build/classes/obligatorio1p2/Tablero.class
+Obligatorio1P2/build/classes/obligatorio1p2/Partida.class
+Obligatorio1P2/build/classes/obligatorio1p2/Interfaz.class
