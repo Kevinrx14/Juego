@@ -374,22 +374,19 @@ public class Tablero {
     public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
         int columnaColor = -1;
         int filaColor = -1;
+        int orientacion = 0;
         if (canConect(fila1, columna1, fila2, columna2, color)) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
-   
                     if (color.equals(this.getFicha(fila1, columna1).devolverUnColor(j, k))) {
                         filaColor = j;
                         columnaColor = k;
-                       
                     }
                 }
             }
-            int orientacion = 0;
             if (fila1 == fila2) {
                 orientacion = 1;
             }
-            System.out.println("orientacion "+orientacion);
             if (orientacion == 1) {
                 for (int i = Math.min(columna1, columna2); i <= this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
                     for (int j = 0; j < 2; j++) {
@@ -403,7 +400,6 @@ public class Tablero {
                     }
                 }
             }
-            System.out.println("No se que onda");
         }
     }
 
