@@ -99,62 +99,80 @@ public class Partida {
     }
 
     public void iniciar() {
-        switch (getTipoTerm()) {
+        switch (this.getTipoTerm()) {
             case 1:
-                partidaConTerminacionTablero();
+                this.partidaConTerminacionTablero();
                 break;
 
             case 2:
-                partidaConTerminacionAves();
+                this.partidaConTerminacionAves();
                 break;
 
             case 3:
-                partidaConTerminacionTurnos();
+                this.partidaConTerminacionTurnos();
                 break;
         }
     }
 
     public void partidaConTerminacionTurnos() {
+        Tablero tablero = this.getTablero();
         boolean salidaEmergencia = false;
 
         for (int turno = 1; turno <= cantTurnos; turno++) {
             for (int jug = 1; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = movimiento();
-                int[] aux = tablero.coordTablero5por5("filas");
-                int[] aux2 = tablero.coordTablero5por5("columnas");
-                System.out.println(tablero.validarSiTablero5por5EstaLleno(aux, aux2));
+                salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
-                    turno = this.cantTurnos + 1;
-                    jug = this.cantJug + 1;
+                    turno = this.getCantTurnos() + 1;
+                    jug = this.getCantJug() + 1;
                 }
             }
         }
     }
 
     public void partidaConTerminacionAves() {
-        ArrayList<Jugador> jugadores = getTodosJug();
+        ArrayList<Jugador> jugadores = this.getTodosJug();
+        Tablero tablero = this.getTablero();
         boolean salidaEmergencia = false;
         boolean running = true;
 
         do {
             for (int jug = 1; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = movimiento();
+                salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
                     running = false;
-                    jug = this.cantJug + 1;
+                    jug = this.getCantJug() + 1;
                 }
                 if (jugadores.get(jug).getCantAves() == 0) {
                     running = false;
-                    jug = this.cantJug + 1;
+                    jug = this.getCantJug() + 1;
                 }
             }
         } while (running);
     }
 
     public void partidaConTerminacionTablero() {
+        Tablero tablero = this.getTablero();
+        int[] coordFilas = tablero.getCoordTablero5por5("filas");
+        int[] coordCol = tablero.getCoordTablero5por5("columnas");
+        boolean salidaEmergencia = false;
+        boolean running = true;
 
+        do {
+            for (int jug = 1; jug <= cantJug; jug++) {
+                System.out.println(tablero.toString());
+                salidaEmergencia = this.movimiento();
+                if (salidaEmergencia) {
+                    running = false;
+                    jug = this.getCantJug() + 1;
+                }
+                if (tablero.validarSiTablero5por5EstaLleno(coordFilas, coordCol)) {
+                    running = false;
+                    jug = this.getCantJug() + 1;
+                }
+            }
+        } while (running);
     }
 
     public boolean movimiento() {

@@ -415,12 +415,18 @@ public class Tablero {
 
     public boolean sePuedePonerFicha(int fila, int col) {
         Tableta[][] tablero = this.getTablero();
+        int[] coordFila = this.getCoordTablero5por5("filas");
+        int[] coordCol = this.getCoordTablero5por5("columnas");
         boolean validador = false;
 
         if (tablero[fila][col] == null) {
-            if (hayFichaAlLado(fila, col)) {
-                if (!hayCincoFichas(fila, col)) {
-                    validador = true;
+            if (this.hayFichaAlLado(fila, col)) {
+                if (!this.hayCincoFichas(fila, col)) {
+                    if (this.validarSiPerteneceA5por5(coordFila, coordCol, new int[]{fila, col})) {
+                        validador = true;
+                    } else {
+                        System.out.println("No se encuentra dentro del tablero 5x5");
+                    }
                 } else {
                     System.out.println("Ya hay 5 fichas en esa fila o columna");
                 }
@@ -563,7 +569,7 @@ public class Tablero {
         }
     }
 
-    public int[] coordTablero5por5(String posicion) {
+    public int[] getCoordTablero5por5(String posicion) {
         int[] coordenadas = new int[]{-1, -1};
         Tableta[][] tablero = getTablero();
         int inicio = 0;
@@ -619,9 +625,23 @@ public class Tablero {
         return coordenadas;
     }
 
-    public boolean validarSiPerteneceA5por5(int[] coordenadas) {
-        Tableta[][] tablero = getTablero();
-        boolean validador = false;
+    public boolean validarSiPerteneceA5por5(int[] coordFila, int[] coordCol, int[] coordFicha) {
+        boolean validador = true;
+
+        /* 
+        Chequeo si la fila en la que esta la ficha no se encuentra entre
+        la fila que comienza el tablero de 5x5 y la fila en la que termina.
+         */
+        if (coordFicha[0] < coordFila[0] || coordFicha[0] > coordFila[1]) {
+            validador = false;
+        }
+
+        /*
+        Hago el mismo chequeo que arriba pero para las columnas
+         */
+        if (coordFicha[1] < coordCol[0] || coordFicha[1] > coordCol[1]) {
+            validador = false;
+        }
 
         return validador;
     }

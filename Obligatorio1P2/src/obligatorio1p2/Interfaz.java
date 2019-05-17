@@ -4,7 +4,19 @@ import java.util.*;
 
 public class Interfaz {
 
-    private Aves aves = new Aves();
+    private Aves aves;
+
+    public Interfaz() {
+        this.setAves();
+    }
+
+    public void setAves() {
+        this.aves = new Aves();
+    }
+
+    public Aves getAves() {
+        return this.aves;
+    }
 
 //  Metodos de validacion de ingreso de datos 
     public int ingresarInt(String tipoDato) {
@@ -16,7 +28,7 @@ public class Interfaz {
             try {
                 valor = input.nextInt();
                 input.nextLine();
-                validador = validarInt(valor, tipoDato);
+                validador = this.validarInt(valor, tipoDato);
             } catch (Exception e) {
                 System.out.println("Verifique el valor ingresado");
                 input.nextLine();
@@ -91,7 +103,7 @@ public class Interfaz {
                 if (tipoString.equals("jugada")) {
                     dato = dato.toUpperCase();
                 }
-                if (validarString(dato, tipoString)) {
+                if (this.validarString(dato, tipoString)) {
                     validador = true;
                 }
             }
@@ -106,7 +118,7 @@ public class Interfaz {
         switch (tipoString) {
             case "jugada":
                 movimiento = dato.charAt(0);
-                if (validarJugadaIngresada(dato, movimiento)) {
+                if (this.validarJugadaIngresada(dato, movimiento)) {
                     validador = true;
                 } else {
                     System.out.println("La jugada ingresada no es correcta");
@@ -127,12 +139,12 @@ public class Interfaz {
             //Rotar
             case 'R':
                 if (jugada.length() > 6 && jugada.length() < 10) {
-                    indices = getIndicesDeIndicacion(1, jugada);
+                    indices = this.getIndicesDeIndicacion(1, jugada);
                     indicacion1 = jugada.substring(indices[0], indices[1]);
-                    indices = getIndicesDeIndicacion(2, jugada);
+                    indices = this.getIndicesDeIndicacion(2, jugada);
                     indicacion2 = jugada.substring(indices[0], indices[1]);
-                    if (validadorDePosicion(indicacion1)) {
-                        if (validadorDeRotacion(indicacion2)) {
+                    if (this.validadorDePosicion(indicacion1)) {
+                        if (this.validadorDeRotacion(indicacion2)) {
                             validador = true;
                         }
                     } else {
@@ -143,12 +155,12 @@ public class Interfaz {
             //Conectar
             case 'C':
                 if (jugada.length() > 6 && jugada.length() < 10) {
-                    indices = getIndicesDeIndicacion(1, jugada);
+                    indices = this.getIndicesDeIndicacion(1, jugada);
                     indicacion1 = jugada.substring(indices[0], indices[1]);
-                    indices = getIndicesDeIndicacion(2, jugada);
+                    indices = this.getIndicesDeIndicacion(2, jugada);
                     indicacion2 = jugada.substring(indices[0], indices[1]);
-                    if (validadorDePosicion(indicacion1)
-                            && validadorDePosicion(indicacion2)) {
+                    if (this.validadorDePosicion(indicacion1)
+                            && this.validadorDePosicion(indicacion2)) {
                         validador = true;
                     } else {
                         System.out.println("Una posicion no es correcta");
@@ -158,7 +170,7 @@ public class Interfaz {
             //Poner ficha 
             case 'P':
                 if (jugada.length() > 3 && jugada.length() < 6) {
-                    if (validadorDePosicion(jugada.substring(2))) {
+                    if (this.validadorDePosicion(jugada.substring(2))) {
                         validador = true;
                     }
                 }
@@ -279,11 +291,11 @@ public class Interfaz {
         int edad;
 
         System.out.println("Ingresa tu nombre");
-        nombre = ingresarString("nombreJug");
+        nombre = this.ingresarString("nombreJug");
         System.out.println("Ingresa tu Edad");
-        edad = ingresarInt("edadJug");
+        edad = this.ingresarInt("edadJug");
         System.out.println("Escribe tu Alias");
-        alias = ingresarString("aliasJug");
+        alias = this.ingresarString("aliasJug");
 
         this.aves.setJugador(nombre, edad, alias);
         System.out.println("Bienvenido a Aves " + alias);
@@ -314,9 +326,9 @@ public class Interfaz {
         int cantJug;
 
         System.out.println("Ingresa la cantidad de jugadores");
-        cantJug = ingresarInt("cantJug");
+        cantJug = this.ingresarInt("cantJug");
 
-        this.aves.setConfiguracion(0, cantJug);
+        this.getAves().setConfiguracion(0, cantJug);
     }
 
     public void configAves() {
@@ -325,7 +337,7 @@ public class Interfaz {
         System.out.println("Ingresa la cantidad de aves por jugador");
         cantAves = ingresarInt("cantAves");
 
-        this.aves.setConfiguracion(1, cantAves);
+        this.getAves().setConfiguracion(1, cantAves);
     }
 
     public void configRot() {
@@ -334,7 +346,7 @@ public class Interfaz {
         System.out.println("Ingresa la cantidad de rotaciones por jugador");
         cantRot = ingresarInt("cantRot");
 
-        this.aves.setConfiguracion(2, cantRot);
+        this.getAves().setConfiguracion(2, cantRot);
     }
 
     public void configTabs() {
@@ -343,7 +355,7 @@ public class Interfaz {
         System.out.println("Ingresa la cantidad de tabletas por Jugador");
         cantTab = ingresarInt("cantTabs");
 
-        this.aves.setConfiguracion(3, cantTab);
+        this.getAves().setConfiguracion(3, cantTab);
     }
 
     public void menuConfigTermTemplate() {
@@ -361,23 +373,23 @@ public class Interfaz {
         int opcSel;
         int cantTurn;
 
-        menuConfigTermTemplate();
+        this.menuConfigTermTemplate();
         opcSel = ingresarInt("configTerm");
         switch (opcSel) {
             //Completar tablero
             case 1:
-                this.aves.setConfiguracion(4, 1);
+                this.getAves().setConfiguracion(4, 1);
                 break;
             //Termianr aves
             case 2:
-                this.aves.setConfiguracion(4, 2);
+                this.getAves().setConfiguracion(4, 2);
                 break;
             //Cantidad de turnos
             case 3:
-                this.aves.setConfiguracion(4, 3);
+                this.getAves().setConfiguracion(4, 3);
                 System.out.println("Ingrese la cantidad de turnos a definir");
-                cantTurn = ingresarInt("cantTurn");
-                this.aves.setConfiguracion(5, cantTurn);
+                cantTurn = this.ingresarInt("cantTurn");
+                this.getAves().setConfiguracion(5, cantTurn);
                 System.out.println("La partida tendra " + cantTurn + " turnos");
                 break;
         }
@@ -386,31 +398,32 @@ public class Interfaz {
     }
 
     public void start() {
+        Aves aves = this.getAves();
         int selPrincipal;
         boolean running = true;
 
         do {
             this.menuPrincipalTemplate();
-            selPrincipal = ingresarInt("menuPrincipal");
+            selPrincipal = this.ingresarInt("menuPrincipal");
             switch (selPrincipal) {
                 //Registar jugador
                 case 1:
-                    registrarJugador();
+                    this.registrarJugador();
                     break;
 
                 //Menu configuracion
                 case 2:
-                    menuConfig();
+                    this.menuConfig();
                     break;
 
                 //Jugar
                 case 3:
-                    this.aves.jugar();
+                    aves.jugar();
                     break;
 
                 //Ranking de jugadores
                 case 4:
-                    this.aves.getRanking();
+                    aves.getRanking();
                     break;
 
                 //Salir
@@ -426,24 +439,24 @@ public class Interfaz {
         int opcSel;
         boolean running = true;
 
-        menuConfigTemplate();
-        opcSel = ingresarInt("menuConfig");
         do {
+            menuConfigTemplate();
+            opcSel = ingresarInt("menuConfig");
             switch (opcSel) {
                 case 1:
-                    configCantJugadores();
+                    this.configCantJugadores();
                     break;
                 case 2:
-                    configAves();
+                    this.configAves();
                     break;
                 case 3:
-                    configRot();
+                    this.configRot();
                     break;
                 case 4:
-                    configTabs();
+                    this.configTabs();
                     break;
                 case 5:
-                    configTerm();
+                    this.configTerm();
                     break;
                 case 6:
                     running = false;
