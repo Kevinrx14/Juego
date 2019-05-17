@@ -5,7 +5,7 @@ public class Tablero {
     private Tableta[][] tablero;
 
     public Tablero() {
-        this.tablero = new Tableta[10][10];
+        this.setTablero();
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 4; j++) {
                 this.tablero[i][j] = new Tableta();
@@ -30,12 +30,16 @@ public class Tablero {
         this.tablero[fila][col] = tableta;
     }
 
-    public Tableta[][] getTablero() {
-        return this.tablero;
-    }
-
     public Tableta getFicha(int fila, int col) {
         return this.tablero[fila][col];
+    }
+    
+    public void setTablero() {
+        this.tablero = new Tableta[10][10];
+    }
+    
+    public Tableta[][] getTablero() {
+        return this.tablero;
     }
 
     @Override
@@ -47,9 +51,9 @@ public class Tablero {
         int col = tablero[0].length;
         int colAux = col * 3 + 1;
 
-        String[][] matAux = crearTablero(filaAux, colAux);
-        matAux = rellenarTablero(matAux);
-        matAux = ponerIndiceTablero(matAux);
+        String[][] matAux = this.crearTablero(filaAux, colAux);
+        matAux = this.rellenarTablero(matAux);
+        matAux = this.ponerIndiceTablero(matAux);
         for (int i = 0; i < filaAux + 1; i++) {
             for (int j = 0; j < colAux + 1; j++) {
                 devolverTablero = devolverTablero + matAux[i][j];
@@ -164,13 +168,13 @@ public class Tablero {
     public void rotar(int fila, int columna, int grados) {
         switch (grados) {
             case 90:
-                this.tablero[fila][columna].rotar90();
+                this.getFicha(fila, columna).rotar90();
                 break;
             case 180:
-                this.tablero[fila][columna].rotar180();
+                this.getFicha(fila, columna).rotar180();
                 break;
             case 270:
-                this.tablero[fila][columna].rotar270();
+                this.getFicha(fila, columna).rotar270();
                 break;
         }
 
@@ -415,11 +419,7 @@ public class Tablero {
             }
         }
     }
-    public void extender(int fila,int columna,String color,char direccion){
-        if (this.canExtend(fila, columna, color, direccion)){
-            
-        }
-    }
+    
     public boolean sePuedePonerFicha(int fila, int col) {
         Tableta[][] tablero = this.getTablero();
         int[] coordFila = this.getCoordTablero5por5("filas");
@@ -578,7 +578,7 @@ public class Tablero {
 
     public int[] getCoordTablero5por5(String posicion) {
         int[] coordenadas = new int[]{-1, -1};
-        Tableta[][] tablero = getTablero();
+        Tableta[][] tablero = this.getTablero();
         int inicio = 0;
         int fin = 0;
         int contador = 0;
