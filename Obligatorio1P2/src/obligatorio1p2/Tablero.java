@@ -273,31 +273,7 @@ public class Tablero {
         if (tieneColor) {
             switch (direccion) {
                 case 'A':
-                    for (int i = fila; i > 0; i--) {
-                        for (int j = 0; j < 2; j++) {
-                            for (int k = 0; k < 2; k++) {
-                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x")&&this.getFicha(i-1, columna).devolverUnColor(j, k).contains("x")&&color.equals(this.getFicha(i-1, columna).devolverUnColor(j, k))) {
-                                    hayExtremo = true;
-                                    filaExt = j;
-                                    colExt = k;
-                                    if (k == colColor || j == filaColor) {
-                                        enLinea = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (hayExtremo && enLinea) {
-                        for (int i = fila; i > filaExt; i--) {
-                            for (int j = 0; j < 2; j++) {
-                                for (int k = 0; k < 2; k++) {
-                                    if (this.getFicha(i, columna) == null) {
-                                        hayFichas = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    
                     break;
                 case 'B':
                     for (int i = fila; i < 10; i++) {
@@ -387,7 +363,7 @@ public class Tablero {
         }
         return (hayFichas && hayExtremo && tieneColor && enLinea);
     }
-
+    
     public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
         int columnaColor = -1;
         int filaColor = -1;

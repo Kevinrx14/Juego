@@ -46,6 +46,7 @@ public class Interfaz {
     cantRot = valida la cantidad de rotaciones (0 - 5)
     cantTabs = valida la cantidad de Tabletas (5 - 25)
     configTerm = valida la opcion del menu configuracion de terminacion (1 - 3)
+    elegirJug = valida que la opcion este entre todos los jugadores disponibles
      */
     public boolean validarInt(int valor, String tipoDato) {
         boolean validador = false;
@@ -87,6 +88,13 @@ public class Interfaz {
                 if (valor > 0 && valor < 4) {
                     validador = true;
                 }
+                
+            case "elegirJug":
+                int cantJug = this.getAves().getJugadores().size();
+                if (valor > 0 && valor <= cantJug) {
+                    validador = true;
+                }
+                break;
         }
 
         return validador;
