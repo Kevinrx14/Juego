@@ -13,7 +13,6 @@ public class Partida {
     private int tipoTerm;
     private int cantTurnos;
     private int indiceGanador;
-    private Interfaz interfaz = new Interfaz();
 
     public Partida(
             int cantJugadores,
@@ -208,6 +207,7 @@ public class Partida {
         int[] indices;
         int[] posicion1;
         int[] posicion2;
+        Interfaz interfaz = new Interfaz();
         String movimiento;
         String indicacion1 = "";
         String indicacion2 = "";
@@ -217,15 +217,15 @@ public class Partida {
         boolean running = true;
 
         do {
-            movimiento = this.interfaz.ingresarString("jugada");
+            movimiento = interfaz.ingresarString("jugada");
             tipoMovimiento = movimiento.charAt(0);
             if (tipoMovimiento != 'X') {
                 if (tipoMovimiento == 'P') {
                     indicacion1 = movimiento.substring(2);
                 } else {
-                    indices = this.interfaz.getIndicesDeIndicacion(1, movimiento);
+                    indices = interfaz.getIndicesDeIndicacion(1, movimiento);
                     indicacion1 = movimiento.substring(indices[0], indices[1]);
-                    indices = this.interfaz.getIndicesDeIndicacion(2, movimiento);
+                    indices = interfaz.getIndicesDeIndicacion(2, movimiento);
                     indicacion2 = movimiento.substring(indices[0], indices[1]);
                 }
             }
