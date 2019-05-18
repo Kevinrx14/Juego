@@ -644,11 +644,7 @@ public class Tablero {
 
     public boolean validarSiPerteneceA5por5(int[] coordFila, int[] coordCol, int[] coordFicha) {
         boolean validador = true;
-        System.out.println("coordFicha[0] " + coordFicha[0]);
-        System.out.println("coordFila[0] " + coordFila[0]);
-        System.out.println("coordFila[1] " + coordFila[1]);
-        System.out.println("coordCol[0] " + coordCol[0]);
-        System.out.println("coordCol[1] " + coordCol[1]);
+
         /* 
         Chequeo si la fila en la que esta la ficha no se encuentra entre
         la fila que comienza el tablero de 5x5 y la fila en la que termina.
