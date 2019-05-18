@@ -88,12 +88,16 @@ public class Interfaz {
                 if (valor > 0 && valor < 4) {
                     validador = true;
                 }
-                
+
             case "elegirJug":
                 int cantJug = this.getAves().getJugadores().size();
-                if (valor > 0 && valor <= cantJug) {
+                if (valor >= 0 && valor <= cantJug) {
                     validador = true;
                 }
+                break;
+
+            default:
+                validador = true;
                 break;
         }
 
@@ -131,6 +135,27 @@ public class Interfaz {
                 } else {
                     System.out.println("La jugada ingresada no es correcta");
                 }
+                break;
+                
+            case "aliasJug":
+                String alias;
+                int cantJug = this.getAves().getJugadores().size();
+                
+                for(int i = 0; i < cantJug; i++) {
+                    alias = this.getAves().getJugadores().get(i).getAlias();
+                    alias = alias.toLowerCase();
+                    if(dato.toLowerCase().equals(alias)) {
+                        validador = false;
+                        i = cantJug;
+                        System.out.println("Ese alias ya existe");
+                    } else {
+                        validador = true;
+                    }
+                }
+                break;
+
+            default:
+                validador = true;
                 break;
         }
 
@@ -336,7 +361,7 @@ public class Interfaz {
         System.out.println("Ingresa la cantidad de jugadores");
         cantJug = this.ingresarInt("cantJug");
 
-        this.getAves().setConfiguracion(0, cantJug);
+        this.getAves().setUnaConfiguracion(0, cantJug);
     }
 
     public void configAves() {
@@ -345,7 +370,7 @@ public class Interfaz {
         System.out.println("Ingresa la cantidad de aves por jugador");
         cantAves = ingresarInt("cantAves");
 
-        this.getAves().setConfiguracion(1, cantAves);
+        this.getAves().setUnaConfiguracion(1, cantAves);
     }
 
     public void configRot() {
@@ -354,7 +379,7 @@ public class Interfaz {
         System.out.println("Ingresa la cantidad de rotaciones por jugador");
         cantRot = ingresarInt("cantRot");
 
-        this.getAves().setConfiguracion(2, cantRot);
+        this.getAves().setUnaConfiguracion(2, cantRot);
     }
 
     public void configTabs() {
@@ -363,7 +388,7 @@ public class Interfaz {
         System.out.println("Ingresa la cantidad de tabletas por Jugador");
         cantTab = ingresarInt("cantTabs");
 
-        this.getAves().setConfiguracion(3, cantTab);
+        this.getAves().setUnaConfiguracion(3, cantTab);
     }
 
     public void menuConfigTermTemplate() {
@@ -386,18 +411,18 @@ public class Interfaz {
         switch (opcSel) {
             //Completar tablero
             case 1:
-                this.getAves().setConfiguracion(4, 1);
+                this.getAves().setUnaConfiguracion(4, 1);
                 break;
             //Termianr aves
             case 2:
-                this.getAves().setConfiguracion(4, 2);
+                this.getAves().setUnaConfiguracion(4, 2);
                 break;
             //Cantidad de turnos
             case 3:
-                this.getAves().setConfiguracion(4, 3);
+                this.getAves().setUnaConfiguracion(4, 3);
                 System.out.println("Ingrese la cantidad de turnos a definir");
                 cantTurn = this.ingresarInt("cantTurn");
-                this.getAves().setConfiguracion(5, cantTurn);
+                this.getAves().setUnaConfiguracion(5, cantTurn);
                 System.out.println("La partida tendra " + cantTurn + " turnos");
                 break;
         }
@@ -426,7 +451,9 @@ public class Interfaz {
 
                 //Jugar
                 case 3:
-                    aves.jugar();
+                    if (this.sePuedeJugar()) {
+                        aves.jugar();
+                    }
                     break;
 
                 //Ranking de jugadores
@@ -471,5 +498,20 @@ public class Interfaz {
                     break;
             }
         } while (running);
+    } 
+    
+    public boolean sePuedeJugar() {
+        int[] configuracion = this.getAves().getConfiguracion();
+        int cantTotalJug = this.getAves().getJugadores().size();
+        boolean validador = false;
+
+        //configuracion[0] = cantidad de jugadores por partida
+        if (cantTotalJug >= configuracion[0]) {
+            validador = true;
+        } else {
+            System.out.println("No hay la cantidad suficiente de jugadores");
+        }
+
+        return validador;
     }
 }

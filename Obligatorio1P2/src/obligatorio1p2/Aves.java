@@ -9,21 +9,31 @@ public class Aves {
     private int[] configuracion;
 
     public Aves() {
-        this.partidas = new ArrayList();
-        this.jugadores = new ArrayList();
-        this.configuracion = new int[]{2, 45, 5, 25, 3, 10};
-    }
-
-    public void setConfiguracion(int i, int configuracion) {
-        this.configuracion[i] = configuracion;
+        this.setPartidas();
+        this.setJugadores();
+        this.setDefaultConfig();
+        this.setJugador("Kevin", 21, "Kevinrx");
+        this.setJugador("Ezequiel", 20, "EzeL");
     }
 
     public int[] getConfiguracion() {
         return this.configuracion;
     }
 
+    public void setDefaultConfig() {
+        this.configuracion = new int[]{2, 45, 5, 25, 3, 10};
+    }
+
+    public void setUnaConfiguracion(int i, int configuracion) {
+        this.configuracion[i] = configuracion;
+    }
+
     public ArrayList<Partida> getPartidas() {
         return this.partidas;
+    }
+
+    public void setPartidas() {
+        this.partidas = new ArrayList<Partida>();
     }
 
     /*
@@ -35,7 +45,7 @@ public class Aves {
     4 - Tipo de terminacion
     5 - Cantidad de turnos
      */
-    public void setPartida(ArrayList<Jugador> jugadores) {
+    public void setUnaPartida(ArrayList<Jugador> jugadores) {
         int[] configuracion = this.getConfiguracion();
         this.partidas.add(new Partida(
                 configuracion[0],
@@ -50,6 +60,10 @@ public class Aves {
 
     public ArrayList<Jugador> getJugadores() {
         return this.jugadores;
+    }
+
+    public void setJugadores() {
+        this.jugadores = new ArrayList<Jugador>();
     }
 
     public void setJugador(String nombre, int edad, String alias) {
@@ -97,12 +111,15 @@ public class Aves {
     }
 
     public void jugar() {
-        setPartida(this.getJugadoresPartida());
-        int indice = this.getPartidas().size() - 1;
-        Partida partida = this.getPartidas().get(indice);
+        ArrayList<Jugador> jugPartida = this.getJugadoresPartida();
 
-        partida.iniciar();
+        if (jugPartida.size() > 0) {
+            setUnaPartida(jugPartida);
+            int indice = this.getPartidas().size() - 1;
+            Partida partida = this.getPartidas().get(indice);
 
+            partida.iniciar();
+        }
     }
 
     public ArrayList<Jugador> getJugadoresPartida() {
@@ -117,12 +134,17 @@ public class Aves {
             String alias = jugadores.get(i).getAlias();
             System.out.println((i + 1) + " - " + alias);
         }
+        System.out.println("\n" + "0 - Salir");
 
         for (int i = 0; i < cantJug; i++) {
-            aux = interfaz.ingresarInt("elegirJug");
-            jugadoresAux.add(jugadores.get(aux));
+            aux = interfaz.ingresarInt("elegirJug") - 1;
+            if (aux >= 0) {
+                jugadoresAux.add(jugadores.get(aux));
+            } else {
+                i = cantJug;
+            }
         }
-        
+
         return jugadoresAux;
     }
 }
