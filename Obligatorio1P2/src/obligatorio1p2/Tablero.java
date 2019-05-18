@@ -20,8 +20,8 @@ public class Tablero {
         this.tablero[3][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[4][4] = new Tableta();
         this.tablero[4][4].setFicha(new char[]{'R', 'A', 'V', 'M'});
-        this.tablero[4][5] = new Tableta();
-        this.tablero[4][5].setFicha(new char[]{'V', 'M', 'R', 'A'});
+//        this.tablero[4][5] = new Tableta();
+//        this.tablero[4][5].setFicha(new char[]{'V', 'M', 'R', 'A'});
     }
 
     public void setFicha(int fila, int col) {

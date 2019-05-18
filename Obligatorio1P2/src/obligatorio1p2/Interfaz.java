@@ -110,7 +110,7 @@ public class Interfaz {
                 this.sonidoError();
             }
         }
-
+        
         return validador;
     }
 
@@ -349,7 +349,7 @@ public class Interfaz {
         System.out.println("Escribe tu Alias");
         alias = this.ingresarString("aliasJug");
 
-        this.aves.setJugador(nombre, edad, alias);
+        this.getAves().setJugador(nombre, edad, alias);
         System.out.println("Bienvenido a Aves " + alias);
     }
 
@@ -456,6 +456,7 @@ public class Interfaz {
 
         do {
             this.menuPrincipalTemplate();
+            System.out.println(this.getAves().getJugadores().size());
             selPrincipal = this.ingresarInt("menuPrincipal");
             switch (selPrincipal) {
                 //Registar jugador
@@ -471,7 +472,7 @@ public class Interfaz {
                 //Jugar
                 case 3:
                     if (this.sePuedeJugar()) {
-                        aves.jugar();
+                        aves.jugar(this.getJugadoresPartida());
                     }
                     break;
 
@@ -537,5 +538,31 @@ public class Interfaz {
 
     public void sonidoError() {
         java.awt.Toolkit.getDefaultToolkit().beep();
+    }
+    
+    
+    public ArrayList<Jugador> getJugadoresPartida() {
+        ArrayList<Jugador> jugadores = this.getAves().getJugadores();
+        ArrayList<Jugador> jugadoresAux = new ArrayList<>();
+        int[] configuracion = this.getAves().getConfiguracion();
+        int cantJug = configuracion[0];
+        int aux = 0;
+
+        for (int i = 0; i < jugadores.size(); i++) {
+            String alias = jugadores.get(i).getAlias();
+            System.out.println((i + 1) + " - " + alias);
+        }
+        System.out.println("\n" + "0 - Salir");
+
+        for (int i = 0; i < cantJug; i++) {
+            aux = this.ingresarInt("elegirJug") - 1;
+            if (aux >= 0) {
+                jugadoresAux.add(jugadores.get(aux));
+            } else {
+                i = cantJug;
+            }
+        }
+
+        return jugadoresAux;
     }
 }

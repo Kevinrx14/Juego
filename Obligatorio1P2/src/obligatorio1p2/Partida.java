@@ -184,7 +184,7 @@ public class Partida {
         Tablero tablero = this.getTablero();
         int[] coordFilas = tablero.getCoordTablero5por5("filas");
         int[] coordCol = tablero.getCoordTablero5por5("columnas");
-        boolean salidaEmergencia = false;
+        boolean salidaEmergencia;
         boolean running = true;
 
         do {
