@@ -6,12 +6,6 @@ public class Tablero {
 
     public Tablero() {
         this.setTablero();
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 4; j++) {
-                this.tablero[i][j] = new Tableta();
-                this.tablero[i][j].setFicha(new char[]{'V', 'M', 'R', 'A'});
-            }
-        }
 //        this.tablero[1][4] = new Tableta();
 //        this.tablero[1][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[2][4] = new Tableta();
@@ -20,8 +14,20 @@ public class Tablero {
         this.tablero[3][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[4][4] = new Tableta();
         this.tablero[4][4].setFicha(new char[]{'R', 'A', 'V', 'M'});
+        this.tablero[5][4] = new Tableta();
+        this.tablero[5][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[6][4] = new Tableta();
+        this.tablero[6][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[4][5] = new Tableta();
         this.tablero[4][5].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[4][6] = new Tableta();
+        this.tablero[4][6].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[4][7] = new Tableta();
+        this.tablero[4][7].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[4][8] = new Tableta();
+        this.tablero[4][8].setFicha(new char[]{'V', 'M', 'R', 'A'});
+//        this.tablero[4][5] = new Tableta();
+//        this.tablero[4][5].setFicha(new char[]{'V', 'M', 'R', 'A'});
     }
 
     public void setFicha(int fila, int col) {
@@ -33,11 +39,11 @@ public class Tablero {
     public Tableta getFicha(int fila, int col) {
         return this.tablero[fila][col];
     }
-    
+
     public void setTablero() {
         this.tablero = new Tableta[10][10];
     }
-    
+
     public Tableta[][] getTablero() {
         return this.tablero;
     }
@@ -386,7 +392,7 @@ public class Tablero {
         }
         return (hayFichas && hayExtremo && tieneColor && enLinea);
     }
-    
+
     public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
         int columnaColor = -1;
         int filaColor = -1;
@@ -604,7 +610,7 @@ public class Tablero {
                     if (posicion.equals("columnas")) {
                         if (tablero[i][j] != null) {
                             contador++;
-                            if (contador == 0) {
+                            if (contador == 1) {
                                 inicio = j;
                             }
                             if (contador == 5) {
@@ -644,6 +650,7 @@ public class Tablero {
         la fila que comienza el tablero de 5x5 y la fila en la que termina.
          */
         if (coordFicha[0] < coordFila[0] || coordFicha[0] > coordFila[1]) {
+            System.out.println("fila");
             validador = false;
         }
 
@@ -651,9 +658,10 @@ public class Tablero {
         Hago el mismo chequeo que arriba pero para las columnas
          */
         if (coordFicha[1] < coordCol[0] || coordFicha[1] > coordCol[1]) {
+            System.out.println("col");
             validador = false;
         }
-
+        
         return validador;
     }
 

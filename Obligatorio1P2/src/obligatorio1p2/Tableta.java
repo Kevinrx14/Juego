@@ -83,7 +83,7 @@ public class Tableta {
                             }
                         }
                     }
-                } while (validador == false);
+                } while (!validador);
                 fichaAux[i][j] = num;
                 switch (fichaAux[i][j]) {
                     case 1:

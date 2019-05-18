@@ -1,9 +1,11 @@
 package obligatorio1p2;
 
 public class Jugador implements Comparable {
+
     private String nombre;
-    private int edad;
     private String alias;
+    private String colorJug;
+    private int edad;
     private int cantAves;
     private int cantRot;
     private int totalPartidas;
@@ -13,7 +15,7 @@ public class Jugador implements Comparable {
         this.setEdad(edad);
         this.setAlias(alias);
     }
-    
+
     public String getNombre() {
         return this.nombre;
     }
@@ -53,25 +55,35 @@ public class Jugador implements Comparable {
     public void setCatRot(int catRot) {
         this.cantRot = catRot;
     }
-    
-    public int getTotalPartidas(){
+
+    public int getTotalPartidas() {
         return this.totalPartidas;
     }
-    
-    public void setTotalPartidas(int unaCant){
-        this.totalPartidas=unaCant;
+
+    public void setTotalPartidas(int unaCant) {
+        this.totalPartidas = unaCant;
     }
     
-    @Override
-    public boolean equals(Object o){
-        return (this.getNombre()==((Jugador)o).getNombre());
+    public String getColorJugador() {
+        return this.colorJug;
     }
-    @Override
-    public int compareTo(Object o){
-        return this.getTotalPartidas()-((Jugador)o).getTotalPartidas();
+    
+    public void setColorJug(String color) {
+        this.colorJug = color;
     }
+
     @Override
-    public String toString(){
+    public boolean equals(Object o) {
+        return (this.getNombre() == ((Jugador) o).getNombre());
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.getTotalPartidas() - ((Jugador) o).getTotalPartidas();
+    }
+
+    @Override
+    public String toString() {
         return this.getNombre();
     }
 }

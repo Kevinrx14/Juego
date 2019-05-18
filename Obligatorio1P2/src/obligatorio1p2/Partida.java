@@ -23,24 +23,15 @@ public class Partida {
             int cantTurnos,
             ArrayList<Jugador> jugadores
     ) {
-        this.cantJug = cantJugadores;
-        this.cantAves = avesXjug;
-        this.cantRot = fichasRotXJug;
-        this.cantTab = totalTab;
-        this.tipoTerm = tipoTerm;
-        this.cantTurnos = cantTurnos;
+        this.setCantJug(cantJugadores);
+        this.setCantAves(avesXjug);
+        this.setCantRot(fichasRotXJug);
+        this.setCantTab(totalTab);
+        this.setTipoTerm(tipoTerm);
+        this.setCantTurnos(cantTurnos);
         this.setTablero();
         this.setJugadores(jugadores);
-    }
-
-    public Partida() {
-        this.setCantJug(2);
-        this.setCantAves(45);
-        this.setCantRot(5);
-        this.setCantTab(25);
-        this.setTipoTerm(3);
-        this.setCantTurnos(10);
-        this.setTablero();
+        this.setColorJugadores();
     }
 
     public int getCantTurnos() {
@@ -57,6 +48,51 @@ public class Partida {
 
     public void setJugadores(ArrayList<Jugador> todosJug) {
         this.jugadores = todosJug;
+    }
+    
+    public String getColorJugador(int indice) {
+        return this.getJugadores().get(indice).getColorJugador();
+    }
+
+    public void setColorJugadores() {
+        Random rand = new Random();
+        String aux = "";
+        int[] colores = new int[this.getCantJug()];
+        int num;
+        boolean validador;
+
+        for (int i = 0; i < this.getCantJug(); i++) {
+            do {
+                validador = true;
+                num = rand.nextInt(4);
+                num++;
+                for (int x = 0; x < i; x++) {
+                    if (colores[x] == num) {
+                        validador = false;
+                    }
+                }
+            } while (!validador);
+            colores[i] = num;
+            switch (colores[i]) {
+                case 1:
+                    aux = "\u001B[41m" + " " + "\033[0m"; //Color rojo
+                    break;
+
+                case 2:
+                    aux = "\u001B[44m" + " " + "\033[0m"; //Color azul
+                    break;
+
+                case 3:
+                    aux = "\u001B[43m" + " " + "\033[0m"; //Color amarillo
+                    break;
+
+                case 4:
+                    aux = "\u001B[42m" + " " + "\033[0m"; //Color verde
+                    break;
+            }
+
+            this.getJugadores().get(i).setColorJug(aux);
+        }
     }
 
     public Tablero getTablero() {
@@ -147,7 +183,7 @@ public class Partida {
         boolean salidaEmergencia = false;
 
         for (int turno = 1; turno <= cantTurnos; turno++) {
-            for (int jug = 1; jug <= cantJug; jug++) {
+            for (int jug = 0; jug < cantJug; jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
@@ -165,7 +201,7 @@ public class Partida {
         boolean running = true;
 
         do {
-            for (int jug = 1; jug <= cantJug; jug++) {
+            for (int jug = 0; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
@@ -184,11 +220,11 @@ public class Partida {
         Tablero tablero = this.getTablero();
         int[] coordFilas = tablero.getCoordTablero5por5("filas");
         int[] coordCol = tablero.getCoordTablero5por5("columnas");
-        boolean salidaEmergencia = false;
+        boolean salidaEmergencia;
         boolean running = true;
 
         do {
-            for (int jug = 1; jug <= cantJug; jug++) {
+            for (int jug = 0; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
@@ -254,7 +290,7 @@ public class Partida {
                     break;
                 //Extender 
                 case 'E':
-                    
+
                     break;
                 //Salir    
                 case 'X':
