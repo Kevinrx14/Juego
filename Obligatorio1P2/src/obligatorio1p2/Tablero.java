@@ -179,7 +179,7 @@ public class Tablero {
                     }
                 }
             } else {
-                for (int i = Math.min(fila1, fila2); i <=Math.max(fila1, fila2); i++) {
+                for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
                     if (this.getTablero()[i][columna1] == null) {
                         alineados = false;
                     }
@@ -223,7 +223,6 @@ public class Tablero {
                                 noHayAves = false;
                             }
                         }
-
                     }
                 }
             }
@@ -239,7 +238,7 @@ public class Tablero {
         boolean hayExtremo = false;
         boolean enLinea = false;
         boolean tieneColor = false;
-        boolean hayLinea=false;
+        boolean hayLinea = false;
         int filaExt = -1;
         int colExt = -1;
         int filaColor = 0;
@@ -260,7 +259,7 @@ public class Tablero {
                     for (int i = fila; i > 0; i--) {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
-                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x")&&this.getFicha(i-1, columna).devolverUnColor(j, k).contains("x")&&color.equals(this.getFicha(i-1, columna).devolverUnColor(j, k))) {
+                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x") && this.getFicha(i - 1, columna).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(i - 1, columna).devolverUnColor(j, k))) {
                                     hayExtremo = true;
                                     filaExt = j;
                                     colExt = k;
@@ -288,7 +287,7 @@ public class Tablero {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
 
-                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x")&&color.equals(this.getFicha(i+1, columna).devolverUnColor(j, k)) && this.getFicha(i+1, columna).devolverUnColor(j, k).contains("x")) {
+                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(i + 1, columna).devolverUnColor(j, k)) && this.getFicha(i + 1, columna).devolverUnColor(j, k).contains("x")) {
                                     hayExtremo = true;
                                     filaExt = j;
                                     colExt = k;
@@ -316,7 +315,7 @@ public class Tablero {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
 
-                                if (color.equals(this.getFicha(fila, i).devolverUnColor(j, k)) && this.getFicha(fila, i).devolverUnColor(j, k).contains("x")&&color.equals(this.getFicha(fila, i+1).devolverUnColor(j, k)) && this.getFicha(fila, i+1).devolverUnColor(j, k).contains("x")) {
+                                if (color.equals(this.getFicha(fila, i).devolverUnColor(j, k)) && this.getFicha(fila, i).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(fila, i + 1).devolverUnColor(j, k)) && this.getFicha(fila, i + 1).devolverUnColor(j, k).contains("x")) {
                                     hayExtremo = true;
                                     filaExt = j;
                                     colExt = k;
@@ -344,7 +343,7 @@ public class Tablero {
                         for (int j = 0; j < 2; j++) {
                             for (int k = 0; k < 2; k++) {
 
-                                if (color.equals(this.getFicha(fila, i).devolverUnColor(j, k)) && this.getFicha(fila, i).devolverUnColor(j, k).contains("x")&&color.equals(this.getFicha(fila, i-1).devolverUnColor(j, k)) && this.getFicha(fila, i-1).devolverUnColor(j, k).contains("x")) {
+                                if (color.equals(this.getFicha(fila, i).devolverUnColor(j, k)) && this.getFicha(fila, i).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(fila, i - 1).devolverUnColor(j, k)) && this.getFicha(fila, i - 1).devolverUnColor(j, k).contains("x")) {
                                     hayExtremo = true;
                                     filaExt = j;
                                     colExt = k;
@@ -394,20 +393,89 @@ public class Tablero {
                         this.getFicha(fila1, i).dibujarAve(filaColor, j, color);
                     }
                 }
-            } else{
+            } else {
                 for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
                     for (int j = 0; j < 2; j++) {
-                        this.getFicha(i, columna1).dibujarAve(j, columnaColor, color); 
+                        this.getFicha(i, columna1).dibujarAve(j, columnaColor, color);
                     }
                 }
             }
         }
     }
-    public void extender(int fila,int columna,String color,char direccion){
-        if (this.canExtend(fila, columna, color, direccion)){
-            
+
+    public void extender(int fila, int columna, String color, char direccion) {
+        int columnaColor = -1;
+        int filaColor = -1;
+        int orientacion = 0;
+        if (direccion == 'A' || direccion == 'B') {
+            orientacion = 1;
+        }
+        boolean crece = true;
+        if (direccion == 'A' || direccion == 'I') {
+            crece = false;
+        }
+        boolean pintando = false;
+        while (canExtend(fila, columna, color, direccion) && pintando) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    if (color.equals(this.getFicha(fila, columna).devolverUnColor(j, k))) {
+                        filaColor = j;
+                        columnaColor = k;
+                    }
+                }
+            }
+            if (crece) {
+                if (orientacion == 1) {
+                    for (int i = columna; i <= 10; i++) {
+                        for (int j = 0; j < 2; j++) {
+                            if (this.getFicha(fila, i).hayAves(filaColor, j)) {
+                                pintando = false;
+                                j = 2;
+                            } else {
+                                this.getFicha(fila, i).dibujarAve(filaColor, j, color);
+                            }
+                        }
+                    }
+                } else {
+                    for (int i = fila; i <= 10; i++) {
+                        for (int j = 0; j < 2; j++) {
+                            if (this.getFicha(i, columna).hayAves(j, columnaColor)) {
+                                pintando = false;
+                                j = 2;
+                            } else {
+                                this.getFicha(i, columna).dibujarAve(j, columnaColor, color);
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (orientacion == 1) {
+                    for (int i = columna; i >= 0; i--) {
+                        for (int j = 0; j < 2; j++) {
+                            if (this.getFicha(fila, i).hayAves(filaColor, j)) {
+                                pintando = false;
+                                j = 2;
+                            } else {
+                                this.getFicha(fila, i).dibujarAve(filaColor, j, color);
+                            }
+                        }
+                    }
+                } else {
+                    for (int i = fila; i >= 0; i--) {
+                        for (int j = 0; j < 2; j++) {
+                            if (this.getFicha(i, columna).hayAves(j, columnaColor)) {
+                                pintando = false;
+                                j = 2;
+                            } else {
+                                this.getFicha(i, columna).dibujarAve(j, columnaColor, color);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+
     public boolean sePuedePonerFicha(int fila, int col) {
         Tableta[][] tablero = this.getTablero();
         boolean validador = false;
@@ -483,79 +551,6 @@ public class Tablero {
         }
 
         return validador;
-    }
-
-    public void extender(int fila, int columna, String color, char direccion) {
-        while (canExtend(fila, columna, color, direccion)) {
-            int columnaColor = -1;
-            int filaColor = -1;
-            for (int j = 0; j < 2; j++) {
-                for (int k = 0; k < 2; k++) {
-                    if (color.equals(this.getFicha(fila, columna).devolverUnColor(j, k))) {
-                        filaColor = j;
-                        columnaColor = k;
-                    }
-                }
-            }
-            switch (direccion) {
-                case 'A':
-                    for (int i = fila; i > 0; i--) {
-                        for (int k = 0; k < 2; k++) {
-                            if (color.equals(this.getFicha(i, columna).devolverUnColor(k, columnaColor)) && this.getFicha(i, columna).devolverUnColor(k, columnaColor).contains("x")) {
-                                for (int l = fila; l > i; l--) {
-                                    for (int j = 0; j < 2; j++) {
-                                        this.getFicha(l, columna).setUnColor(filaColor, j, color + "x");
-                                    }
-                                }
-                                i = 0;
-                            }
-                        }
-                    }
-                    break;
-                case 'B':
-                    for (int i = fila; i < 10; i++) {
-                        for (int k = 0; k < 2; k++) {
-                            if (color.equals(this.getFicha(i, columna).devolverUnColor(k, filaColor)) && this.getFicha(i, columna).devolverUnColor(k, filaColor).contains("x")) {
-                                for (int l = fila; l < i; l++) {
-                                    for (int j = 0; j < 2; j++) {
-                                        this.getFicha(l, columna).setUnColor(filaColor, j, color + "x");
-                                    }
-                                }
-                                i = 0;
-                            }
-                        }
-                    }
-                    break;
-                case 'D':
-                    for (int i = columna; i < 0; i++) {
-                        for (int k = 0; k < 2; k++) {
-                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila, i).devolverUnColor(filaColor, k).contains("x")) {
-                                for (int l = fila; l < i; l++) {
-                                    for (int j = 0; j < 2; j++) {
-                                        this.getFicha(fila, l).setUnColor(j, columnaColor, color + "x");
-                                    }
-                                }
-                                i = 0;
-                            }
-                        }
-                    }
-                    break;
-                case 'I':
-                    for (int i = columna; i > 10; i--) {
-                        for (int k = 0; k < 2; k++) {
-                            if (color.equals(this.getFicha(fila, i).devolverUnColor(filaColor, k)) && this.getFicha(fila, i).devolverUnColor(filaColor, k).contains("x")) {
-                                for (int l = fila; l > i; l--) {
-                                    for (int j = 0; j < 2; j++) {
-                                        this.getFicha(fila, l).setUnColor(j, columnaColor, color + "x");
-                                    }
-                                }
-                                i = 0;
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
     }
 }
 

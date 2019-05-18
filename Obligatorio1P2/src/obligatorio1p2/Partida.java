@@ -204,7 +204,7 @@ public class Partida {
                     break;
                 //Extender 
                 case 'E':
-
+                    
                     break;
                 //Salir    
                 case 'X':
