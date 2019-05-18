@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package obligatorio1p2;
 
-/**
- *
- * @author Ezequiel
- */
 public class Jugador implements Comparable {
     private String nombre;
     private int edad;
@@ -17,8 +8,14 @@ public class Jugador implements Comparable {
     private int cantRot;
     private int totalPartidas;
 
+    public Jugador(String nombre, int edad, String alias) {
+        this.setNombre(nombre);
+        this.setEdad(edad);
+        this.setAlias(alias);
+    }
+    
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
 
     public void setNombre(String nombre) {
@@ -26,7 +23,7 @@ public class Jugador implements Comparable {
     }
 
     public int getEdad() {
-        return edad;
+        return this.edad;
     }
 
     public void setEdad(int edad) {
@@ -34,7 +31,7 @@ public class Jugador implements Comparable {
     }
 
     public String getAlias() {
-        return alias;
+        return this.alias;
     }
 
     public void setAlias(String alias) {
@@ -42,7 +39,7 @@ public class Jugador implements Comparable {
     }
 
     public int getCantAves() {
-        return cantAves;
+        return this.cantAves;
     }
 
     public void setCantAves(int cantAves) {
@@ -50,7 +47,7 @@ public class Jugador implements Comparable {
     }
 
     public int getCantRot() {
-        return cantRot;
+        return this.cantRot;
     }
 
     public void setCatRot(int catRot) {
@@ -63,12 +60,6 @@ public class Jugador implements Comparable {
     
     public void setTotalPartidas(int unaCant){
         this.totalPartidas=unaCant;
-    }
-
-    public Jugador(String nombre, int edad, String alias) {
-        this.nombre = nombre;
-        this.edad = edad;
-        this.alias = alias;
     }
     
     @Override

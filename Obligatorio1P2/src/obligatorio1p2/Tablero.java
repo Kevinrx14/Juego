@@ -5,7 +5,7 @@ public class Tablero {
     private Tableta[][] tablero;
 
     public Tablero() {
-        this.tablero = new Tableta[10][10];
+        this.setTablero();
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 4; j++) {
                 this.tablero[i][j] = new Tableta();
@@ -30,12 +30,16 @@ public class Tablero {
         this.tablero[fila][col] = tableta;
     }
 
-    public Tableta[][] getTablero() {
-        return this.tablero;
-    }
-
     public Tableta getFicha(int fila, int col) {
         return this.tablero[fila][col];
+    }
+    
+    public void setTablero() {
+        this.tablero = new Tableta[10][10];
+    }
+    
+    public Tableta[][] getTablero() {
+        return this.tablero;
     }
 
     @Override
@@ -47,9 +51,9 @@ public class Tablero {
         int col = tablero[0].length;
         int colAux = col * 3 + 1;
 
-        String[][] matAux = crearTablero(filaAux, colAux);
-        matAux = rellenarTablero(matAux);
-        matAux = ponerIndiceTablero(matAux);
+        String[][] matAux = this.crearTablero(filaAux, colAux);
+        matAux = this.rellenarTablero(matAux);
+        matAux = this.ponerIndiceTablero(matAux);
         for (int i = 0; i < filaAux + 1; i++) {
             for (int j = 0; j < colAux + 1; j++) {
                 devolverTablero = devolverTablero + matAux[i][j];
@@ -164,13 +168,13 @@ public class Tablero {
     public void rotar(int fila, int columna, int grados) {
         switch (grados) {
             case 90:
-                this.tablero[fila][columna].rotar90();
+                this.getFicha(fila, columna).rotar90();
                 break;
             case 180:
-                this.tablero[fila][columna].rotar180();
+                this.getFicha(fila, columna).rotar180();
                 break;
             case 270:
-                this.tablero[fila][columna].rotar270();
+                this.getFicha(fila, columna).rotar270();
                 break;
         }
 
@@ -269,31 +273,7 @@ public class Tablero {
         if (tieneColor) {
             switch (direccion) {
                 case 'A':
-                    for (int i = fila; i > 0; i--) {
-                        for (int j = 0; j < 2; j++) {
-                            for (int k = 0; k < 2; k++) {
-                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x")&&this.getFicha(i-1, columna).devolverUnColor(j, k).contains("x")&&color.equals(this.getFicha(i-1, columna).devolverUnColor(j, k))) {
-                                    hayExtremo = true;
-                                    filaExt = j;
-                                    colExt = k;
-                                    if (k == colColor || j == filaColor) {
-                                        enLinea = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (hayExtremo && enLinea) {
-                        for (int i = fila; i > filaExt; i--) {
-                            for (int j = 0; j < 2; j++) {
-                                for (int k = 0; k < 2; k++) {
-                                    if (this.getFicha(i, columna) == null) {
-                                        hayFichas = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    
                     break;
                 case 'B':
                     for (int i = fila; i < 10; i++) {
@@ -383,7 +363,7 @@ public class Tablero {
         }
         return (hayFichas && hayExtremo && tieneColor && enLinea);
     }
-
+    
     public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
         int columnaColor = -1;
         int filaColor = -1;
@@ -415,13 +395,10 @@ public class Tablero {
             }
         }
     }
-    public void extender(int fila,int columna,String color,char direccion){
-        if (this.canExtend(fila, columna, color, direccion)){
-            
-        }
-    }
+    
     public boolean sePuedePonerFicha(int fila, int col) {
         Tableta[][] tablero = this.getTablero();
+        Interfaz interfaz = new Interfaz();
         int[] coordFila = this.getCoordTablero5por5("filas");
         int[] coordCol = this.getCoordTablero5por5("columnas");
         boolean validador = false;
@@ -433,15 +410,19 @@ public class Tablero {
                         validador = true;
                     } else {
                         System.out.println("No se encuentra dentro del tablero 5x5");
+                        interfaz.sonidoError();
                     }
                 } else {
                     System.out.println("Ya hay 5 fichas en esa fila o columna");
+                    interfaz.sonidoError();
                 }
             } else {
                 System.out.println("No hay ninguna ficha al lado");
+                interfaz.sonidoError();
             }
         } else {
             System.out.println("Ya hay una ficha en ese lugar");
+            interfaz.sonidoError();
         }
 
         return validador;
@@ -578,7 +559,7 @@ public class Tablero {
 
     public int[] getCoordTablero5por5(String posicion) {
         int[] coordenadas = new int[]{-1, -1};
-        Tableta[][] tablero = getTablero();
+        Tableta[][] tablero = this.getTablero();
         int inicio = 0;
         int fin = 0;
         int contador = 0;
