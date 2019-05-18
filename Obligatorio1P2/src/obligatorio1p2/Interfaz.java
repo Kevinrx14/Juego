@@ -456,7 +456,6 @@ public class Interfaz {
 
         do {
             this.menuPrincipalTemplate();
-            System.out.println(this.getAves().getJugadores().size());
             selPrincipal = this.ingresarInt("menuPrincipal");
             switch (selPrincipal) {
                 //Registar jugador
