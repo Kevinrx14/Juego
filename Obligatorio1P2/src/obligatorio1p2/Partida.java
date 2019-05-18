@@ -182,8 +182,8 @@ public class Partida {
         Tablero tablero = this.getTablero();
         boolean salidaEmergencia = false;
 
-        for (int turno = 1; turno <= cantTurnos; turno++) {
-            for (int jug = 0; jug < cantJug; jug++) {
+        for (int turno = 1; turno <= this.getCantTurnos(); turno++) {
+            for (int jug = 0; jug < this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
@@ -201,7 +201,7 @@ public class Partida {
         boolean running = true;
 
         do {
-            for (int jug = 0; jug <= cantJug; jug++) {
+            for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
@@ -224,7 +224,7 @@ public class Partida {
         boolean running = true;
 
         do {
-            for (int jug = 0; jug <= cantJug; jug++) {
+            for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
                 salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
