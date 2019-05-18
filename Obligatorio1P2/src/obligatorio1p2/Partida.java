@@ -12,9 +12,17 @@ public class Partida {
     private int cantTab;
     private int tipoTerm;
     private int cantTurnos;
-    private Interfaz interfaz = new Interfaz();
+    private int indiceGanador;
 
-    public Partida(int cantJugadores, int avesXjug, int fichasRotXJug, int totalTab, int tipoTerm, int cantTurnos) {
+    public Partida(
+            int cantJugadores,
+            int avesXjug,
+            int fichasRotXJug,
+            int totalTab,
+            int tipoTerm,
+            int cantTurnos,
+            ArrayList<Jugador> jugadores
+    ) {
         this.cantJug = cantJugadores;
         this.cantAves = avesXjug;
         this.cantRot = fichasRotXJug;
@@ -22,6 +30,7 @@ public class Partida {
         this.tipoTerm = tipoTerm;
         this.cantTurnos = cantTurnos;
         this.setTablero();
+        this.setJugadores(jugadores);
     }
 
     public Partida() {
@@ -35,18 +44,18 @@ public class Partida {
     }
 
     public int getCantTurnos() {
-        return cantTurnos;
+        return this.cantTurnos;
     }
 
     public void setCantTurnos(int cantTurnos) {
         this.cantTurnos = cantTurnos;
     }
 
-    public ArrayList<Jugador> getTodosJug() {
-        return jugadores;
+    public ArrayList<Jugador> getJugadores() {
+        return this.jugadores;
     }
 
-    public void setTodosJug(ArrayList<Jugador> todosJug) {
+    public void setJugadores(ArrayList<Jugador> todosJug) {
         this.jugadores = todosJug;
     }
 
@@ -98,66 +107,107 @@ public class Partida {
         this.tipoTerm = tipoTerm;
     }
 
+    public int getIndiceGanador() {
+        return this.indiceGanador;
+    }
+
+    public void setIndiceGanador(int indice) {
+        this.indiceGanador = indice;
+    }
+
+    public String getGanador() {
+        ArrayList<Jugador> jugadores = this.getJugadores();
+        String alias = "";
+
+        if (this.getIndiceGanador() == -1) {
+            alias = jugadores.get(this.getIndiceGanador()).getAlias();
+        }
+
+        return alias;
+    }
+
     public void iniciar() {
-        switch (getTipoTerm()) {
+        switch (this.getTipoTerm()) {
             case 1:
-                partidaConTerminacionTablero();
+                this.partidaConTerminacionTablero();
                 break;
 
             case 2:
-                partidaConTerminacionAves();
+                this.partidaConTerminacionAves();
                 break;
 
             case 3:
-                partidaConTerminacionTurnos();
+                this.partidaConTerminacionTurnos();
                 break;
         }
     }
 
     public void partidaConTerminacionTurnos() {
+        Tablero tablero = this.getTablero();
         boolean salidaEmergencia = false;
 
         for (int turno = 1; turno <= cantTurnos; turno++) {
             for (int jug = 1; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = movimiento();
+                salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
-                    turno = this.cantTurnos + 1;
-                    jug = this.cantJug + 1;
+                    turno = this.getCantTurnos() + 1;
+                    jug = this.getCantJug() + 1;
                 }
             }
         }
     }
 
     public void partidaConTerminacionAves() {
-        ArrayList<Jugador> jugadores = getTodosJug();
+        ArrayList<Jugador> jugadores = this.getJugadores();
+        Tablero tablero = this.getTablero();
         boolean salidaEmergencia = false;
         boolean running = true;
 
         do {
             for (int jug = 1; jug <= cantJug; jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = movimiento();
+                salidaEmergencia = this.movimiento();
                 if (salidaEmergencia) {
                     running = false;
-                    jug = this.cantJug + 1;
+                    jug = this.getCantJug() + 1;
                 }
                 if (jugadores.get(jug).getCantAves() == 0) {
                     running = false;
-                    jug = this.cantJug + 1;
+                    jug = this.getCantJug() + 1;
                 }
             }
         } while (running);
     }
 
     public void partidaConTerminacionTablero() {
+        Tablero tablero = this.getTablero();
+        int[] coordFilas = tablero.getCoordTablero5por5("filas");
+        int[] coordCol = tablero.getCoordTablero5por5("columnas");
+        boolean salidaEmergencia = false;
+        boolean running = true;
 
+        do {
+            for (int jug = 1; jug <= cantJug; jug++) {
+                System.out.println(tablero.toString());
+                salidaEmergencia = this.movimiento();
+                if (salidaEmergencia) {
+                    running = false;
+                    jug = this.getCantJug() + 1;
+                }
+                if (tablero.validarSiTablero5por5EstaLleno(coordFilas, coordCol)) {
+                    running = false;
+                    jug = this.getCantJug() + 1;
+                }
+            }
+        } while (running);
     }
 
     public boolean movimiento() {
         int[] indices;
         int[] posicion1;
         int[] posicion2;
+        Interfaz interfaz = new Interfaz();
         String movimiento;
         String indicacion1 = "";
         String indicacion2 = "";
@@ -167,15 +217,15 @@ public class Partida {
         boolean running = true;
 
         do {
-            movimiento = this.interfaz.ingresarString("jugada");
+            movimiento = interfaz.ingresarString("jugada");
             tipoMovimiento = movimiento.charAt(0);
             if (tipoMovimiento != 'X') {
                 if (tipoMovimiento == 'P') {
                     indicacion1 = movimiento.substring(2);
                 } else {
-                    indices = this.interfaz.getIndicesDeIndicacion(1, movimiento);
+                    indices = interfaz.getIndicesDeIndicacion(1, movimiento);
                     indicacion1 = movimiento.substring(indices[0], indices[1]);
-                    indices = this.interfaz.getIndicesDeIndicacion(2, movimiento);
+                    indices = interfaz.getIndicesDeIndicacion(2, movimiento);
                     indicacion2 = movimiento.substring(indices[0], indices[1]);
                 }
             }
@@ -267,5 +317,25 @@ public class Partida {
         }
 
         return devolverPosicion;
+    }
+
+    public void terminarPartida() {
+        ArrayList<Jugador> jugadores = this.getJugadores();
+        String alias;
+        int aux;
+        int mayor = 0;
+        int indiceJug = 0;
+
+        for (int i = 0; i < jugadores.size(); i++) {
+            aux = jugadores.get(i).getCantAves();
+            if (aux > mayor) {
+                mayor = aux;
+                indiceJug = i;
+            }
+        }
+
+        this.setIndiceGanador(indiceJug);
+        alias = jugadores.get(indiceJug).getAlias();
+        System.out.println("El ganador es " + alias + "con " + mayor + " aves");
     }
 }

@@ -5,7 +5,19 @@ public class Tablero {
     private Tableta[][] tablero;
 
     public Tablero() {
-        this.tablero = new Tableta[10][10];
+        this.setTablero();
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 4; j++) {
+                this.tablero[i][j] = new Tableta();
+                this.tablero[i][j].setFicha(new char[]{'V', 'M', 'R', 'A'});
+            }
+        }
+//        this.tablero[1][4] = new Tableta();
+//        this.tablero[1][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[2][4] = new Tableta();
+        this.tablero[2][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[3][4] = new Tableta();
+        this.tablero[3][4].setFicha(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[4][4] = new Tableta();
         this.tablero[4][4].setFicha(new char[]{'R', 'A', 'V', 'M'});
         this.tablero[4][5] = new Tableta();
@@ -18,12 +30,16 @@ public class Tablero {
         this.tablero[fila][col] = tableta;
     }
 
-    public Tableta[][] getTablero() {
-        return this.tablero;
-    }
-
     public Tableta getFicha(int fila, int col) {
         return this.tablero[fila][col];
+    }
+    
+    public void setTablero() {
+        this.tablero = new Tableta[10][10];
+    }
+    
+    public Tableta[][] getTablero() {
+        return this.tablero;
     }
 
     @Override
@@ -35,9 +51,9 @@ public class Tablero {
         int col = tablero[0].length;
         int colAux = col * 3 + 1;
 
-        String[][] matAux = crearTablero(filaAux, colAux);
-        matAux = rellenarTablero(matAux);
-        matAux = ponerIndiceTablero(matAux);
+        String[][] matAux = this.crearTablero(filaAux, colAux);
+        matAux = this.rellenarTablero(matAux);
+        matAux = this.ponerIndiceTablero(matAux);
         for (int i = 0; i < filaAux + 1; i++) {
             for (int j = 0; j < colAux + 1; j++) {
                 devolverTablero = devolverTablero + matAux[i][j];
@@ -152,13 +168,13 @@ public class Tablero {
     public void rotar(int fila, int columna, int grados) {
         switch (grados) {
             case 90:
-                this.tablero[fila][columna].rotar90();
+                this.getFicha(fila, columna).rotar90();
                 break;
             case 180:
-                this.tablero[fila][columna].rotar180();
+                this.getFicha(fila, columna).rotar180();
                 break;
             case 270:
-                this.tablero[fila][columna].rotar270();
+                this.getFicha(fila, columna).rotar270();
                 break;
         }
 
@@ -370,7 +386,7 @@ public class Tablero {
         }
         return (hayFichas && hayExtremo && tieneColor && enLinea);
     }
-
+    
     public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
         int columnaColor = -1;
         int filaColor = -1;
@@ -478,20 +494,31 @@ public class Tablero {
 
     public boolean sePuedePonerFicha(int fila, int col) {
         Tableta[][] tablero = this.getTablero();
+        Interfaz interfaz = new Interfaz();
+        int[] coordFila = this.getCoordTablero5por5("filas");
+        int[] coordCol = this.getCoordTablero5por5("columnas");
         boolean validador = false;
 
         if (tablero[fila][col] == null) {
-            if (hayFichaAlLado(fila, col)) {
-                if (!hayCincoFichas(fila, col)) {
-                    validador = true;
+            if (this.hayFichaAlLado(fila, col)) {
+                if (!this.hayCincoFichas(fila, col)) {
+                    if (this.validarSiPerteneceA5por5(coordFila, coordCol, new int[]{fila, col})) {
+                        validador = true;
+                    } else {
+                        System.out.println("No se encuentra dentro del tablero 5x5");
+                        interfaz.sonidoError();
+                    }
                 } else {
                     System.out.println("Ya hay 5 fichas en esa fila o columna");
+                    interfaz.sonidoError();
                 }
             } else {
                 System.out.println("No hay ninguna ficha al lado");
+                interfaz.sonidoError();
             }
         } else {
             System.out.println("Ya hay una ficha en ese lugar");
+            interfaz.sonidoError();
         }
 
         return validador;
@@ -552,28 +579,107 @@ public class Tablero {
 
         return validador;
     }
+
+    public int[] getCoordTablero5por5(String posicion) {
+        int[] coordenadas = new int[]{-1, -1};
+        Tableta[][] tablero = this.getTablero();
+        int inicio = 0;
+        int fin = 0;
+        int contador = 0;
+        boolean noEstanTodasLasCoordenadas = false;
+
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero[0].length; j++) {
+                if (posicion.equals("filas")) {
+                    if (tablero[j][i] != null) {
+                        contador++;
+                        if (contador == 1) {
+                            inicio = j;
+                        }
+                        if (contador == 5) {
+                            fin = j;
+                        }
+                    }
+                } else {
+                    if (posicion.equals("columnas")) {
+                        if (tablero[i][j] != null) {
+                            contador++;
+                            if (contador == 0) {
+                                inicio = j;
+                            }
+                            if (contador == 5) {
+                                fin = j;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (contador == 5) {
+                if (coordenadas[0] == -1 && coordenadas[1] == -1) {
+                    coordenadas[0] = inicio;
+                    coordenadas[1] = fin;
+                }
+            }
+            contador = 0;
+        }
+
+        if (coordenadas[0] == -1 || coordenadas[1] == -1) {
+            noEstanTodasLasCoordenadas = true;
+        }
+
+        if (noEstanTodasLasCoordenadas) {
+            coordenadas[0] = 0;
+            coordenadas[1] = 0;
+        }
+
+        return coordenadas;
+    }
+
+    public boolean validarSiPerteneceA5por5(int[] coordFila, int[] coordCol, int[] coordFicha) {
+        boolean validador = true;
+
+        /* 
+        Chequeo si la fila en la que esta la ficha no se encuentra entre
+        la fila que comienza el tablero de 5x5 y la fila en la que termina.
+         */
+        if (coordFicha[0] < coordFila[0] || coordFicha[0] > coordFila[1]) {
+            validador = false;
+        }
+
+        /*
+        Hago el mismo chequeo que arriba pero para las columnas
+         */
+        if (coordFicha[1] < coordCol[0] || coordFicha[1] > coordCol[1]) {
+            validador = false;
+        }
+
+        return validador;
+    }
+
+    public boolean validarSiTablero5por5EstaLleno(int[] coordenadasFilas, int[] coordenadasCol) {
+        Tableta[][] tablero = getTablero();
+        boolean validador = true;
+
+        if (coordenadasFilas[0] == coordenadasFilas[1]) {
+            validador = false;
+        }
+
+        if (coordenadasCol[0] == coordenadasCol[1]) {
+            validador = false;
+        }
+
+        if (validador) {
+            for (int i = coordenadasFilas[0]; i <= coordenadasFilas[1]; i++) {
+                for (int j = coordenadasCol[0]; j <= coordenadasCol[1]; j++) {
+                    if (tablero[i][j] == null) {
+                        validador = false;
+                    }
+
+                }
+            }
+        }
+
+        return validador;
+    }
 }
-
-//    public int[] coordenadasTablero5por5() {
-//        int[] coordenadas = new int({-1, -1, -1, -1});
-//        Tableta[][] tablero = getTablero();
-//        int contadorCol = 0;
-//        int contadorFila = 0;
-//        int indice = 0;
-//
-//        for (int i = 0; i < tablero.length; i++) {
-//            for (int j = 0; j < tablero[0].length; j++) {
-//                if (tablero[i][j] != null) {
-//                    contadorCol++;
-//                }
-//            }
-//            if ()
-//            if (contadorCol == 5) {
-//                
-//
-//            }
-//        }
-//
-//        return coordenadas;
-//    }
-
