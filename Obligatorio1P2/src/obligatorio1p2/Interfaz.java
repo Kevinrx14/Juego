@@ -31,6 +31,7 @@ public class Interfaz {
                 validador = this.validarInt(valor, tipoDato);
             } catch (Exception e) {
                 System.out.println("Verifique el valor ingresado");
+                this.sonidoError();
                 input.nextLine();
             }
         } while (!validador);
@@ -50,55 +51,64 @@ public class Interfaz {
      */
     public boolean validarInt(int valor, String tipoDato) {
         boolean validador = false;
+        boolean noAplica = false;
+        int min = 0;
+        int max = 0;
 
         switch (tipoDato) {
             case "menuPrincipal":
-                if (valor > 0 && valor < 6) {
-                    validador = true;
-                }
+                min = 1;
+                max = 5;
                 break;
 
             case "menuConfig":
-                if (valor > 0 && valor < 7) {
-                    validador = true;
-                }
+                min = 1;
+                max = 6;
                 break;
 
             case "cantJug":
-                if (valor > 1 && valor < 5) {
-                    validador = true;
-                }
+                min = 2;
+                max = 4;
+                break;
 
             case "cantAves":
-                if (valor > 4 && valor < 46) {
-                    validador = true;
-                }
+                min = 5;
+                max = 45;
+                break;
 
             case "cantRot":
-                if (valor >= 0 && valor < 6) {
-                    validador = true;
-                }
+                min = 0;
+                max = 5;
+                break;
 
             case "cantTabs":
-                if (valor > 4 && valor < 25) {
-                    validador = true;
-                }
+                min = 5;
+                max = 24;
+                break;
 
             case "configTerm":
-                if (valor > 0 && valor < 4) {
-                    validador = true;
-                }
+                min = 1;
+                max = 3;
+                break;
 
             case "elegirJug":
-                int cantJug = this.getAves().getJugadores().size();
-                if (valor >= 0 && valor <= cantJug) {
-                    validador = true;
-                }
+                min = 0;
+                max = this.getAves().getJugadores().size();
                 break;
 
             default:
                 validador = true;
+                noAplica = true;
                 break;
+        }
+
+        if (!noAplica) {
+            if (valor >= min && valor <= max) {
+                validador = true;
+            } else {
+                System.out.println("Eliga una opcion entre " + min + " y " + max);
+                this.sonidoError();
+            }
         }
 
         return validador;
@@ -118,6 +128,9 @@ public class Interfaz {
                 if (this.validarString(dato, tipoString)) {
                     validador = true;
                 }
+            } else {
+                System.out.println("No se ingresaron datos");
+                this.sonidoError();
             }
         } while (!validador);
         return dato;
@@ -134,20 +147,22 @@ public class Interfaz {
                     validador = true;
                 } else {
                     System.out.println("La jugada ingresada no es correcta");
+                    this.sonidoError();
                 }
                 break;
-                
+
             case "aliasJug":
                 String alias;
                 int cantJug = this.getAves().getJugadores().size();
-                
-                for(int i = 0; i < cantJug; i++) {
+
+                for (int i = 0; i < cantJug; i++) {
                     alias = this.getAves().getJugadores().get(i).getAlias();
                     alias = alias.toLowerCase();
-                    if(dato.toLowerCase().equals(alias)) {
+                    if (dato.toLowerCase().equals(alias)) {
                         validador = false;
                         i = cantJug;
                         System.out.println("Ese alias ya existe");
+                        this.sonidoError();
                     } else {
                         validador = true;
                     }
@@ -182,6 +197,7 @@ public class Interfaz {
                         }
                     } else {
                         System.out.println("La posicion indicada no es correcta");
+                        this.sonidoError();
                     }
                 }
                 break;
@@ -197,6 +213,7 @@ public class Interfaz {
                         validador = true;
                     } else {
                         System.out.println("Una posicion no es correcta");
+                        this.sonidoError();
                     }
                 }
                 break;
@@ -219,6 +236,7 @@ public class Interfaz {
                 } else {
                     System.out.println("La jugada no fue ingresada correctamente");
                     System.out.println("Para terminar el juego solamente ingrese X");
+                    this.sonidoError();
                 }
                 break;
         }
@@ -291,6 +309,7 @@ public class Interfaz {
 
             default:
                 System.out.println("No se puede rotar " + rotacion + " grados");
+                this.sonidoError();
                 break;
         }
 
@@ -498,8 +517,8 @@ public class Interfaz {
                     break;
             }
         } while (running);
-    } 
-    
+    }
+
     public boolean sePuedeJugar() {
         int[] configuracion = this.getAves().getConfiguracion();
         int cantTotalJug = this.getAves().getJugadores().size();
@@ -510,8 +529,13 @@ public class Interfaz {
             validador = true;
         } else {
             System.out.println("No hay la cantidad suficiente de jugadores");
+            this.sonidoError();
         }
 
         return validador;
+    }
+
+    public void sonidoError() {
+        java.awt.Toolkit.getDefaultToolkit().beep();
     }
 }

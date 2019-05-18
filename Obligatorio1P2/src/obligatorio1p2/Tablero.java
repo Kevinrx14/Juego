@@ -398,6 +398,7 @@ public class Tablero {
     
     public boolean sePuedePonerFicha(int fila, int col) {
         Tableta[][] tablero = this.getTablero();
+        Interfaz interfaz = new Interfaz();
         int[] coordFila = this.getCoordTablero5por5("filas");
         int[] coordCol = this.getCoordTablero5por5("columnas");
         boolean validador = false;
@@ -409,15 +410,19 @@ public class Tablero {
                         validador = true;
                     } else {
                         System.out.println("No se encuentra dentro del tablero 5x5");
+                        interfaz.sonidoError();
                     }
                 } else {
                     System.out.println("Ya hay 5 fichas en esa fila o columna");
+                    interfaz.sonidoError();
                 }
             } else {
                 System.out.println("No hay ninguna ficha al lado");
+                interfaz.sonidoError();
             }
         } else {
             System.out.println("Ya hay una ficha en ese lugar");
+            interfaz.sonidoError();
         }
 
         return validador;
