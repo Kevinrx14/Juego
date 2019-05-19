@@ -29,8 +29,14 @@ public class Aves {
         this.configuracion[i] = configuracion;
     }
 
+<<<<<<< HEAD
     public ArrayList<Partida> getPartidas() {
         return this.partidas;
+=======
+    public Partida configurarPart(int cantJug,int cantAves,int cantRot,int cantTab,int tipoTerm,int cantTurnos) {
+        Partida p = new Partida(cantJug, cantAves, cantRot, cantTab, tipoTerm, cantTurnos);
+        return p;
+>>>>>>> fa55485... Optimicé metodos extender, conectar, canconnect y canextend
     }
 
     public void setPartidas() {
