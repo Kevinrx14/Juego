@@ -49,7 +49,7 @@ public class Partida {
     public void setJugadores(ArrayList<Jugador> todosJug) {
         this.jugadores = todosJug;
     }
-    
+
     public String getColorJugador(int indice) {
         return this.getJugadores().get(indice).getColorJugador();
     }
@@ -238,7 +238,14 @@ public class Partida {
             }
         } while (running);
     }
-
+    public char[]indColores(String movimiento){
+        char[] ordenados= new char[4];
+        for (int i=0; i<4; i++){
+            ordenados[i]=movimiento.charAt(i);
+        }
+        return ordenados;
+    }
+    
     public boolean movimiento() {
         int[] indices;
         int[] posicion1;
@@ -247,10 +254,12 @@ public class Partida {
         String movimiento;
         String indicacion1 = "";
         String indicacion2 = "";
+        char direccion=' ';
         int rotacion;
         char tipoMovimiento;
         boolean salidaEmergencia = false;
         boolean running = true;
+        char[] ordenColores;
 
         do {
             movimiento = interfaz.ingresarString("jugada");
@@ -282,10 +291,16 @@ public class Partida {
                     break;
                 //Poner ficha 
                 case 'P':
-                    posicion1 = traducirPosicion(indicacion1);
-                    if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
-                        this.tablero.setFicha(posicion1[0], posicion1[1]);
-                        running = false;
+                    if (movimiento.charAt(1) == 'M') {
+                        posicion1=traducirPosicion(movimiento.substring(3));
+                        ordenColores=indColores(movimiento.substring(6));
+                        this.tablero.fichaManual(posicion1[0],posicion1[1], ordenColores);
+                    } else {
+                        posicion1 = traducirPosicion(indicacion1);
+                        if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                            this.tablero.setFicha(posicion1[0], posicion1[1]);
+                            running = false;
+                        }
                     }
                     break;
                 //Extender 
