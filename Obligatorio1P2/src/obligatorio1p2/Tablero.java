@@ -391,10 +391,6 @@ public class Tablero {
     }
 
     public int darOrientacionC(int fila1, int fila2) {
-    
-    public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
-        int columnaColor = -1;
-        int filaColor = -1;
         int orientacion = 0;
         if (fila1 == fila2) {
             orientacion = 1;

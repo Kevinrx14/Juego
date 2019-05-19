@@ -30,6 +30,7 @@ public class Aves {
     public Partida configurarPart(int cantJug,int cantAves,int cantRot,int cantTab,int tipoTerm,int cantTurnos) {
         Partida p = new Partida(cantJug, cantAves, cantRot, cantTab, tipoTerm, cantTurnos);
         return p;
+    }
     public ArrayList<Partida> getPartidas() {
         return this.partidas;
     }
