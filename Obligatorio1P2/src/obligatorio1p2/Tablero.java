@@ -36,6 +36,11 @@ public class Tablero {
         this.tablero[fila][col] = tableta;
     }
 
+    public void fichaManual(int fila, int col, char[] colores){
+        Tableta tableta=new Tableta();
+        tableta.setFicha(colores);
+        this.tablero[fila][col]=tableta;
+    }
     public Tableta getFicha(int fila, int col) {
         return this.tablero[fila][col];
     }
