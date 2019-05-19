@@ -266,7 +266,7 @@ public class Tablero {
         if (tieneColor1 && tieneColor2 && enLinea && alineados(fila1, columna1, fila2, columna2)) {
             noHayAves = !hayAves(fila1, columna1, fila2, columna2);
         }
-        System.out.println(alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
+        System.out.println("flag " + alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
         return (alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
 

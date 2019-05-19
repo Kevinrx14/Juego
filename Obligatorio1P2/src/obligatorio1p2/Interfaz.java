@@ -110,7 +110,7 @@ public class Interfaz {
                 this.sonidoError();
             }
         }
-        
+
         return validador;
     }
 
@@ -179,43 +179,40 @@ public class Interfaz {
 
     public boolean validarJugadaIngresada(String jugada, char movimiento) {
         int[] indices;
-        String indicacion1;
-        String indicacion2;
+        String indicacion1 = "";
+        String indicacion2 = "";
         boolean validador = false;
+
+        if (jugada.length() >= 6 && jugada.length() < 10) {
+            indices = this.getIndicesDeIndicacion(1, jugada);
+            indicacion1 = jugada.substring(indices[0], indices[1]);
+            indices = this.getIndicesDeIndicacion(2, jugada);
+            indicacion2 = jugada.substring(indices[0], indices[1]);
+        }
 
         switch (movimiento) {
             //Rotar
             case 'R':
-                if (jugada.length() > 6 && jugada.length() < 10) {
-                    indices = this.getIndicesDeIndicacion(1, jugada);
-                    indicacion1 = jugada.substring(indices[0], indices[1]);
-                    indices = this.getIndicesDeIndicacion(2, jugada);
-                    indicacion2 = jugada.substring(indices[0], indices[1]);
-                    if (this.validadorDePosicion(indicacion1)) {
-                        if (this.validadorDeRotacion(indicacion2)) {
-                            validador = true;
-                        }
-                    } else {
-                        System.out.println("La posicion indicada no es correcta");
-                        this.sonidoError();
+                if (this.validadorDePosicion(indicacion1)) {
+                    if (this.validadorDeRotacion(indicacion2)) {
+                        validador = true;
                     }
+                } else {
+                    System.out.println("La posicion indicada no es correcta");
+                    this.sonidoError();
+
                 }
                 break;
             //Conectar
             case 'C':
-                if (jugada.length() > 6 && jugada.length() < 10) {
-                    indices = this.getIndicesDeIndicacion(1, jugada);
-                    indicacion1 = jugada.substring(indices[0], indices[1]);
-                    indices = this.getIndicesDeIndicacion(2, jugada);
-                    indicacion2 = jugada.substring(indices[0], indices[1]);
-                    if (this.validadorDePosicion(indicacion1)
-                            && this.validadorDePosicion(indicacion2)) {
-                        validador = true;
-                    } else {
-                        System.out.println("Una posicion no es correcta");
-                        this.sonidoError();
-                    }
+                if (this.validadorDePosicion(indicacion1)
+                        && this.validadorDePosicion(indicacion2)) {
+                    validador = true;
+                } else {
+                    System.out.println("Una posicion no es correcta");
+                    this.sonidoError();
                 }
+
                 break;
             //Poner ficha 
             case 'P':
@@ -227,7 +224,14 @@ public class Interfaz {
                 break;
             //Extender 
             case 'E':
-
+                if (this.validadorDeDireccion(indicacion1)) {
+                    if (this.validadorDePosicion(indicacion2)) {
+                        validador = true;
+                    } else {
+                        System.out.println("Una posicion no es correcta");
+                        this.sonidoError();
+                    }
+                }
                 break;
             //Salir    
             case 'X':
@@ -311,6 +315,26 @@ public class Interfaz {
                 System.out.println("No se puede rotar " + rotacion + " grados");
                 this.sonidoError();
                 break;
+        }
+
+        return validador;
+    }
+
+    public boolean validadorDeDireccion(String chequear) {
+        char[] direcciones = new char[]{'I', 'D', 'A', 'B'};
+        char aux;
+        boolean validador = false;
+
+        aux = chequear.charAt(0);
+        for (int i = 0; i < direcciones.length; i++) {
+            if (aux == direcciones[i]) {
+                validador = true;
+            }
+        }
+
+        if (!validador) {
+            System.out.println("La direccion ingresada no es valida");
+            this.sonidoError();
         }
 
         return validador;
@@ -538,8 +562,7 @@ public class Interfaz {
     public void sonidoError() {
         java.awt.Toolkit.getDefaultToolkit().beep();
     }
-    
-    
+
     public ArrayList<Jugador> getJugadoresPartida() {
         ArrayList<Jugador> jugadores = this.getAves().getJugadores();
         ArrayList<Jugador> jugadoresAux = new ArrayList<>();
