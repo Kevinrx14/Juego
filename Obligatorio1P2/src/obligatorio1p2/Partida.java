@@ -26,12 +26,12 @@ public class Partida {
         this.setCantJug(cantJugadores);
         this.setCantAves(avesXjug);
         this.setCantRot(fichasRotXJug);
-        this.setCantTab(totalTab);
+        this.setCantTab(totalTab - 2);
         this.setTipoTerm(tipoTerm);
         this.setCantTurnos(cantTurnos);
         this.setTablero();
         this.setJugadores(jugadores);
-        this.setColorJugadores();
+        this.setConfigJugadores();
     }
 
     public int getCantTurnos() {
@@ -49,7 +49,18 @@ public class Partida {
     public void setJugadores(ArrayList<Jugador> todosJug) {
         this.jugadores = todosJug;
     }
-    
+
+    //Metodo que setea la cantidad de rotaciones, fichas y aves disponibles por jugador
+    public void setConfigJugadores() {
+        ArrayList<Jugador> jugadores = this.getJugadores();
+
+        for (int i = 0; i < jugadores.size(); i++) {
+            jugadores.get(i).setCantAves(this.getCantAves());
+            jugadores.get(i).setCatRot(this.getCantRot());
+        }
+        this.setColorJugadores();
+    }
+
     public String getColorJugador(int indice) {
         return this.getJugadores().get(indice).getColorJugador();
     }
@@ -185,7 +196,7 @@ public class Partida {
         for (int turno = 1; turno <= this.getCantTurnos(); turno++) {
             for (int jug = 0; jug < this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = this.movimiento();
+                salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     turno = this.getCantTurnos() + 1;
                     jug = this.getCantJug() + 1;
@@ -203,7 +214,7 @@ public class Partida {
         do {
             for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = this.movimiento();
+                salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     running = false;
                     jug = this.getCantJug() + 1;
@@ -223,10 +234,12 @@ public class Partida {
         boolean salidaEmergencia;
         boolean running = true;
 
+        //Seteo la cantidad de tabletas en 23, sino el juego no termina.
+        this.setCantTab(23);
         do {
             for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = this.movimiento();
+                salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     running = false;
                     jug = this.getCantJug() + 1;
@@ -239,15 +252,20 @@ public class Partida {
         } while (running);
     }
 
-    public boolean movimiento() {
+    public char[] indColores(String movimiento) {
+        char[] ordenados = new char[4];
+        for (int i = 0; i < 4; i++) {
+            ordenados[i] = movimiento.charAt(i);
+        }
+        return ordenados;
+    }
+
+    public boolean movimiento(int indiceJug) {
         int[] indices;
-        int[] posicion1;
-        int[] posicion2;
         Interfaz interfaz = new Interfaz();
         String movimiento;
         String indicacion1 = "";
         String indicacion2 = "";
-        int rotacion;
         char tipoMovimiento;
         boolean salidaEmergencia = false;
         boolean running = true;
@@ -268,29 +286,23 @@ public class Partida {
             switch (tipoMovimiento) {
                 //Rotar
                 case 'R':
-                    posicion1 = traducirPosicion(indicacion1);
-                    rotacion = Integer.parseInt(indicacion2);
-                    this.tablero.rotar(posicion1[0], posicion1[1], rotacion);
-                    running = false;
+                    running = rotar(indicacion1, indicacion2, indiceJug);
                     break;
                 //Conectar
                 case 'C':
-                    posicion1 = traducirPosicion(indicacion1);
-                    posicion2 = traducirPosicion(indicacion2);
-                    this.tablero.conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], ("\u001B[44m" + " " + "\033[0m"));
-                    running = false;
+                    running = conectar(indicacion1, indicacion2, indiceJug);
                     break;
                 //Poner ficha 
                 case 'P':
-                    posicion1 = traducirPosicion(indicacion1);
-                    if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
-                        this.tablero.setFicha(posicion1[0], posicion1[1]);
-                        running = false;
+                    if (movimiento.charAt(1) == 'M') {
+                        running = ponerFichaArmada(movimiento);
+                    } else {
+                        running = ponerFicha(indicacion1);
                     }
                     break;
                 //Extender 
                 case 'E':
-
+                    running = extender(indicacion1, indicacion2, indiceJug);
                     break;
                 //Salir    
                 case 'X':
@@ -301,6 +313,89 @@ public class Partida {
             }
         } while (running);
         return salidaEmergencia;
+    }
+
+    public boolean rotar(String indicacion1, String indicacion2, int indiceJug) {
+        Interfaz interfaz = new Interfaz();
+        int rotacionesDisponibles = this.getJugadores().get(indiceJug).getCantRot();
+        int[] posicion1 = this.traducirPosicion(indicacion1);
+        int rotacion = Integer.parseInt(indicacion2);
+        boolean running = true;
+
+        if (rotacionesDisponibles > 0) {
+            this.getTablero().rotar(posicion1[0], posicion1[1], rotacion);
+            rotacionesDisponibles--;
+            this.getJugadores().get(indiceJug).setCatRot(rotacionesDisponibles);
+            running = false;
+        } else {
+            System.out.println("No tiene rotaciones disponibles");
+            interfaz.sonidoError();
+        }
+
+        return running;
+    }
+
+    public boolean ponerFicha(String indicacion1) {
+        boolean running = true;
+        int[] posicion1 = this.traducirPosicion(indicacion1);
+        int cantTabletas = this.getCantTab();
+        Interfaz interfaz = new Interfaz();
+
+        if (cantTabletas > 0) {
+            if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                this.getTablero().setFicha(posicion1[0], posicion1[1]);
+                running = false;
+                this.setCantTab(cantTabletas - 1);
+            }
+        } else {
+            System.out.println("No hay tabletas disponibles");
+            interfaz.sonidoError();
+        }
+
+        return running;
+    }
+
+    public boolean ponerFichaArmada(String movimiento) {
+        Interfaz interfaz = new Interfaz();
+        boolean running = true;
+        int[] posicion1 = this.traducirPosicion(movimiento.substring(3));
+        char[] ordenColores = this.indColores(movimiento.substring(6));
+        int cantTabletas = this.getCantTab();
+
+        if (cantTabletas > 0) {
+            if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                this.getTablero().fichaManual(posicion1[0], posicion1[1], ordenColores);
+                running = false;
+                this.setCantTab(cantTabletas - 1);
+            }
+        } else {
+            System.out.println("No hay tabletas disponibles");
+            interfaz.sonidoError();
+        }
+
+        return running;
+    }
+
+    public boolean conectar(String indicacion1, String indicacion2, int indiceJug) {
+        int[] posicion1 = this.traducirPosicion(indicacion1);
+        int[] posicion2 = this.traducirPosicion(indicacion2);
+        String colorJug = this.getColorJugador(indiceJug);
+        boolean running = false;
+
+        this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], colorJug);
+
+        return running;
+    }
+    
+    public boolean extender(String indicacion1, String indicacion2, int indiceJug) {
+        int[] posicion = this.traducirPosicion(indicacion2);
+        char direccion = indicacion1.charAt(0);
+        String colorJug = this.getColorJugador(indiceJug);
+        boolean running = false;
+        
+        this.getTablero().extender(posicion[0], posicion[1], colorJug, direccion);
+        
+        return running;
     }
 
     public int[] traducirPosicion(String posicion) {
