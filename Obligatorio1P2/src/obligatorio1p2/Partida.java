@@ -290,10 +290,7 @@ public class Partida {
                     break;
                 //Conectar
                 case 'C':
-                    posicion1 = traducirPosicion(indicacion1);
-                    posicion2 = traducirPosicion(indicacion2);
-                    this.tablero.conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], ("\u001B[44m" + " " + "\033[0m"));
-                    running = false;
+                    running = conectar(indicacion1, indicacion2, indiceJug);
                     break;
                 //Poner ficha 
                 case 'P':
@@ -361,6 +358,17 @@ public class Partida {
             running = false;
         }
 
+        return running;
+    }
+
+    public boolean conectar(String indicacion1, String indicacion2, int indiceJug) {
+        int[] posicion1 = this.traducirPosicion(indicacion1);
+        int[] posicion2 = this.traducirPosicion(indicacion2);
+        String colorJug = this.getColorJugador(indiceJug);
+        boolean running = false;
+        
+        this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], colorJug);
+    
         return running;
     }
 
