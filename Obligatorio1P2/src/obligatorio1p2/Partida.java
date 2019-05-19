@@ -31,7 +31,7 @@ public class Partida {
         this.setCantTurnos(cantTurnos);
         this.setTablero();
         this.setJugadores(jugadores);
-        this.setColorJugadores();
+        this.setConfigJugadores();
     }
 
     public int getCantTurnos() {
@@ -48,6 +48,17 @@ public class Partida {
 
     public void setJugadores(ArrayList<Jugador> todosJug) {
         this.jugadores = todosJug;
+    }
+
+    //Metodo que setea la cantidad de rotaciones, fichas y aves disponibles por jugador
+    public void setConfigJugadores() {
+        ArrayList<Jugador> jugadores = this.getJugadores();
+
+        for (int i = 0; i < jugadores.size(); i++) {
+            jugadores.get(i).setCantAves(this.getCantAves());
+            jugadores.get(i).setCatRot(this.getCantRot());
+        }
+        this.setColorJugadores();
     }
 
     public String getColorJugador(int indice) {
@@ -185,7 +196,7 @@ public class Partida {
         for (int turno = 1; turno <= this.getCantTurnos(); turno++) {
             for (int jug = 0; jug < this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = this.movimiento();
+                salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     turno = this.getCantTurnos() + 1;
                     jug = this.getCantJug() + 1;
@@ -203,7 +214,7 @@ public class Partida {
         do {
             for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = this.movimiento();
+                salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     running = false;
                     jug = this.getCantJug() + 1;
@@ -226,7 +237,7 @@ public class Partida {
         do {
             for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
-                salidaEmergencia = this.movimiento();
+                salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     running = false;
                     jug = this.getCantJug() + 1;
@@ -238,15 +249,16 @@ public class Partida {
             }
         } while (running);
     }
-    public char[]indColores(String movimiento){
-        char[] ordenados= new char[4];
-        for (int i=0; i<4; i++){
-            ordenados[i]=movimiento.charAt(i);
+
+    public char[] indColores(String movimiento) {
+        char[] ordenados = new char[4];
+        for (int i = 0; i < 4; i++) {
+            ordenados[i] = movimiento.charAt(i);
         }
         return ordenados;
     }
-    
-    public boolean movimiento() {
+
+    public boolean movimiento(int indiceJug) {
         int[] indices;
         int[] posicion1;
         int[] posicion2;
@@ -254,12 +266,9 @@ public class Partida {
         String movimiento;
         String indicacion1 = "";
         String indicacion2 = "";
-        char direccion=' ';
-        int rotacion;
         char tipoMovimiento;
         boolean salidaEmergencia = false;
         boolean running = true;
-        char[] ordenColores;
 
         do {
             movimiento = interfaz.ingresarString("jugada");
@@ -277,10 +286,7 @@ public class Partida {
             switch (tipoMovimiento) {
                 //Rotar
                 case 'R':
-                    posicion1 = traducirPosicion(indicacion1);
-                    rotacion = Integer.parseInt(indicacion2);
-                    this.tablero.rotar(posicion1[0], posicion1[1], rotacion);
-                    running = false;
+                    running = rotar(indicacion1, indicacion2, indiceJug);
                     break;
                 //Conectar
                 case 'C':
@@ -292,15 +298,9 @@ public class Partida {
                 //Poner ficha 
                 case 'P':
                     if (movimiento.charAt(1) == 'M') {
-                        posicion1=traducirPosicion(movimiento.substring(3));
-                        ordenColores=indColores(movimiento.substring(6));
-                        this.tablero.fichaManual(posicion1[0],posicion1[1], ordenColores);
+                        running = ponerFichaArmada(movimiento);
                     } else {
-                        posicion1 = traducirPosicion(indicacion1);
-                        if (this.tablero.sePuedePonerFicha(posicion1[0], posicion1[1])) {
-                            this.tablero.setFicha(posicion1[0], posicion1[1]);
-                            running = false;
-                        }
+                        running = ponerFicha(indicacion1);
                     }
                     break;
                 //Extender 
@@ -316,6 +316,52 @@ public class Partida {
             }
         } while (running);
         return salidaEmergencia;
+    }
+
+    public boolean rotar(String indicacion1, String indicacion2, int indiceJug) {
+        Interfaz interfaz = new Interfaz();
+        int rotacionesDisponibles = this.getJugadores().get(indiceJug).getCantRot();
+        int[] posicion1 = this.traducirPosicion(indicacion1);
+        int rotacion = Integer.parseInt(indicacion2);
+        boolean running = true;
+
+        if (rotacionesDisponibles > 0) {
+            System.out.println("flag 1");
+            this.getTablero().rotar(posicion1[0], posicion1[1], rotacion);
+            rotacionesDisponibles--;
+            this.getJugadores().get(indiceJug).setCatRot(rotacionesDisponibles);
+            running = false;
+        } else {
+            System.out.println("No tiene rotaciones disponibles");
+            interfaz.sonidoError();
+        }
+
+        return running;
+    }
+
+    public boolean ponerFicha(String indicacion1) {
+        boolean running = true;
+        int[] posicion1 = this.traducirPosicion(indicacion1);
+
+        if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
+            this.getTablero().setFicha(posicion1[0], posicion1[1]);
+            running = false;
+        }
+
+        return running;
+    }
+
+    public boolean ponerFichaArmada(String movimiento) {
+        boolean running = true;
+        int[] posicion1 = this.traducirPosicion(movimiento.substring(3));
+        char[] ordenColores = this.indColores(movimiento.substring(6));
+
+        if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
+            this.getTablero().fichaManual(posicion1[0], posicion1[1], ordenColores);
+            running = false;
+        }
+
+        return running;
     }
 
     public int[] traducirPosicion(String posicion) {
