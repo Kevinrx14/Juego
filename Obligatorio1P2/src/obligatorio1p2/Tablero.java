@@ -164,13 +164,8 @@ public class Tablero {
 
     }
 
-    public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color) {
+    public boolean alineados(int fila1, int columna1, int fila2, int columna2) {
         boolean alineados = true;
-        boolean tieneColor1 = false;
-        boolean tieneColor2 = false;
-        boolean noHayAves = true;
-        boolean enLinea = false;
-        // Validamos que esten en la misma fila o columna
         if (fila1 == fila2 || columna1 == columna2) {
             if (fila1 == fila2) {
                 for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
@@ -186,11 +181,33 @@ public class Tablero {
                 }
             }
         }
+        return alineados;
+    }
 
-        //validamos que esten los colores en las fichas ingresadas y que los colores esten en linea
-        int filaf1 = 0;
+    public boolean hayAves(int fila1, int columna1, int fila2, int columna2) {
+        boolean hayAves = false;
+        for (int i = Math.min(columna1, columna2); i < Math.max(columna1, columna2); i++) {
+            for (int k = 0; k < 2; k++) {
+                for (int j = 0; j < 2; j++) {
+                    if (fila1 == fila2) {
+                        if (this.getFicha(fila1, columna1).devolverUnColor(k, j).contains("x")) {
+                            hayAves = true;
+                        }
+                    }
+                }
+            }
+        }
+        return hayAves;
+    }
+
+    public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color) {
+        boolean tieneColor1 = false;
+        boolean tieneColor2 = false;
+        boolean noHayAves = true;
+        boolean enLinea = false;
+        int filaf1 = -98;
         int filaf2 = 0;
-        int columnaf1 = -1;
+        int columnaf1 = -33;
         int columnaf2 = -1;
         if (this.getTablero()[fila1][columna1] != null && this.getTablero()[fila2][columna2] != null) {
             for (int i = 0; i < 2; i++) {
@@ -200,221 +217,318 @@ public class Tablero {
                         filaf1 = i;
                         columnaf1 = j;
                     }
-                    if (color.equals(this.getFicha(fila1, columna1).devolverUnColor(i, j))) {
+                    if (color.equals(this.getFicha(fila2, columna2).devolverUnColor(i, j))) {
                         tieneColor2 = true;
                         filaf2 = i;
                         columnaf2 = j;
                     }
-                    if (columnaf2 == columnaf1 || filaf1 == filaf2) {
-
-                        enLinea = true;
-                    }
-
-                }
-            }
-        }
-        // Validamos que no hayan aves en el camino
-        if (tieneColor1 && tieneColor2 && alineados && enLinea) {
-            for (int i = Math.min(columna1, columna2); i < Math.max(columna1, columna2); i++) {
-                for (int k = 0; k < 2; k++) {
-                    for (int j = 0; j < 2; j++) {
+                    System.out.println("filaf1 " + filaf1 + " columnaf1 " + columnaf1 + "/n filaf2 " + filaf2 + " columnaf2 " + columnaf2);
+                    System.out.println(enLinea);
+                    if (alineados(fila1, columna1, fila2, columna2)) {
                         if (fila1 == fila2) {
-                            if (this.getFicha(fila1, columna1).devolverUnColor(k, j).equals("x")) {
-                                noHayAves = false;
+                            if (filaf1 == filaf2) {
+                                enLinea = true;
+                            }
+                        } else {
+                            if (columnaf2 == columnaf1) {
+                                enLinea = true;
                             }
                         }
+                        System.out.println(enLinea);
                     }
                 }
             }
+            System.out.println("enLinea " + enLinea);
         }
-
-        return (alineados && tieneColor1 && tieneColor2 && noHayAves && enLinea);
+        if (tieneColor1 && tieneColor2 && enLinea && alineados(fila1, columna1, fila2, columna2)) {
+            noHayAves = !hayAves(fila1, columna1, fila2, columna2);
+        }
+        System.out.println(alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
+        return (alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
 
-    public boolean canExtend(int fila, int columna, String color, char direccion) {
-        //direccion: A- arriba B- abajo D-derecha I-izquierda
-
-        boolean hayFichas = true;
-        boolean hayExtremo = false;
+    public boolean enLineaF(int col, int fila) {
         boolean enLinea = false;
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                if (k == col || j == fila) {
+                    enLinea = true;
+                }
+
+            }
+        }
+        return enLinea;
+    }
+
+    public boolean hayFichas(int fila, int filaExt, int constante, boolean crece) {
+        boolean hayFichas = true;
+        if (!crece) {
+            for (int i = fila; i > filaExt; i--) {
+                if (this.getFicha(constante, i) == null) {
+                    hayFichas = false;
+                }
+            }
+        } else {
+            for (int i = fila; i < filaExt; i++) {
+                if (this.getFicha(constante, i) == null) {
+                    hayFichas = false;
+                }
+            }
+        }
+        return hayFichas;
+    }
+
+    public boolean tieneColor(int fila, int columna, String color) {
         boolean tieneColor = false;
-        boolean hayLinea = false;
-        int filaExt = -1;
-        int colExt = -1;
-        int filaColor = 0;
-        int colColor = 0;
-        // valido que el color esté dentro de la ficha selecionada
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 if (color.equals(this.getFicha(fila, columna).getFicha()[i][j])) {
                     tieneColor = true;
-                    filaColor = i;
-                    colColor = j;
                 }
             }
         }
-        if (tieneColor) {
+        return tieneColor;
+    }
+
+    public int[] colorFicha(int fila, int columna, String color) {
+        int[] colorFicha = new int[2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                if (color.equals(this.getFicha(fila, columna).getFicha()[i][j])) {
+                    colorFicha[0] = i;
+                    colorFicha[1] = j;
+                }
+            }
+        }
+        return colorFicha;
+    }
+
+    public int[] validarExtension(int constante, int variable, boolean crece, String color) {
+        int retorno[] = new int[3];
+        if (!crece) {
+            for (int i = variable; i > 0; i--) {
+                for (int j = 0; j < 2; j++) {
+                    for (int k = 0; k < 2; k++) {
+                        if (color.equals(this.getFicha(i, constante).devolverUnColor(j, k)) && this.getFicha(i, constante).devolverUnColor(j, k).contains("x") && this.getFicha(i - 1, constante).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(i - 1, constante).devolverUnColor(j, k))) {
+                            retorno[0] = 1;
+                            retorno[1] = j;
+                            retorno[2] = k;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int i = variable; i < 0; i++) {
+                for (int j = 0; j < 2; j++) {
+                    for (int k = 0; k < 2; k++) {
+                        if (color.equals(this.getFicha(i, constante).devolverUnColor(j, k)) && this.getFicha(i, constante).devolverUnColor(j, k).contains("x") && this.getFicha(i - 1, constante).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(i - 1, constante).devolverUnColor(j, k))) {
+                            retorno[0] = 1;
+                            retorno[1] = j;
+                            retorno[2] = k;
+                        }
+                    }
+                }
+            }
+
+        }
+        return retorno;
+    }
+
+    public boolean canExtend(int fila, int columna, String color, char direccion) {
+        boolean hayFichas = true;
+        int hayExtremo = 0;
+        int filaExt = -1;
+        int colExt = -1;
+        int filaColor = colorFicha(fila, columna, color)[0];
+        int colColor = colorFicha(fila, columna, color)[1];
+        if (tieneColor(fila, columna, color)) {
             switch (direccion) {
                 case 'A':
-                    for (int i = fila; i > 0; i--) {
-                        for (int j = 0; j < 2; j++) {
-                            for (int k = 0; k < 2; k++) {
-                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x") && this.getFicha(i - 1, columna).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(i - 1, columna).devolverUnColor(j, k))) {
-                                    hayExtremo = true;
-                                    filaExt = j;
-                                    colExt = k;
-                                    if (k == colColor || j == filaColor) {
-                                        enLinea = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (hayExtremo && enLinea) {
-                        for (int i = fila; i > filaExt; i--) {
-                            for (int j = 0; j < 2; j++) {
-                                for (int k = 0; k < 2; k++) {
-                                    if (this.getFicha(i, columna) == null) {
-                                        hayFichas = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    hayExtremo = validarExtension(columna, fila, false, color)[0];
+                    filaExt = validarExtension(columna, fila, false, color)[1];
+                    colExt = validarExtension(columna, fila, false, color)[2];
+                    hayFichas = hayFichas(fila, filaExt, columna, false);
+
                     break;
                 case 'B':
-                    for (int i = fila; i < 10; i++) {
-                        for (int j = 0; j < 2; j++) {
-                            for (int k = 0; k < 2; k++) {
-
-                                if (color.equals(this.getFicha(i, columna).devolverUnColor(j, k)) && this.getFicha(i, columna).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(i + 1, columna).devolverUnColor(j, k)) && this.getFicha(i + 1, columna).devolverUnColor(j, k).contains("x")) {
-                                    hayExtremo = true;
-                                    filaExt = j;
-                                    colExt = k;
-                                    if (k == colColor || j == filaColor) {
-                                        enLinea = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (hayExtremo && enLinea) {
-                        for (int i = fila; i < filaExt; i++) {
-                            for (int j = 0; j < 2; j++) {
-                                for (int k = 0; k < 2; k++) {
-                                    if (this.getFicha(i, columna) == null) {
-                                        hayFichas = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    hayExtremo = validarExtension(columna, fila, true, color)[0];
+                    filaExt = validarExtension(columna, fila, true, color)[1];
+                    colExt = validarExtension(columna, fila, true, color)[2];
+                    hayFichas = hayFichas(fila, filaExt, columna, true);
                     break;
                 case 'D':
-                    for (int i = columna; i < 10; i++) {
-                        for (int j = 0; j < 2; j++) {
-                            for (int k = 0; k < 2; k++) {
-
-                                if (color.equals(this.getFicha(fila, i).devolverUnColor(j, k)) && this.getFicha(fila, i).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(fila, i + 1).devolverUnColor(j, k)) && this.getFicha(fila, i + 1).devolverUnColor(j, k).contains("x")) {
-                                    hayExtremo = true;
-                                    filaExt = j;
-                                    colExt = k;
-                                    if (k == colColor || j == filaColor) {
-                                        enLinea = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (hayExtremo && enLinea) {
-                        for (int i = columna; i < filaExt; i++) {
-                            for (int j = 0; j < 2; j++) {
-                                for (int k = 0; k < 2; k++) {
-                                    if (this.getFicha(fila, i) == null) {
-                                        hayFichas = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    hayExtremo = validarExtension(fila, columna, true, color)[0];
+                    filaExt = validarExtension(fila, columna, true, color)[1];
+                    colExt = validarExtension(fila, columna, true, color)[2];
+                    hayFichas = hayFichas(columna, colExt, fila, true);
                     break;
                 case 'I':
-                    for (int i = columna; i > 0; i--) {
-                        for (int j = 0; j < 2; j++) {
-                            for (int k = 0; k < 2; k++) {
+                    hayExtremo = validarExtension(fila, columna, false, color)[0];
+                    filaExt = validarExtension(fila, columna, false, color)[1];
+                    colExt = validarExtension(fila, columna, false, color)[2];
+                    hayFichas = hayFichas(columna, colExt, fila, false);
 
-                                if (color.equals(this.getFicha(fila, i).devolverUnColor(j, k)) && this.getFicha(fila, i).devolverUnColor(j, k).contains("x") && color.equals(this.getFicha(fila, i - 1).devolverUnColor(j, k)) && this.getFicha(fila, i - 1).devolverUnColor(j, k).contains("x")) {
-                                    hayExtremo = true;
-                                    filaExt = j;
-                                    colExt = k;
-                                    if (k == colColor || j == filaColor) {
-                                        enLinea = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (hayExtremo && enLinea) {
-                        for (int i = columna; i > filaExt; i--) {
-                            for (int j = 0; j < 2; j++) {
-                                for (int k = 0; k < 2; k++) {
-                                    if (this.getFicha(fila, i) == null) {
-                                        hayFichas = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
                     break;
             }
         }
-        return (hayFichas && hayExtremo && tieneColor && enLinea);
+        return (hayFichas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
+    }
+
+    public int darOrientacionC(int fila1, int fila2) {
+        int orientacion = 0;
+        if (fila1 == fila2) {
+            orientacion = 1;
+        }
+        return orientacion;
+    }
+
+    public int darOrientacionE(char direccion) {
+        int orientacion = 1;
+        if (direccion == 'A' || direccion == 'B') {
+            orientacion = 0;
+        }
+        return orientacion;
     }
 
     public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
-        int columnaColor = -1;
-        int filaColor = -1;
-        int orientacion = 0;
+        int columnaColor1 = -1;
+        int filaColor1 = -1;
+        int columnaColor2 = -1;
+        int filaColor2 = -1;
         if (canConect(fila1, columna1, fila2, columna2, color)) {
-            for (int j = 0; j < 2; j++) {
-                for (int k = 0; k < 2; k++) {
-                    if (color.equals(this.getFicha(fila1, columna1).devolverUnColor(j, k))) {
-                        filaColor = j;
-                        columnaColor = k;
+            filaColor1 = colorFicha(fila1, columna1, color)[0];
+            columnaColor1 = colorFicha(fila1, columna1, color)[1];
+            filaColor2 = colorFicha(fila2, columna2, color)[0];
+            columnaColor2 = colorFicha(fila2, columna2, color)[1];
+            if (darOrientacionC(fila1, fila2) == 1) {
+                this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+            } else {
+                this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
+            }
+        }
+
+    }
+
+    public void pintarHorizontal(int fila1, int columna1, int columna2, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
+        for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
+            if (i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2) && (columnaColor1 == 1 || columnaColor2 == 0)) {
+                if (columnaColor1 == 1) {
+                    this.getFicha(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, columnaColor1, color);
+                } else {
+                    for (int j = 0; j < 2; j++) {
+                        {
+                            this.getFicha(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                        }
                     }
                 }
-            }
-            if (fila1 == fila2) {
-                orientacion = 1;
-            }
-            if (orientacion == 1) {
-                for (int i = Math.min(columna1, columna2); i <= this.getTablero()[Math.max(columna1, columna2)].length - this.getTablero()[Math.min(columna1, columna2)].length; i++) {
+                if (columnaColor2 == 0) {
+                    this.getFicha(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, columnaColor2, color);
+                } else {
                     for (int j = 0; j < 2; j++) {
-                        this.getFicha(fila1, i).dibujarAve(filaColor, j, color);
+                        {
+                            this.getFicha(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                        }
                     }
                 }
             } else {
-                for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
-                    for (int j = 0; j < 2; j++) {
-                        this.getFicha(i, columna1).dibujarAve(j, columnaColor, color);
+                for (int j = 0; j < 2; j++) {
+                    {
+                        this.getFicha(fila1, i).dibujarAve(filaColor1, j, color);
                     }
                 }
             }
         }
+    }
+
+    public void pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
+        for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
+            if (i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2) && (filaColor1 == 1 || filaColor2 == 0)) {
+                if (filaColor1 == 1) {
+                    this.getFicha(Math.min(fila1, fila2), columna1).dibujarAve(filaColor1, columnaColor1, color);
+                } else {
+                    for (int j = 0; j < 2; j++) {
+                        this.getFicha(Math.min(fila1, fila2), columna1).dibujarAve(j, columnaColor1, color);
+                    }
+                }
+                if (filaColor2 == 0) {
+                    this.getFicha(Math.max(fila1, fila2), columna1).dibujarAve(filaColor2, columnaColor2, color);
+                } else {
+                    for (int j = 0; j < 2; j++) {
+                        this.getFicha(Math.max(fila1, fila2), columna1).dibujarAve(j, columnaColor1, color);
+                    }
+                }
+            } else {
+                for (int j = 0; j < 2; j++) {
+                    this.getFicha(i, columna1).dibujarAve(j, columnaColor1, color);
+                }
+            }
+        }
+    }
+
+    public boolean extendCreciente(int fila, int columna, int filaColor, int columnaColor, char direccion, String color) {
+        boolean pintando = true;
+        if (darOrientacionE(direccion) == 0) {
+            for (int i = columna; i <= 10; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if (this.getFicha(fila, i).hayAves(filaColor, j)) {
+                        pintando = false;
+                        j = 2;
+                    } else {
+                        this.getFicha(fila, i).dibujarAve(filaColor, j, color);
+                    }
+                }
+            }
+        } else {
+            for (int i = fila; i <= 10; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if (this.getFicha(i, columna).hayAves(j, columnaColor)) {
+                        pintando = false;
+                        j = 2;
+                    } else {
+                        this.getFicha(i, columna).dibujarAve(j, columnaColor, color);
+                    }
+                }
+            }
+        }
+        return pintando;
+    }
+
+    public boolean extendDecreciente(int fila, int columna, int filaColor, int columnaColor, char direccion, String color) {
+        boolean pintando = true;
+        if (darOrientacionE(direccion) == 1) {
+            for (int i = columna; i >= 0; i--) {
+                for (int j = 0; j < 2; j++) {
+                    if (this.getFicha(fila, i).hayAves(filaColor, j)) {
+                        pintando = false;
+                        j = 2;
+                    } else {
+                        this.getFicha(fila, i).dibujarAve(filaColor, j, color);
+                    }
+                }
+            }
+        } else {
+            for (int i = fila; i >= 0; i--) {
+                for (int j = 0; j < 2; j++) {
+                    if (this.getFicha(i, columna).hayAves(j, columnaColor)) {
+                        pintando = false;
+                        j = 2;
+                    } else {
+                        this.getFicha(i, columna).dibujarAve(j, columnaColor, color);
+                    }
+                }
+            }
+        }
+        return pintando;
     }
 
     public void extender(int fila, int columna, String color, char direccion) {
         int columnaColor = -1;
         int filaColor = -1;
-        int orientacion = 0;
-        if (direccion == 'A' || direccion == 'B') {
-            orientacion = 1;
-        }
         boolean crece = true;
         if (direccion == 'A' || direccion == 'I') {
             crece = false;
         }
-        boolean pintando = false;
+        boolean pintando = true;
         while (canExtend(fila, columna, color, direccion) && pintando) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
@@ -425,53 +539,9 @@ public class Tablero {
                 }
             }
             if (crece) {
-                if (orientacion == 1) {
-                    for (int i = columna; i <= 10; i++) {
-                        for (int j = 0; j < 2; j++) {
-                            if (this.getFicha(fila, i).hayAves(filaColor, j)) {
-                                pintando = false;
-                                j = 2;
-                            } else {
-                                this.getFicha(fila, i).dibujarAve(filaColor, j, color);
-                            }
-                        }
-                    }
-                } else {
-                    for (int i = fila; i <= 10; i++) {
-                        for (int j = 0; j < 2; j++) {
-                            if (this.getFicha(i, columna).hayAves(j, columnaColor)) {
-                                pintando = false;
-                                j = 2;
-                            } else {
-                                this.getFicha(i, columna).dibujarAve(j, columnaColor, color);
-                            }
-                        }
-                    }
-                }
+                pintando = extendCreciente(fila, columna, filaColor, columnaColor, direccion, color);
             } else {
-                if (orientacion == 1) {
-                    for (int i = columna; i >= 0; i--) {
-                        for (int j = 0; j < 2; j++) {
-                            if (this.getFicha(fila, i).hayAves(filaColor, j)) {
-                                pintando = false;
-                                j = 2;
-                            } else {
-                                this.getFicha(fila, i).dibujarAve(filaColor, j, color);
-                            }
-                        }
-                    }
-                } else {
-                    for (int i = fila; i >= 0; i--) {
-                        for (int j = 0; j < 2; j++) {
-                            if (this.getFicha(i, columna).hayAves(j, columnaColor)) {
-                                pintando = false;
-                                j = 2;
-                            } else {
-                                this.getFicha(i, columna).dibujarAve(j, columnaColor, color);
-                            }
-                        }
-                    }
-                }
+                pintando = extendDecreciente(fila, columna, filaColor, columnaColor, direccion, color);
             }
         }
     }
