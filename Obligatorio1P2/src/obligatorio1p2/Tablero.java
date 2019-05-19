@@ -244,8 +244,6 @@ public class Tablero {
                         filaf2 = i;
                         columnaf2 = j;
                     }
-                    System.out.println("filaf1 " + filaf1 + " columnaf1 " + columnaf1 + "/n filaf2 " + filaf2 + " columnaf2 " + columnaf2);
-                    System.out.println(enLinea);
                     if (alineados(fila1, columna1, fila2, columna2)) {
                         if (fila1 == fila2) {
                             if (filaf1 == filaf2) {
@@ -256,11 +254,9 @@ public class Tablero {
                                 enLinea = true;
                             }
                         }
-                        System.out.println(enLinea);
                     }
                 }
             }
-            System.out.println("enLinea " + enLinea);
         }
         if (tieneColor1 && tieneColor2 && enLinea && alineados(fila1, columna1, fila2, columna2)) {
             noHayAves = !hayAves(fila1, columna1, fila2, columna2);
