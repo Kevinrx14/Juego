@@ -224,12 +224,13 @@ public class Interfaz {
                 break;
             //Extender 
             case 'E':
-                if (this.validadorDeDireccion(indicacion1)
-                        && this.validadorDePosicion(indicacion2)) {
-                    validador = true;
-                } else {
-                    System.out.println("Una posicion no es correcta");
-                    this.sonidoError();
+                if (this.validadorDeDireccion(indicacion1)) {
+                    if (this.validadorDePosicion(indicacion2)) {
+                        validador = true;
+                    } else {
+                        System.out.println("Una posicion no es correcta");
+                        this.sonidoError();
+                    }
                 }
                 break;
             //Salir    
@@ -323,21 +324,22 @@ public class Interfaz {
         char[] direcciones = new char[]{'I', 'D', 'A', 'B'};
         char aux;
         boolean validador = false;
-        
+
         aux = chequear.charAt(0);
-        for(int i = 0; i < direcciones.length; i++) {
+        for (int i = 0; i < direcciones.length; i++) {
             if (aux == direcciones[i]) {
                 validador = true;
             }
         }
-        
-        if(!validador) {
+
+        if (!validador) {
             System.out.println("La direccion ingresada no es valida");
             this.sonidoError();
         }
-        
+
         return validador;
     }
+
     public void menuPrincipalTemplate() {
         System.out.println("+-!-!-!-!- >|< AVES! 1.0 (Beta) >|< -!-!-!-!- +");
         System.out.println("|><    ><    ><    ><    ><    ><    ><    >< |");
