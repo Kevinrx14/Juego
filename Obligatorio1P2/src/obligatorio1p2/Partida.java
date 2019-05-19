@@ -26,7 +26,7 @@ public class Partida {
         this.setCantJug(cantJugadores);
         this.setCantAves(avesXjug);
         this.setCantRot(fichasRotXJug);
-        this.setCantTab(totalTab);
+        this.setCantTab(totalTab - 2);
         this.setTipoTerm(tipoTerm);
         this.setCantTurnos(cantTurnos);
         this.setTablero();
@@ -260,8 +260,6 @@ public class Partida {
 
     public boolean movimiento(int indiceJug) {
         int[] indices;
-        int[] posicion1;
-        int[] posicion2;
         Interfaz interfaz = new Interfaz();
         String movimiento;
         String indicacion1 = "";
@@ -323,7 +321,6 @@ public class Partida {
         boolean running = true;
 
         if (rotacionesDisponibles > 0) {
-            System.out.println("flag 1");
             this.getTablero().rotar(posicion1[0], posicion1[1], rotacion);
             rotacionesDisponibles--;
             this.getJugadores().get(indiceJug).setCatRot(rotacionesDisponibles);
@@ -339,23 +336,39 @@ public class Partida {
     public boolean ponerFicha(String indicacion1) {
         boolean running = true;
         int[] posicion1 = this.traducirPosicion(indicacion1);
+        int cantTabletas = this.getCantTab();
+        Interfaz interfaz = new Interfaz();
 
-        if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
-            this.getTablero().setFicha(posicion1[0], posicion1[1]);
-            running = false;
+        if (cantTabletas > 0) {
+            if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                this.getTablero().setFicha(posicion1[0], posicion1[1]);
+                running = false;
+                this.setCantTab(cantTabletas - 1);
+            }
+        } else {
+            System.out.println("No hay tabletas disponibles");
+            interfaz.sonidoError();
         }
 
         return running;
     }
 
     public boolean ponerFichaArmada(String movimiento) {
+        Interfaz interfaz = new Interfaz();
         boolean running = true;
         int[] posicion1 = this.traducirPosicion(movimiento.substring(3));
         char[] ordenColores = this.indColores(movimiento.substring(6));
+        int cantTabletas = this.getCantTab();
 
-        if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
-            this.getTablero().fichaManual(posicion1[0], posicion1[1], ordenColores);
-            running = false;
+        if (cantTabletas > 0) {
+            if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
+                this.getTablero().fichaManual(posicion1[0], posicion1[1], ordenColores);
+                running = false;
+                this.setCantTab(cantTabletas - 1);
+            }
+        } else {
+            System.out.println("No hay tabletas disponibles");
+            interfaz.sonidoError();
         }
 
         return running;
@@ -366,9 +379,9 @@ public class Partida {
         int[] posicion2 = this.traducirPosicion(indicacion2);
         String colorJug = this.getColorJugador(indiceJug);
         boolean running = false;
-        
+
         this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], colorJug);
-    
+
         return running;
     }
 
