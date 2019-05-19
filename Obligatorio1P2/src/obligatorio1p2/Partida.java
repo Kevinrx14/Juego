@@ -302,7 +302,7 @@ public class Partida {
                     break;
                 //Extender 
                 case 'E':
-
+                    System.out.println("E");
                     break;
                 //Salir    
                 case 'X':
