@@ -234,6 +234,8 @@ public class Partida {
         boolean salidaEmergencia;
         boolean running = true;
 
+        //Seteo la cantidad de tabletas en 23, sino el juego no termina.
+        this.setCantTab(23);
         do {
             for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
