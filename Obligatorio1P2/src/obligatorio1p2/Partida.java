@@ -302,7 +302,7 @@ public class Partida {
                     break;
                 //Extender 
                 case 'E':
-                    System.out.println("E");
+                    running = extender(indicacion1, indicacion2, indiceJug);
                     break;
                 //Salir    
                 case 'X':
@@ -384,6 +384,17 @@ public class Partida {
 
         this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], colorJug);
 
+        return running;
+    }
+    
+    public boolean extender(String indicacion1, String indicacion2, int indiceJug) {
+        int[] posicion = this.traducirPosicion(indicacion2);
+        char direccion = indicacion1.charAt(0);
+        String colorJug = this.getColorJugador(indiceJug);
+        boolean running = false;
+        
+        this.getTablero().extender(posicion[0], posicion[1], colorJug, direccion);
+        
         return running;
     }
 
