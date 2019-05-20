@@ -9,7 +9,10 @@ public class Tableta {
         this.tableta[fila][col] = color;
         this.tableta[fila][col] = this.tableta[fila][col].replaceAll(" ", "x");
     }
-    
+    public boolean hayAvesYColor(int fila, int columna, String color){
+        String col=color.substring(0, 5);
+        return hayAves(fila, columna)&&this.devolverUnColor(fila,columna).substring(0,5).equals(col);
+    }
     public boolean hayAves(int fila, int col) {
         boolean validador = false;
         

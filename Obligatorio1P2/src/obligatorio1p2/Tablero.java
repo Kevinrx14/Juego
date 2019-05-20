@@ -213,40 +213,36 @@ public class Tablero {
         return alineados;
     }
 
-    public boolean hayAves(int fila1, int columna1, int fila2, int columna2, int cantAves) {
+    public boolean hayAves(int fila1, int columna1, int fila2, int columna2, int filaf1, int columnaf1, int cantAves) {
         int cont = 0;
         boolean hayAves = false;
 
         if (fila1 == fila2) {
             for (int i = Math.min(columna1, columna2); i < Math.max(columna1, columna2); i++) {
                 for (int k = 0; k < 2; k++) {
-                    for (int j = 0; j < 2; j++) {
-                        cont++;
-                        if (this.getTableta(fila1, i).devolverUnColor(k, j).contains("x")) {
-                            hayAves = true;
-                        }
+                    cont++;
+                    if (this.getTableta(fila1, i).devolverUnColor(filaf1, k).contains("x")) {
+                        hayAves = true;
                     }
                 }
             }
         } else {
             for (int i = Math.min(fila1, fila2); i < Math.max(fila1, fila2); i++) {
                 for (int k = 0; k < 2; k++) {
-                    for (int j = 0; j < 2; j++) {
-                        cont++;
-                        if (this.getTableta(i, columna1).devolverUnColor(k, j).contains("x")) {
-                            hayAves = true;
-                        }
+
+                    cont++;
+                    if (this.getTableta(i, columna1).devolverUnColor(k, columnaf1).contains("x")) {
+                        hayAves = true;
                     }
                 }
             }
         }
-        if(cont%2!=0){
-            cont=((cont-1)/2)+1;
-        }else{
-            cont=cont/2;
+        if (cont % 2 != 0) {
+            cont = ((cont - 1) / 2) + 1;
+        } else {
+            cont = cont / 2;
         }
         return hayAves || cont > cantAves;
-        return hayAves && cont <= cantAves;
     }
 
     public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color, int cantAves) {
@@ -286,7 +282,7 @@ public class Tablero {
             }
         }
         if (tieneColor1 && tieneColor2 && enLinea && alineados(fila1, columna1, fila2, columna2)) {
-            noHayAves = !hayAves(fila1, columna1, fila2, columna2, cantAves);
+            noHayAves = !hayAves(fila1, columna1, fila2, columna2, filaf1, columnaf1, cantAves);
         }
 
         return (alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
@@ -337,10 +333,10 @@ public class Tablero {
     }
 
     public int[] colorTableta(int fila, int columna, String color) {
-        int[] colorTableta = new int[2];
+        int[] colorTableta = {0, 0};
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                if (color.equals(this.getTableta(fila, columna).getTableta()[i][j])) {
+                if (color.equals(this.getTableta(fila, columna).devolverUnColor(i, j))) {
                     colorTableta[0] = i;
                     colorTableta[1] = j;
                 }
@@ -351,19 +347,32 @@ public class Tablero {
 
     public int[] validarExtension(int constante, int variable, boolean crece, String color) {
         int retorno[] = new int[3];
-        if (!crece) {
+        System.out.println("esta" + crece);
+        if (crece == false) {
             for (int i = variable; i > 0; i--) {
-                for (int j = 0; j < 2; j++) {
-                    for (int k = 0; k < 2; k++) {
-                        if (color.equals(
-                                this.getTableta(i, constante).devolverUnColor(j, k))
-                                && this.getTableta(i, constante).devolverUnColor(j, k).contains("x")
-                                && this.getTableta(i - 1, constante).devolverUnColor(j, k).contains("x")
-                                && color.equals(this.getTableta(i - 1, constante).devolverUnColor(j, k)
-                                )) {
-                            retorno[0] = 1;
-                            retorno[1] = j;
-                            retorno[2] = k;
+                System.out.println(i);
+                for (int j = 1; j >= 0; j--) {
+                    for (int k = 1; k >= 0; k--) {
+                        if (this.getTableta(i, constante) != null && this.getTableta(i - 1, constante) != null) {
+                            System.out.println((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i - 1, constante).hayAvesYColor(j, k, color)) + " " + i + " " + constante + " " + k + " " + j);
+                            if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i - 1, constante).hayAvesYColor(j, k, color))) {
+                                retorno[0] = 1;
+                                retorno[1] = i;
+                                retorno[2] = constante;
+                                i = 0;
+                                k = 2;
+                                j = 2;
+                            }
+                        }
+                        if (this.getTableta(constante, i) != null&&this.getTableta(constante, i+1) != null) {
+                            if (this.getTableta(constante, i).hayAvesYColor(j, k, color) && this.getTableta(constante,i - 1).hayAvesYColor(j, k, color)) {
+                                retorno[0] = 1;
+                                retorno[1] = constante;
+                                retorno[2] = i;
+                                i = 0;
+                                k = 2;
+                                j = 2;
+                            }
                         }
                     }
                 }
@@ -372,23 +381,25 @@ public class Tablero {
             for (int i = variable; i < 0; i++) {
                 for (int j = 0; j < 2; j++) {
                     for (int k = 0; k < 2; k++) {
-                        if (color.equals(this.getTableta(i, constante).devolverUnColor(j, k))
-                                && this.getTableta(i, constante).devolverUnColor(j, k).contains("x")
-                                && this.getTableta(i - 1, constante).devolverUnColor(j, k).contains("x")
-                                && color.equals(this.getTableta(i - 1, constante).devolverUnColor(j, k)
-                                )) {
-                            retorno[0] = 1;
-                            retorno[1] = j;
-                            retorno[2] = k;
+                        if (this.getTableta(i, constante) != null&&this.getTableta(i+1, constante) != null) {
+                            if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i + 1, constante).hayAvesYColor(j, k, color))) {
+                                retorno[0] = 1;
+                                retorno[1] = i;
+                                retorno[2] = constante;
+                                i = 0;
+                                k = 2;
+                                j = 2;
+                            }
                         }
-                        if (color.equals(this.getTableta(constante, i).devolverUnColor(j, k))
-                                && this.getTableta(constante, i).devolverUnColor(j, k).contains("x")
-                                && this.getTableta(constante, i - 1).devolverUnColor(j, k).contains("x")
-                                && color.equals(this.getTableta(constante, i - 1).devolverUnColor(j, k)
-                                )) {
-                            retorno[0] = 1;
-                            retorno[1] = j;
-                            retorno[2] = k;
+                        if (this.getTableta(constante, i) != null&&this.getTableta(constante, i+1) != null) {
+                            if (this.getTableta(constante, i).hayAvesYColor(j, k, color) && this.getTableta(constante,i + 1).hayAvesYColor(j, k, color)) {
+                                retorno[0] = 1;
+                                retorno[1] = constante;
+                                retorno[2] = i;
+                                i = 0;
+                                k = 2;
+                                j = 2;
+                            }
                         }
                     }
                 }
@@ -404,13 +415,14 @@ public class Tablero {
         int colExt = -1;
         int filaColor = colorTableta(fila, columna, color)[0];
         int colColor = colorTableta(fila, columna, color)[1];
-
+        System.out.println(tieneColor(fila, columna, color) && direccion == 'A');
         if (tieneColor(fila, columna, color)) {
             switch (direccion) {
                 case 'A':
                     hayExtremo = validarExtension(columna, fila, false, color)[0];
                     filaExt = validarExtension(columna, fila, false, color)[1];
                     colExt = validarExtension(columna, fila, false, color)[2];
+                    System.out.println(filaExt + " " + colExt);
                     hayTabletas = hayTabletas(fila, filaExt, columna, false);
 
                     break;
@@ -435,10 +447,12 @@ public class Tablero {
                     break;
             }
         }
-        return (hayTabletas
-                && hayExtremo == 1
-                && tieneColor(fila, columna, color)
-                && enLineaF(filaColor, colColor));
+        System.out.println("hayExt " + hayExtremo);
+        System.out.println("hayTabletas " + hayTabletas);
+        System.out.println("tieneColor " + tieneColor(fila, columna, color));
+        System.out.println("enLineaF " + enLineaF(filaColor, colColor));
+        return (hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
+
     }
 
     public int darOrientacionC(int fila1, int fila2) {
@@ -463,8 +477,8 @@ public class Tablero {
         int columnaColor1 = -1;
         int filaColor1 = -1;
         int columnaColor2 = -1;
-        int filaColor2 = -1; 
-        boolean ret=true;
+        int filaColor2 = -1;
+        boolean ret = true;
         boolean running = true;
         if (canConect(fila1, columna1, fila2, columna2, color, contador)) {
             filaColor1 = colorTableta(fila1, columna1, color)[0];
@@ -474,18 +488,11 @@ public class Tablero {
             if (darOrientacionC(fila1, fila2) == 1) {
                 contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
             } else {
-                contador = contador - this.pintarVertical(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, filaColor2, color);
             }
-
-        }else{
-            ret=false;
-        }
-        p.getJugadores().get(indiceJugador).setCantAves(contador);
-        return ret;
+            p.getJugadores().get(indiceJugador).setCantAves(contador);
             running = false;
         }
-        p.getJugadores().get(indiceJugador).setCantAves(contador);
-        
         return running;
     }
 
@@ -523,12 +530,11 @@ public class Tablero {
         return cont;
     }
 
-
     public int pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
         int cont = 0;
         for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
             if (i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2) && (filaColor1 == 1 || filaColor2 == 0)) {
-                if (filaColor1 == 1) {                   
+                if (filaColor1 == 1) {
                     this.getTableta(Math.min(fila1, fila2), columna1).dibujarAve(filaColor1, columnaColor1, color);
                     cont++;
                 } else {
@@ -538,6 +544,7 @@ public class Tablero {
                     }
                 }
                 if (filaColor2 == 0) {
+                    System.out.println(filaColor2 + " + " + columnaColor2 + " " + color);
                     this.getTableta(Math.max(fila1, fila2), columna1).dibujarAve(filaColor2, columnaColor2, color);
                     cont++;
                 } else {
@@ -553,31 +560,39 @@ public class Tablero {
                 }
             }
         }
-        
+
         return cont;
     }
 
-    public boolean extendCreciente(int fila, int columna, int filaColor, int columnaColor, char direccion, String color) {
+    public boolean extendCreciente(int fila, int columna, int filaColor, int columnaColor, char direccion, String color, int filaExt, int colExt) {
         boolean pintando = true;
-        if (darOrientacionE(direccion) == 0) {
-            for (int i = columna; i <= 10; i++) {
+        if (darOrientacionE(direccion) == 1) {
+            for (int i = columna; i <= colExt; i++) {
                 for (int j = 0; j < 2; j++) {
-                    if (this.getTableta(fila, i).hayAves(filaColor, j)) {
-                        pintando = false;
-                        j = 2;
-                    } else {
-                        this.getTableta(fila, i).dibujarAve(filaColor, j, color);
+                    if(i!=colExt){
+                        if (this.getTableta(fila, i).hayAves(filaColor, j)) {
+                            pintando = false;
+                            j = 2;
+                        } else {
+                            this.getTableta(fila, i).dibujarAve(filaColor, j, color);
+                        }
+                    }else{
+                        
                     }
                 }
             }
         } else {
-            for (int i = fila; i <= 10; i++) {
+            for (int i = fila; i <= filaExt; i++) {
                 for (int j = 0; j < 2; j++) {
-                    if (this.getTableta(i, columna).hayAves(j, columnaColor)) {
-                        pintando = false;
-                        j = 2;
-                    } else {
-                        this.getTableta(i, columna).dibujarAve(j, columnaColor, color);
+                    if (i!=filaExt) {
+                        if (this.getTableta(i, columna).hayAves(j, columnaColor)) {
+                            pintando = false;
+                            j = 2;
+                        } else {
+                            this.getTableta(i, columna).dibujarAve(j, columnaColor, color);
+                        }
+                    }else{
+                        
                     }
                 }
             }
@@ -585,27 +600,35 @@ public class Tablero {
         return pintando;
     }
 
-    public boolean extendDecreciente(int fila, int columna, int filaColor, int columnaColor, char direccion, String color) {
+    public boolean extendDecreciente(int fila, int columna, int filaColor, int columnaColor, char direccion, String color, int filaExt, int colExt) {
         boolean pintando = true;
         if (darOrientacionE(direccion) == 1) {
-            for (int i = columna; i >= 0; i--) {
+            for (int i = columna; i >= colExt; i--) {
                 for (int j = 0; j < 2; j++) {
-                    if (this.getTableta(fila, i).hayAves(filaColor, j)) {
-                        pintando = false;
-                        j = 2;
-                    } else {
-                        this.getTableta(fila, i).dibujarAve(filaColor, j, color);
+                    if (i!=colExt) {
+                        if (this.getTableta(fila, i).hayAves(filaColor, j)) {
+                            pintando = false;
+                            j = 2;
+                        } else {
+                            this.getTableta(fila, i).dibujarAve(filaColor, j, color);
+                        }
+                    }else{
+                        
                     }
                 }
             }
         } else {
-            for (int i = fila; i >= 0; i--) {
+            for (int i = fila; i >= filaExt; i--) {
                 for (int j = 0; j < 2; j++) {
-                    if (this.getTableta(i, columna).hayAves(j, columnaColor)) {
-                        pintando = false;
-                        j = 2;
-                    } else {
-                        this.getTableta(i, columna).dibujarAve(j, columnaColor, color);
+                    if (i!= filaExt) {
+                        if (this.getTableta(i, columna).hayAves(j, columnaColor)) {
+                            pintando = false;
+                            j = 2;
+                        } else {
+                            this.getTableta(i, columna).dibujarAve(j, columnaColor, color);
+                        }
+                    }else{
+                        
                     }
                 }
             }
@@ -621,7 +644,6 @@ public class Tablero {
             crece = false;
         }
         boolean pintando = true;
-
         while (canExtend(fila, columna, color, direccion) && pintando) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
@@ -632,9 +654,9 @@ public class Tablero {
                 }
             }
             if (crece) {
-                pintando = extendCreciente(fila, columna, filaColor, columnaColor, direccion, color);
+                pintando = extendCreciente(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1],this.validarExtension(columna, fila, crece, color)[2]);
             } else {
-                pintando = extendDecreciente(fila, columna, filaColor, columnaColor, direccion, color);
+                pintando = extendDecreciente(fila, columna, filaColor, columnaColor, direccion, color,this.validarExtension(columna, fila, crece, color)[1],this.validarExtension(columna, fila, crece, color)[2]);
             }
         }
     }
