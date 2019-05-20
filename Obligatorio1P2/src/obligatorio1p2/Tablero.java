@@ -489,19 +489,10 @@ public class Tablero {
 
     public int pintarHorizontal(int fila1, int columna1, int columna2, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
         int cont = 0;
-        int empieza=0;
-        int termina=0;
-        if (Math.max(columna1, columna2)==columna1){
-            termina=columnaColor1;
-            empieza=columnaColor2;
-        }else{
-            termina=columnaColor2;
-            empieza=columnaColor1;
-        }
         for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
-            if (i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2) && (termina == 0 || empieza == 1)) {
-                if (termina == 0) {
-                    this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, termina, color);
+            if (i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2) && (columnaColor1 == 1 || columnaColor2 == 0)) {
+                if (columnaColor1 == 1) {
+                    this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, columnaColor1, color);
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
@@ -510,8 +501,8 @@ public class Tablero {
                     }
                 }
 
-                if (empieza==1) {
-                    this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, empieza, color);
+                if (columnaColor2 == 0) {
+                    this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, columnaColor2, color);
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
@@ -532,19 +523,10 @@ public class Tablero {
 
     public int pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
         int cont = 0;
-        int empieza=0;
-        int termina=0;
-        if (Math.max(fila1, fila2)==fila1){
-            termina=filaColor1;
-            empieza=filaColor2;
-        }else{
-            termina=filaColor2;
-            empieza=filaColor1;
-        }
         for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
-            if (i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2) && (empieza == 1 || termina == 0)) {
-                if (termina == 0) {
-                    this.getTableta(Math.min(fila1, fila2), columna1).dibujarAve(termina, columnaColor1, color);
+            if (i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2) && (filaColor1 == 1 || filaColor2 == 0)) {
+                if (filaColor1 == 1) {
+                    this.getTableta(Math.min(fila1, fila2), columna1).dibujarAve(filaColor1, columnaColor1, color);
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
@@ -552,8 +534,8 @@ public class Tablero {
                         cont++;
                     }
                 }
-                if (empieza == 1) {
-                    this.getTableta(Math.max(fila1, fila2), columna1).dibujarAve(empieza, columnaColor2, color);
+                if (filaColor2 == 0) {
+                    this.getTableta(Math.max(fila1, fila2), columna1).dibujarAve(filaColor2, columnaColor2, color);
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
