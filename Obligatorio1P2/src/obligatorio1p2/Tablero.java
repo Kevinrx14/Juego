@@ -361,8 +361,8 @@ public class Tablero {
                                 j = 2;
                             }
                         }
-                        if (this.getTableta(constante, i) != null&&this.getTableta(constante, i+1) != null) {
-                            if (this.getTableta(constante, i).hayAvesYColor(j, k, color) && this.getTableta(constante,i - 1).hayAvesYColor(j, k, color)) {
+                        if (this.getTableta(constante, i) != null && this.getTableta(constante, i + 1) != null) {
+                            if (this.getTableta(constante, i).hayAvesYColor(j, k, color) && this.getTableta(constante, i - 1).hayAvesYColor(j, k, color)) {
                                 retorno[0] = 1;
                                 retorno[1] = constante;
                                 retorno[2] = i;
@@ -378,7 +378,7 @@ public class Tablero {
             for (int i = variable; i < 0; i++) {
                 for (int j = 0; j < 2; j++) {
                     for (int k = 0; k < 2; k++) {
-                        if (this.getTableta(i, constante) != null&&this.getTableta(i+1, constante) != null) {
+                        if (this.getTableta(i, constante) != null && this.getTableta(i + 1, constante) != null) {
                             if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i + 1, constante).hayAvesYColor(j, k, color))) {
                                 retorno[0] = 1;
                                 retorno[1] = i;
@@ -388,8 +388,8 @@ public class Tablero {
                                 j = 2;
                             }
                         }
-                        if (this.getTableta(constante, i) != null&&this.getTableta(constante, i+1) != null) {
-                            if (this.getTableta(constante, i).hayAvesYColor(j, k, color) && this.getTableta(constante,i + 1).hayAvesYColor(j, k, color)) {
+                        if (this.getTableta(constante, i) != null && this.getTableta(constante, i + 1) != null) {
+                            if (this.getTableta(constante, i).hayAvesYColor(j, k, color) && this.getTableta(constante, i + 1).hayAvesYColor(j, k, color)) {
                                 retorno[0] = 1;
                                 retorno[1] = constante;
                                 retorno[2] = i;
@@ -442,7 +442,7 @@ public class Tablero {
                     break;
             }
         }
-        
+
         return (hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
 
     }
@@ -466,6 +466,7 @@ public class Tablero {
     public boolean conectar(int fila1, int columna1, int fila2, int columna2, int indiceJugador, Partida p) {
         int contador = p.getJugadores().get(indiceJugador).getCantAves();
         String color = p.getJugadores().get(indiceJugador).getColorJugador();
+        Interfaz interfaz = new Interfaz();
         int columnaColor1 = -1;
         int filaColor1 = -1;
         int columnaColor2 = -1;
@@ -484,6 +485,9 @@ public class Tablero {
             }
             p.getJugadores().get(indiceJugador).setCantAves(contador);
             running = false;
+        } else {
+            System.out.println("No se puede conectar");
+            interfaz.sonidoError();
         }
         return running;
     }
@@ -559,31 +563,27 @@ public class Tablero {
         boolean pintando = true;
         if (darOrientacionE(direccion) == 1) {
             for (int i = columna; i <= colExt; i++) {
-                for (int j = 0; j < 2; j++) {
-                    if(i!=colExt){
+                for (int j = columnaColor; j < 2; j++) {
+                    if (i != colExt) {
                         if (this.getTableta(fila, i).hayAves(filaColor, j)) {
                             pintando = false;
                             j = 2;
                         } else {
                             this.getTableta(fila, i).dibujarAve(filaColor, j, color);
                         }
-                    }else{
-                        
                     }
                 }
             }
         } else {
             for (int i = fila; i <= filaExt; i++) {
-                for (int j = 0; j < 2; j++) {
-                    if (i!=filaExt) {
+                for (int j = filaColor; j < 2; j++) {
+                    if (i != filaExt) {
                         if (this.getTableta(i, columna).hayAves(j, columnaColor)) {
                             pintando = false;
                             j = 2;
                         } else {
                             this.getTableta(i, columna).dibujarAve(j, columnaColor, color);
                         }
-                    }else{
-                        
                     }
                 }
             }
@@ -595,31 +595,27 @@ public class Tablero {
         boolean pintando = true;
         if (darOrientacionE(direccion) == 1) {
             for (int i = columna; i >= colExt; i--) {
-                for (int j = 0; j < 2; j++) {
-                    if (i!=colExt) {
+                for (int j = columnaColor; j >= 0; j--) {
+                    if (i != colExt) {
                         if (this.getTableta(fila, i).hayAves(filaColor, j)) {
                             pintando = false;
                             j = 2;
                         } else {
                             this.getTableta(fila, i).dibujarAve(filaColor, j, color);
                         }
-                    }else{
-                        
                     }
                 }
             }
         } else {
             for (int i = fila; i >= filaExt; i--) {
-                for (int j = 0; j < 2; j++) {
-                    if (i!= filaExt) {
+                for (int j = filaColor; j >= 0; j--) {
+                    if (i != filaExt) {
                         if (this.getTableta(i, columna).hayAves(j, columnaColor)) {
                             pintando = false;
                             j = 2;
                         } else {
                             this.getTableta(i, columna).dibujarAve(j, columnaColor, color);
                         }
-                    }else{
-                        
                     }
                 }
             }
@@ -645,9 +641,9 @@ public class Tablero {
                 }
             }
             if (crece) {
-                pintando = extendCreciente(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1],this.validarExtension(columna, fila, crece, color)[2]);
+                pintando = extendCreciente(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1], this.validarExtension(columna, fila, crece, color)[2]);
             } else {
-                pintando = extendDecreciente(fila, columna, filaColor, columnaColor, direccion, color,this.validarExtension(columna, fila, crece, color)[1],this.validarExtension(columna, fila, crece, color)[2]);
+                pintando = extendDecreciente(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1], this.validarExtension(columna, fila, crece, color)[2]);
             }
         }
     }
