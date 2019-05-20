@@ -400,7 +400,7 @@ public class Partida {
         String colorJug = this.getColorJugador(indiceJug);
         boolean running = false;
 
-        this.getTablero().extender(posicion[0], posicion[1], colorJug, direccion);
+        this.getTablero().extender(posicion[0], posicion[1], direccion, indiceJug, this);
 
         return running;
     }
