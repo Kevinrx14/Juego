@@ -422,54 +422,19 @@ public class Partida {
     }
 
     public int[] traducirPosicion(String posicion) {
+        char[] filasChar = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
         int[] devolverPosicion = new int[2];
         char fila;
 
         fila = posicion.charAt(0);
         devolverPosicion[1] = Integer.parseInt(posicion.substring(1)) - 1;
 
-        switch (fila) {
-            case 'A':
-                devolverPosicion[0] = 0;
-                break;
-
-            case 'B':
-                devolverPosicion[0] = 1;
-                break;
-
-            case 'C':
-                devolverPosicion[0] = 2;
-                break;
-
-            case 'D':
-                devolverPosicion[0] = 3;
-                break;
-
-            case 'E':
-                devolverPosicion[0] = 4;
-                break;
-
-            case 'F':
-                devolverPosicion[0] = 5;
-                break;
-
-            case 'G':
-                devolverPosicion[0] = 6;
-                break;
-
-            case 'H':
-                devolverPosicion[0] = 7;
-                break;
-
-            case 'I':
-                devolverPosicion[0] = 8;
-                break;
-
-            case 'J':
-                devolverPosicion[0] = 9;
-                break;
+        for(int i = 0; i < filasChar.length; i++) {
+            if(fila == filasChar[i]) {
+                devolverPosicion[0] = i;
+            }
         }
-
+        
         return devolverPosicion;
     }
 
