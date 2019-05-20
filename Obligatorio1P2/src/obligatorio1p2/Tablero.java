@@ -559,9 +559,12 @@ public class Tablero {
         return cont;
     }
 
-    public boolean extendCreciente(int fila, int columna, int filaColor, int columnaColor, char direccion, String color, int filaExt, int colExt) {
+    public boolean pintarExtend(int fila, int columna, int filaColor, int columnaColor, char direccion, String color, int filaExt, int colExt) {
+        int filaColExt = colorTableta(filaExt, colExt, color)[0];
+        int colColExt = colorTableta(filaExt, colExt, color)[1];
         boolean pintando = true;
         if (darOrientacionE(direccion) == 1) {
+<<<<<<< HEAD
             for (int i = columna; i <= colExt; i++) {
                 for (int j = columnaColor; j < 2; j++) {
                     if (i != colExt) {
@@ -619,8 +622,13 @@ public class Tablero {
                     }
                 }
             }
+=======
+            this.pintarHorizontal(fila, columna, colExt, filaColor, columnaColor, filaColExt, colColExt, color);
+        } else {
+            this.pintarVertical(fila, filaExt, columna, filaColor, columnaColor, filaColExt, colColExt, color);
+>>>>>>> 5a5a8f4523606fbd1c23363407dc5cd03beb066c
         }
-        return pintando;
+        return false;
     }
 
     public void extender(int fila, int columna, String color, char direccion) {
@@ -640,10 +648,17 @@ public class Tablero {
                     }
                 }
             }
+<<<<<<< HEAD
             if (crece) {
                 pintando = extendCreciente(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1], this.validarExtension(columna, fila, crece, color)[2]);
             } else {
                 pintando = extendDecreciente(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1], this.validarExtension(columna, fila, crece, color)[2]);
+=======
+            if (direccion == ('A') || direccion == ('B')) {
+                pintando = pintarExtend(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1], this.validarExtension(columna, fila, crece, color)[2]);
+            } else {
+                pintando = pintarExtend(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(fila, columna, crece, color)[1], this.validarExtension(fila, columna, crece, color)[2]);
+>>>>>>> 5a5a8f4523606fbd1c23363407dc5cd03beb066c
             }
         }
     }
