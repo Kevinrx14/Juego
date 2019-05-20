@@ -17,7 +17,7 @@ public class Partida {
     public Partida(
             int cantJugadores,
             int avesXjug,
-            int fichasRotXJug,
+            int tabletasRotXJug,
             int totalTab,
             int tipoTerm,
             int cantTurnos,
@@ -25,7 +25,7 @@ public class Partida {
     ) {
         this.setCantJug(cantJugadores);
         this.setCantAves(avesXjug);
-        this.setCantRot(fichasRotXJug);
+        this.setCantRot(tabletasRotXJug);
         this.setCantTab(totalTab - 2);
         this.setTipoTerm(tipoTerm);
         this.setCantTurnos(cantTurnos);
@@ -50,7 +50,7 @@ public class Partida {
         this.jugadores = todosJug;
     }
 
-    //Metodo que setea la cantidad de rotaciones, fichas y aves disponibles por jugador
+    //Metodo que setea la cantidad de rotaciones, tabletas y aves disponibles por jugador
     public void setConfigJugadores() {
         ArrayList<Jugador> jugadores = this.getJugadores();
 
@@ -134,8 +134,8 @@ public class Partida {
         return this.cantRot;
     }
 
-    public void setCantRot(int fichasRotXJug) {
-        this.cantRot = fichasRotXJug;
+    public void setCantRot(int tabletasRotXJug) {
+        this.cantRot = tabletasRotXJug;
     }
 
     public int getCantTab() {
@@ -299,12 +299,12 @@ public class Partida {
                 case 'C':
                     running = conectar(indicacion1, indicacion2, indiceJug);
                     break;
-                //Poner ficha 
+                //Poner tableta 
                 case 'P':
                     if (movimiento.charAt(1) == 'M') {
-                        running = ponerFichaArmada(indicacion1, indicacion2);
+                        running = ponerTabletaArmada(indicacion1, indicacion2);
                     } else {
-                        running = ponerFicha(indicacion1);
+                        running = ponerTableta(indicacion1);
                     }
                     break;
                 //Extender 
@@ -342,15 +342,15 @@ public class Partida {
         return running;
     }
 
-    public boolean ponerFicha(String indicacion1) {
+    public boolean ponerTableta(String indicacion1) {
         boolean running = true;
         int[] posicion1 = this.traducirPosicion(indicacion1);
         int cantTabletas = this.getCantTab();
         Interfaz interfaz = new Interfaz();
 
         if (cantTabletas > 0) {
-            if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
-                this.getTablero().setFicha(posicion1[0], posicion1[1]);
+            if (this.getTablero().sePuedePonerTableta(posicion1[0], posicion1[1])) {
+                this.getTablero().setTableta(posicion1[0], posicion1[1]);
                 running = false;
                 this.setCantTab(cantTabletas - 1);
             }
@@ -362,7 +362,7 @@ public class Partida {
         return running;
     }
 
-    public boolean ponerFichaArmada(String indicacion1, String indicacion2) {
+    public boolean ponerTabletaArmada(String indicacion1, String indicacion2) {
         Interfaz interfaz = new Interfaz();
         boolean running = true;
         int[] posicion1 = this.traducirPosicion(indicacion1);
@@ -370,8 +370,8 @@ public class Partida {
         int cantTabletas = this.getCantTab();
 
         if (cantTabletas > 0) {
-            if (this.getTablero().sePuedePonerFicha(posicion1[0], posicion1[1])) {
-                this.getTablero().fichaManual(posicion1[0], posicion1[1], ordenColores);
+            if (this.getTablero().sePuedePonerTableta(posicion1[0], posicion1[1])) {
+                this.getTablero().tabletaManual(posicion1[0], posicion1[1], ordenColores);
                 running = false;
                 this.setCantTab(cantTabletas - 1);
             }
