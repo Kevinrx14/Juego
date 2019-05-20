@@ -12,9 +12,6 @@ public class Aves {
         this.setPartidas();
         this.setJugadores();
         this.setDefaultConfig();
-        this.setJugador("Kevin", 21, "Kevinrx");
-        this.setJugador("Ezequiel", 20, "EzeL");
-        this.setJugador("Pepe", 20, "Pepe");
     }
 
     public int[] getConfiguracion() {
