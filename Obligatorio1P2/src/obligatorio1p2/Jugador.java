@@ -1,3 +1,5 @@
+//Kevin Rinaldi - 240179
+//Ezequiel Lopez - 237308
 package obligatorio1p2;
 
 public class Jugador implements Comparable {
