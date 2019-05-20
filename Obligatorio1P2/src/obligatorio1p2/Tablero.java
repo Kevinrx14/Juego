@@ -215,23 +215,38 @@ public class Tablero {
         return alineados;
     }
 
-    public boolean hayAves(int fila1, int columna1, int fila2, int columna2) {
+    public boolean hayAves(int fila1, int columna1, int fila2, int columna2, int cantAves) {
+        int cont = 0;
         boolean hayAves = false;
-        for (int i = Math.min(columna1, columna2); i < Math.max(columna1, columna2); i++) {
-            for (int k = 0; k < 2; k++) {
-                for (int j = 0; j < 2; j++) {
-                    if (fila1 == fila2) {
-                        if (this.getTableta(fila1, columna1).devolverUnColor(k, j).contains("x")) {
+
+        if (fila1 == fila2) {
+            for (int i = Math.min(columna1, columna2); i < Math.max(columna1, columna2); i++) {
+                for (int k = 0; k < 2; k++) {
+                    for (int j = 0; j < 2; j++) {
+                        cont++;
+                        if (this.getTableta(fila1, i).devolverUnColor(k, j).contains("x")) {
+                            hayAves = true;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int i = Math.min(fila1, fila2); i < Math.max(fila1, fila2); i++) {
+                for (int k = 0; k < 2; k++) {
+                    for (int j = 0; j < 2; j++) {
+                        cont++;
+                        if (this.getTableta(i, columna1).devolverUnColor(k, j).contains("x")) {
                             hayAves = true;
                         }
                     }
                 }
             }
         }
-        return hayAves;
+        
+        return hayAves&&cont<=cantAves;
     }
 
-    public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color) {
+    public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color, int cantAves) {
         boolean tieneColor1 = false;
         boolean tieneColor2 = false;
         boolean noHayAves = true;
@@ -268,10 +283,9 @@ public class Tablero {
             }
         }
         if (tieneColor1 && tieneColor2 && enLinea && alineados(fila1, columna1, fila2, columna2)) {
-            noHayAves = !hayAves(fila1, columna1, fila2, columna2);
+            noHayAves = !hayAves(fila1, columna1, fila2, columna2, cantAves);
         }
-        //flag
-        System.out.println(alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
+
         return (alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
 
@@ -440,43 +454,51 @@ public class Tablero {
         return orientacion;
     }
 
-    public void conectar(int fila1, int columna1, int fila2, int columna2, String color) {
+    public void conectar(int fila1, int columna1, int fila2, int columna2, int indiceJugador, Partida p) {
+        int contador = p.getJugadores().get(indiceJugador).getCantAves();
+        String color = p.getJugadores().get(indiceJugador).getColorJugador();
         int columnaColor1 = -1;
         int filaColor1 = -1;
         int columnaColor2 = -1;
         int filaColor2 = -1;
+      
         if (canConect(fila1, columna1, fila2, columna2, color)) {
             filaColor1 = colorTableta(fila1, columna1, color)[0];
             columnaColor1 = colorTableta(fila1, columna1, color)[1];
             filaColor2 = colorTableta(fila2, columna2, color)[0];
             columnaColor2 = colorTableta(fila2, columna2, color)[1];
             if (darOrientacionC(fila1, fila2) == 1) {
-                this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
             } else {
                 this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
+                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
             }
         }
-
+        p.getJugadores().get(indiceJugador).setCantAves(contador);
     }
 
-    public void pintarHorizontal(int fila1, int columna1, int columna2, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
+    public int pintarHorizontal(int fila1, int columna1, int columna2, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
+        int cont = 0;
         for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
             if (i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2) && (columnaColor1 == 1 || columnaColor2 == 0)) {
-                if (columnaColor1 == 1) {
                     this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, columnaColor1, color);
+                    cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
                         {
                             this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                            cont++;
                         }
                     }
                 }
                 if (columnaColor2 == 0) {
                     this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, columnaColor2, color);
+                    cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
                         {
                             this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                            cont++;
                         }
                     }
                 }
@@ -484,10 +506,12 @@ public class Tablero {
                 for (int j = 0; j < 2; j++) {
                     {
                         this.getTableta(fila1, i).dibujarAve(filaColor1, j, color);
+                        cont++;
                     }
                 }
             }
         }
+        return cont;
     }
 
     public void pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {

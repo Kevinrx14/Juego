@@ -389,7 +389,7 @@ public class Partida {
         String colorJug = this.getColorJugador(indiceJug);
         boolean running = false;
 
-        this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], colorJug);
+        this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indiceJug, this);
 
         return running;
     }
