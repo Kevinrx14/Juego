@@ -242,8 +242,8 @@ public class Tablero {
                 }
             }
         }
-        
-        return hayAves&&cont<=cantAves;
+
+        return hayAves && cont <= cantAves;
     }
 
     public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color, int cantAves) {
@@ -461,8 +461,8 @@ public class Tablero {
         int filaColor1 = -1;
         int columnaColor2 = -1;
         int filaColor2 = -1;
-      
-        if (canConect(fila1, columna1, fila2, columna2, color)) {
+
+        if (canConect(fila1, columna1, fila2, columna2, color, contador)) {
             filaColor1 = colorTableta(fila1, columna1, color)[0];
             columnaColor1 = colorTableta(fila1, columna1, color)[1];
             filaColor2 = colorTableta(fila2, columna2, color)[0];
@@ -481,34 +481,31 @@ public class Tablero {
         int cont = 0;
         for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
             if (i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2) && (columnaColor1 == 1 || columnaColor2 == 0)) {
+                if (columnaColor1 == 1) {
                     this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, columnaColor1, color);
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
-                        {
-                            this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, j, color);
-                            cont++;
-                        }
+                        this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                        cont++;
                     }
                 }
+
                 if (columnaColor2 == 0) {
                     this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, columnaColor2, color);
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
-                        {
-                            this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor1, j, color);
-                            cont++;
-                        }
+                        this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                        cont++;
                     }
                 }
             } else {
                 for (int j = 0; j < 2; j++) {
-                    {
-                        this.getTableta(fila1, i).dibujarAve(filaColor1, j, color);
-                        cont++;
-                    }
+                    this.getTableta(fila1, i).dibujarAve(filaColor1, j, color);
+                    cont++;
                 }
+
             }
         }
         return cont;
