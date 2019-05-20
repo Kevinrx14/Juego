@@ -188,6 +188,13 @@ public class Interfaz {
             indicacion1 = jugada.substring(indices[0], indices[1]);
             indices = this.getIndicesDeIndicacion(2, jugada);
             indicacion2 = jugada.substring(indices[0], indices[1]);
+        } else {
+            if (jugada.length() >= 6 && jugada.length() <= 10) {
+                indices = this.getIndicesDeIndicacion(1, jugada);
+                indicacion1 = jugada.substring(indices[0], indices[1] + 1);
+                indices = this.getIndicesDeIndicacion(2, jugada);
+                indicacion2 = jugada.substring(indices[0] + 1, indices[1]);
+            }
         }
 
         switch (movimiento) {
@@ -214,15 +221,25 @@ public class Interfaz {
                 }
 
                 break;
-            //Poner ficha 
+            //Poner tableta 
             case 'P':
-                if (jugada.length() > 3 && jugada.length() < 6) {
-                    if (this.validadorDePosicion(jugada.substring(2))) {
-                        validador = true;
+                if (jugada.charAt(1) == 'M') {
+                    if (this.validadorDePosicion(indicacion1)) {
+                        if (this.validadorDeColoresPM(indicacion2)) {
+                            validador = true;
+                        }
+
+                    }
+                } else {
+                    if (jugada.length() > 3 && jugada.length() < 6) {
+                        if (this.validadorDePosicion(jugada.substring(2))) {
+                            validador = true;
+                        }
                     }
                 }
                 break;
             //Extender 
+
             case 'E':
                 if (this.validadorDeDireccion(indicacion1)) {
                     if (this.validadorDePosicion(indicacion2)) {
@@ -251,15 +268,17 @@ public class Interfaz {
     public int[] getIndicesDeIndicacion(int indicacion, String jugada) {
         int[] indices = new int[2];
         String aux;
+        int inicio;
 
-        aux = jugada.substring(2);
+        inicio = jugada.indexOf(" ") + 1;
+        aux = jugada.substring(inicio);
 
         /* chequeo que indicacion quiero saber
         Ejemplo: C E4 E5
         E4 = Indicacion 1
         E5 = Indicacion 2 */
         if (indicacion == 1) {
-            indices[0] = 2;
+            indices[0] = inicio;
             indices[1] = aux.indexOf(" ") + 2;
         } else {
             if (indicacion == 2) {
@@ -334,6 +353,31 @@ public class Interfaz {
 
         if (!validador) {
             System.out.println("La direccion ingresada no es valida");
+            this.sonidoError();
+        }
+
+        return validador;
+    }
+
+    //Valida los colores que se ingresa en la jugada PM
+    public boolean validadorDeColoresPM(String chequear) {
+        char[] colores = new char[]{'A', 'R', 'M', 'V'};
+        int contador = 0;
+        boolean validador = false;
+
+        for (int i = 0; i < chequear.length(); i++) {
+            for (int j = 0; j < colores.length; j++) {
+                if (chequear.charAt(i) == colores[j]) {
+                    validador = true;
+                    contador++;
+                }
+            }
+        }
+
+        if (contador == 4) {
+            validador = true;
+        } else {
+            System.out.println("No todos los colores ingresados son validos");
             this.sonidoError();
         }
 
