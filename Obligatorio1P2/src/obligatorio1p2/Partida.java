@@ -309,7 +309,6 @@ public class Partida {
                     break;
                 //Extender 
                 case 'E':
-                    System.out.println(indicacion1 + " " + indicacion2);
                     running = extender(indicacion1, indicacion2, indiceJug);
                     break;
                 //Salir    
