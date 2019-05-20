@@ -6,10 +6,11 @@ public class Tablero {
 
     public Tablero() {
         this.setTablero();
+        char[] colores = new char[]{'V', 'M', 'R', 'A'};
 //        this.tablero[1][4] = new Tableta();
 //        this.tablero[1][4].setTableta(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[2][4] = new Tableta();
-        this.tablero[2][4].setTableta(new char[]{'V', 'M', 'R', 'A'});
+        this.tablero[2][4].setTableta(colores);
         this.tablero[3][4] = new Tableta();
         this.tablero[3][4].setTableta(new char[]{'V', 'M', 'R', 'A'});
         this.tablero[4][4] = new Tableta();
@@ -28,9 +29,6 @@ public class Tablero {
         this.tablero[4][8].setTableta(new char[]{'V', 'M', 'R', 'A'});
 //        this.tablero[4][5] = new Tableta();
 //        this.tablero[4][5].setTableta(new char[]{'V', 'M', 'R', 'A'});
-        this.tablero[4][5].setAves(1, 0, "\u001B[41m" + " " + "\033[0m");
-        this.tablero[4][5].setAves(1, 1, "\u001B[41m" + " " + "\033[0m");
-        this.tablero[4][7].setAves(1, 0, "\u001B[41m" + "x" + "\033[0m");
     }
 
     public void setTableta(int fila, int col) {

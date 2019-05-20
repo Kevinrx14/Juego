@@ -174,6 +174,10 @@ public class Partida {
     }
 
     public void iniciar() {
+        for(int i = 0; i < this.getCantJug(); i++) {
+            this.mostrarColorYJugador(i);
+        }
+        
         switch (this.getTipoTerm()) {
             case 1:
                 this.partidaConTerminacionTablero();
@@ -196,6 +200,8 @@ public class Partida {
         for (int turno = 1; turno <= this.getCantTurnos(); turno++) {
             for (int jug = 0; jug < this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
+                System.out.print("Es el turno de ");
+                this.mostrarColorYJugador(jug);
                 salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     turno = this.getCantTurnos() + 1;
@@ -214,6 +220,8 @@ public class Partida {
         do {
             for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
+                System.out.print("Es el turno de ");
+                this.mostrarColorYJugador(jug);
                 salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     running = false;
@@ -239,6 +247,8 @@ public class Partida {
         do {
             for (int jug = 0; jug <= this.getCantJug(); jug++) {
                 System.out.println(tablero.toString());
+                System.out.print("Es el turno de ");
+                this.mostrarColorYJugador(jug);
                 salidaEmergencia = this.movimiento(jug);
                 if (salidaEmergencia) {
                     running = false;
@@ -250,6 +260,12 @@ public class Partida {
                 }
             }
         } while (running);
+    }
+    
+    public void mostrarColorYJugador(int indice) {
+        String colorJug = this.getColorJugador(indice);
+        String alias = this.getJugadores().get(indice).getAlias();
+        System.out.println(colorJug + " - " + alias);
     }
 
     public char[] indColores(String movimiento) {
