@@ -172,7 +172,7 @@ public class Partida {
                 this.partidaConTerminacionTurnos();
                 break;
         }
-        
+
         System.out.println(tablero.toString());
         this.terminarPartida();
     }
@@ -309,7 +309,7 @@ public class Partida {
                     break;
                 //Extender 
                 case 'E':
-                    System.out.println(indicacion1+" "+indicacion2);
+                    System.out.println(indicacion1 + " " + indicacion2);
                     running = extender(indicacion1, indicacion2, indiceJug);
                     break;
                 //Salir    
@@ -398,10 +398,10 @@ public class Partida {
         int[] posicion = this.traducirPosicion(indicacion2);
         char direccion = indicacion1.charAt(0);
         String colorJug = this.getColorJugador(indiceJug);
-        boolean running = false;
+        boolean running;
 
-        this.getTablero().extender(posicion[0], posicion[1], colorJug, direccion);
-
+        running = this.getTablero().extender(posicion[0], posicion[1], direccion, indiceJug, this);
+        
         return running;
     }
 
@@ -450,7 +450,7 @@ public class Partida {
             for (int i = 0; i < listaIndicesJug.size(); i++) {
                 alias = this.getJugadores().get(listaIndicesJug.get(i)).getAlias();
                 System.out.print(alias + " ");
-                if(i == listaIndicesJug.size() - 2) {
+                if (i == listaIndicesJug.size() - 2) {
                     System.out.print("y ");
                 }
             }
