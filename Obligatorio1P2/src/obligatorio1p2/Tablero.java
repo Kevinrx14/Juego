@@ -478,9 +478,9 @@ public class Tablero {
             filaColor2 = colorTableta(fila2, columna2, color)[0];
             columnaColor2 = colorTableta(fila2, columna2, color)[1];
             if (darOrientacionC(fila1, fila2) == 1) {
-                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
             } else {
-                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
             }
             p.getJugadores().get(indiceJugador).setCantAves(contador);
             running = false;
