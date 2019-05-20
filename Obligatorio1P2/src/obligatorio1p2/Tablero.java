@@ -346,11 +346,12 @@ public class Tablero {
     }
 
     public int[] validarExtension(int constante, int variable, boolean crece, String color) {
-        int retorno[] = new int[3];
+        int retorno[] = new int[4];
         if (crece == false) {
             for (int i = variable; i > 0; i--) {
                 for (int j = 1; j >= 0; j--) {
                     for (int k = 1; k >= 0; k--) {
+                        retorno[3]++;
                         if (this.getTableta(i, constante) != null && this.getTableta(i - 1, constante) != null) {
                             if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i - 1, constante).hayAvesYColor(j, k, color))) {
                                 retorno[0] = 1;
@@ -378,6 +379,7 @@ public class Tablero {
             for (int i = variable; i < 0; i++) {
                 for (int j = 0; j < 2; j++) {
                     for (int k = 0; k < 2; k++) {
+                        retorno[3]++;
                         if (this.getTableta(i, constante) != null && this.getTableta(i + 1, constante) != null) {
                             if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i + 1, constante).hayAvesYColor(j, k, color))) {
                                 retorno[0] = 1;
@@ -402,11 +404,17 @@ public class Tablero {
                 }
             }
         }
+        if (retorno[3] % 2 != 0) {
+            retorno[3] = ((retorno[3] - 1) / 2) + 1;
+        } else {
+            retorno[3] = retorno[3] / 2;
+        }
         return retorno;
     }
 
-    public boolean canExtend(int fila, int columna, String color, char direccion) {
+    public boolean canExtend(int fila, int columna, String color, char direccion, int cantAves) {
         boolean hayTabletas = true;
+        int avesRequeridas = 0;
         int hayExtremo = 0;
         int filaExt = -1;
         int colExt = -1;
@@ -419,31 +427,33 @@ public class Tablero {
                     filaExt = validarExtension(columna, fila, false, color)[1];
                     colExt = validarExtension(columna, fila, false, color)[2];
                     hayTabletas = hayTabletas(fila, filaExt, columna, false);
-
+                    avesRequeridas = validarExtension(columna, fila, false, color)[3];
                     break;
                 case 'B':
                     hayExtremo = validarExtension(columna, fila, true, color)[0];
                     filaExt = validarExtension(columna, fila, true, color)[1];
                     colExt = validarExtension(columna, fila, true, color)[2];
                     hayTabletas = hayTabletas(fila, filaExt, columna, true);
+                    avesRequeridas = validarExtension(columna, fila, true, color)[3];
                     break;
                 case 'D':
                     hayExtremo = validarExtension(fila, columna, true, color)[0];
                     filaExt = validarExtension(fila, columna, true, color)[1];
                     colExt = validarExtension(fila, columna, true, color)[2];
                     hayTabletas = hayTabletas(columna, colExt, fila, true);
+                    avesRequeridas = validarExtension(fila, columna, true, color)[3];
                     break;
                 case 'I':
                     hayExtremo = validarExtension(fila, columna, false, color)[0];
                     filaExt = validarExtension(fila, columna, false, color)[1];
                     colExt = validarExtension(fila, columna, false, color)[2];
                     hayTabletas = hayTabletas(columna, colExt, fila, false);
-
+                    avesRequeridas = validarExtension(fila, columna, false, color)[3];
                     break;
             }
-        }
 
-        return (hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
+        }
+        return (avesRequeridas <= cantAves && hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
 
     }
 
@@ -466,6 +476,7 @@ public class Tablero {
     public boolean conectar(int fila1, int columna1, int fila2, int columna2, int indiceJugador, Partida p) {
         int contador = p.getJugadores().get(indiceJugador).getCantAves();
         String color = p.getJugadores().get(indiceJugador).getColorJugador();
+        Interfaz interfaz = new Interfaz();
         int columnaColor1 = -1;
         int filaColor1 = -1;
         int columnaColor2 = -1;
@@ -478,80 +489,162 @@ public class Tablero {
             filaColor2 = colorTableta(fila2, columna2, color)[0];
             columnaColor2 = colorTableta(fila2, columna2, color)[1];
             if (darOrientacionC(fila1, fila2) == 1) {
-                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
+                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, columnaColor2, color);
             } else {
-                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
+                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, filaColor2, columnaColor1, color);
             }
             p.getJugadores().get(indiceJugador).setCantAves(contador);
             running = false;
+        } else {
+            System.out.println("No se puede conectar");
+            interfaz.sonidoError();
         }
         return running;
     }
 
-    public int pintarHorizontal(int fila1, int columna1, int columna2, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
+    public int pintarHorizontal(int fila1, int columna1, int columna2, int filaColor1, int columnaColor1, int columnaColor2, String color) {
         int cont = 0;
-        for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
-            if (i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2) && (columnaColor1 == 1 || columnaColor2 == 0)) {
-                if (columnaColor1 == 1) {
-                    this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, columnaColor1, color);
-                    cont++;
-                } else {
-                    for (int j = 0; j < 2; j++) {
-                        this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, j, color);
+        int min = Math.min(columna1, columna2);
+        int max = Math.max(columna1, columna2);
+        boolean crece = false;
+
+        if (columna1 < columna2) {
+            crece = true;
+        }
+
+        if (crece) {
+            for (int i = max; i >= min; i--) {
+                Tableta tableta = this.getTableta(fila1, i);
+                if (i == min) {
+                    if (columnaColor1 == 1) {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
                         cont++;
+                    } else {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
+                        tableta.dibujarAve(filaColor1, columnaColor1 + 1, color);
+                        cont += 2;
+                    }
+                } else {
+                    if (i == max) {
+                        if (columnaColor1 == 0) {
+                            tableta.dibujarAve(filaColor1, columnaColor2, color);
+                            cont++;
+                        } else {
+                            tableta.dibujarAve(filaColor1, columnaColor2 - 1, color);
+                            tableta.dibujarAve(filaColor1, columnaColor2, color);
+                            cont += 2;
+                        }
+                    } else {
+                        tableta.dibujarAve(filaColor1, 0, color);
+                        tableta.dibujarAve(filaColor1, 1, color);
+                        cont += 2;
                     }
                 }
-
-                if (columnaColor2 == 0) {
-                    this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, columnaColor2, color);
-                    cont++;
-                } else {
-                    for (int j = 0; j < 2; j++) {
-                        this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor1, j, color);
-                        cont++;
-                    }
-                }
-            } else {
-                for (int j = 0; j < 2; j++) {
-                    this.getTableta(fila1, i).dibujarAve(filaColor1, j, color);
-                    cont++;
-                }
-
             }
+        } else {
+            for (int i = min; i <= max; i++) {
+                Tableta tableta = this.getTableta(fila1, i);
+                if (i == min) {
+                    if (columnaColor1 == 1) {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
+                        cont++;
+                    } else {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
+                        tableta.dibujarAve(filaColor1, columnaColor1 + 1, color);
+                        cont += 2;
+                    }
+                } else {
+                    if (i == max) {
+                        if (columnaColor2 == 0) {
+                            tableta.dibujarAve(filaColor1, columnaColor2, color);
+                            cont++;
+                        } else {
+                            tableta.dibujarAve(filaColor1, columnaColor2 - 1, color);
+                            tableta.dibujarAve(filaColor1, columnaColor2, color);
+                            cont += 2;
+                        }
+                    } else {
+                        tableta.dibujarAve(filaColor1, 0, color);
+                        tableta.dibujarAve(filaColor1, 1, color);
+                        cont += 2;
+                    }
+                }
+            }
+
         }
         return cont;
     }
 
-    public int pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
+    public int pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int filaColor2, int columnaColor1, String color) {
         int cont = 0;
-        for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
-            if (i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2) && (filaColor1 == 1 || filaColor2 == 0)) {
-                if (filaColor1 == 1) {
-                    this.getTableta(Math.min(fila1, fila2), columna1).dibujarAve(filaColor1, columnaColor1, color);
-                    cont++;
-                } else {
-                    for (int j = 0; j < 2; j++) {
-                        this.getTableta(Math.min(fila1, fila2), columna1).dibujarAve(j, columnaColor1, color);
-                        cont++;
-                    }
-                }
-                if (filaColor2 == 0) {
-                    this.getTableta(Math.max(fila1, fila2), columna1).dibujarAve(filaColor2, columnaColor2, color);
-                    cont++;
-                } else {
-                    for (int j = 0; j < 2; j++) {
-                        this.getTableta(Math.max(fila1, fila2), columna1).dibujarAve(j, columnaColor1, color);
-                        cont++;
-                    }
-                }
-            } else {
-                for (int j = 0; j < 2; j++) {
-                    this.getTableta(i, columna1).dibujarAve(j, columnaColor1, color);
-                    cont++;
-                }
-            }
+        int min = Math.min(fila1, fila2);
+        int max = Math.max(fila1, fila2);
+        boolean crece = false;
+
+        if (fila1 > fila2) {
+            crece = true;
         }
 
+        if (crece) {
+            for (int i = max; i >= min; i--) {
+                Tableta tableta = this.getTableta(i, columna1);
+                if (i == min) {
+                    if (filaColor1 == 1) {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
+                        cont++;
+                    } else {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
+                        tableta.dibujarAve(filaColor1 + 1, columnaColor1, color);
+                        cont += 2;
+                    }
+                } else {
+                    if (i == max) {
+                        if (filaColor2 == 0) {
+                            tableta.dibujarAve(filaColor2, columnaColor1, color);
+                            cont++;
+                        } else {
+                            tableta.dibujarAve(filaColor2 - 1, columnaColor1, color);
+                            tableta.dibujarAve(filaColor2, columnaColor1, color);
+                            cont += 2;
+                        }
+                    } else {
+                        tableta.dibujarAve(0, columnaColor1, color);
+                        tableta.dibujarAve(1, columnaColor1, color);
+                        cont += 2;
+                    }
+                }
+            }
+        } else {
+            for (int i = min; i <= max; i++) {
+                Tableta tableta = this.getTableta(i, columna1);
+                if (i == min) {
+                    if (filaColor1 == 1) {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
+                        cont++;
+                    } else {
+                        tableta.dibujarAve(filaColor1, columnaColor1, color);
+                        tableta.dibujarAve(filaColor1 + 1, columnaColor1, color);
+                        cont += 2;
+                    }
+                } else {
+                    if (i == max) {
+                        if (filaColor2 == 0) {
+                            tableta.dibujarAve(filaColor2, columnaColor1, color);
+                            cont++;
+                        } else {
+                            tableta.dibujarAve(filaColor2 - 1, columnaColor1, color);
+                            tableta.dibujarAve(filaColor2, columnaColor1, color);
+                            cont += 2;
+                        }
+                    } else {
+                        tableta.dibujarAve(0, columnaColor1, color);
+                        tableta.dibujarAve(1, columnaColor1, color);
+                        cont += 2;
+                    }
+                }
+            }
+
+        }
         return cont;
     }
 
@@ -560,14 +653,16 @@ public class Tablero {
         int colColExt = colorTableta(filaExt, colExt, color)[1];
         boolean pintando = true;
         if (darOrientacionE(direccion) == 1) {
-            this.pintarHorizontal(fila, columna, colExt, filaColor, columnaColor, filaColExt, colColExt, color);
+            this.pintarHorizontal(fila, columna, colExt, filaColor, columnaColor, colColExt, color);
         } else {
-            this.pintarVertical(fila, filaExt, columna, filaColor, columnaColor, filaColExt, colColExt, color);
+            this.pintarVertical(fila, filaExt, columna, filaColor, filaColExt, columnaColor, color);
         }
         return false;
     }
 
-    public void extender(int fila, int columna, String color, char direccion) {
+    public void extender(int fila, int columna, char direccion, int indiceJugador, Partida p) {
+        int contador = p.getJugadores().get(indiceJugador).getCantAves();
+        String color = p.getJugadores().get(indiceJugador).getColorJugador();
         int columnaColor = -1;
         int filaColor = -1;
         boolean crece = true;
@@ -575,7 +670,7 @@ public class Tablero {
             crece = false;
         }
         boolean pintando = true;
-        while (canExtend(fila, columna, color, direccion) && pintando) {
+        while (canExtend(fila, columna, color, direccion, contador) && pintando) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
                     if (color.equals(this.getTableta(fila, columna).devolverUnColor(j, k))) {
