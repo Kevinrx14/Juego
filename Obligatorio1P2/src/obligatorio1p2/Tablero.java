@@ -238,7 +238,7 @@ public class Tablero {
                 }
             }
         }
-        
+        System.out.println("hayAves: "+(hayAves&&cont<=cantAves));
         return hayAves&&cont<=cantAves;
     }
 
@@ -281,6 +281,7 @@ public class Tablero {
         if (tieneColor1 && tieneColor2 && enLinea && alineados(fila1, columna1, fila2, columna2)) {
             noHayAves = !hayAves(fila1, columna1, fila2, columna2, cantAves);
         }
+        System.out.println("noHayAves: "+(noHayAves));
         return (alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
 
