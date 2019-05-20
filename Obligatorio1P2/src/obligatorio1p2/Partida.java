@@ -154,6 +154,7 @@ public class Partida {
     }
 
     public void iniciar() {
+        System.out.println("Jugadores:");
         for (int i = 0; i < this.getCantJug(); i++) {
             this.mostrarColorYJugador(i);
         }
@@ -388,7 +389,6 @@ public class Partida {
         int[] posicion2 = this.traducirPosicion(indicacion2);
         boolean running = false;
 
-        System.out.println(this.getCantAves());
         running = this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indiceJug, this);
 
         return running;
