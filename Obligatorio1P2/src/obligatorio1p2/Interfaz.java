@@ -156,6 +156,10 @@ public class Interfaz {
                 String alias;
                 int cantJug = this.getAves().getJugadores().size();
 
+                if (cantJug == 0) {
+                    validador = true;
+                }
+                
                 for (int i = 0; i < cantJug; i++) {
                     alias = this.getAves().getJugadores().get(i).getAlias();
                     alias = alias.toLowerCase();
@@ -168,6 +172,7 @@ public class Interfaz {
                         validador = true;
                     }
                 }
+                
                 break;
 
             default:
