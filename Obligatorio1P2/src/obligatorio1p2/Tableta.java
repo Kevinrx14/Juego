@@ -3,11 +3,11 @@ package obligatorio1p2;
 import java.util.*;
 
 public class Tableta {
-    private String[][] ficha = new String[2][2];
+    private String[][] tableta = new String[2][2];
 
     public void setAves(int fila, int col, String color){
-        this.ficha[fila][col] = color;
-        this.ficha[fila][col] = this.ficha[fila][col].replaceAll(" ", "x");
+        this.tableta[fila][col] = color;
+        this.tableta[fila][col] = this.tableta[fila][col].replaceAll(" ", "x");
     }
     
     public boolean hayAves(int fila, int col) {
@@ -22,39 +22,39 @@ public class Tableta {
     public void dibujarAve(int fila, int columna, String color){
         switch (color){
             case ("\u001B[41m" + " " + "\033[0m"):
-                this.ficha[fila][columna]="\u001B[41m" + "x" + "\033[0m";
+                this.tableta[fila][columna]="\u001B[41m" + "x" + "\033[0m";
                 break;
             case ("\u001B[44m" + " " + "\033[0m"):
-                this.ficha[fila][columna]="\u001B[44m" + "x" + "\033[0m";
+                this.tableta[fila][columna]="\u001B[44m" + "x" + "\033[0m";
                 break;
             case ("\u001B[43m" + " " + "\033[0m"):
-                this.ficha[fila][columna]="\u001B[43m" + "x" + "\033[0m";
+                this.tableta[fila][columna]="\u001B[43m" + "x" + "\033[0m";
                 break;
             case ("\u001B[42m" + " " + "\033[0m"):
-                this.ficha[fila][columna]="\u001B[42m" + "x" + "\033[0m";
+                this.tableta[fila][columna]="\u001B[42m" + "x" + "\033[0m";
                 break;
         }        
       
     }
-    public void setFicha(char colores[]) {
+    public void setTableta(char colores[]) {
         int x = 0;
-        for (int i = 0; i < this.ficha.length; i++) {
-            for (int j = 0; j < this.ficha[0].length; j++) {
+        for (int i = 0; i < this.tableta.length; i++) {
+            for (int j = 0; j < this.tableta[0].length; j++) {
                 switch (colores[x]) {
                     case 'R':
-                        this.ficha[i][j] = "\u001B[41m" + " " + "\033[0m"; //Color rojo
+                        this.tableta[i][j] = "\u001B[41m" + " " + "\033[0m"; //Color rojo
                         break;
 
                     case 'A':
-                        this.ficha[i][j] = "\u001B[44m" + " " + "\033[0m"; //Color azul
+                        this.tableta[i][j] = "\u001B[44m" + " " + "\033[0m"; //Color azul
                         break;
 
                     case 'M':
-                        this.ficha[i][j] = "\u001B[43m" + " " + "\033[0m"; //Color amarillo
+                        this.tableta[i][j] = "\u001B[43m" + " " + "\033[0m"; //Color amarillo
                         break;
 
                     case 'V':
-                        this.ficha[i][j] = "\u001B[42m" + " " + "\033[0m"; //Color verde
+                        this.tableta[i][j] = "\u001B[42m" + " " + "\033[0m"; //Color verde
                         break;
                 }
                 x++;
@@ -62,30 +62,30 @@ public class Tableta {
         }
     }
     
-    public void setFichaRandom(){
+    public void setTabletaRandom(){
         Random rand = new Random();
-        int[][] fichaAux = new int[2][2];
+        int[][] tabletaAux = new int[2][2];
         char[] colores = new char[4];
         int num;
         int indice = 0;
         boolean validador;
         
-        for (int i = 0; i < fichaAux.length; i++) {
-            for (int j = 0; j < fichaAux[0].length; j++) {
+        for (int i = 0; i < tabletaAux.length; i++) {
+            for (int j = 0; j < tabletaAux[0].length; j++) {
                 do {
                     validador = true;
                     num = rand.nextInt(4);
                     num++;
-                    for (int x = 0; x < fichaAux.length; x++) {
-                        for (int y = 0; y < fichaAux[0].length; y++) {
-                            if (fichaAux[x][y] == num) {
+                    for (int x = 0; x < tabletaAux.length; x++) {
+                        for (int y = 0; y < tabletaAux[0].length; y++) {
+                            if (tabletaAux[x][y] == num) {
                                 validador = false;
                             }
                         }
                     }
                 } while (!validador);
-                fichaAux[i][j] = num;
-                switch (fichaAux[i][j]) {
+                tabletaAux[i][j] = num;
+                switch (tabletaAux[i][j]) {
                     case 1:
                         colores[indice] = 'R'; //Color rojo
                         break;
@@ -105,15 +105,15 @@ public class Tableta {
                 indice++;
             }
         }
-        setFicha(colores);
+        setTableta(colores);
     }
     
-    public String[][] getFicha(){
-        return this.ficha;
+    public String[][] getTableta(){
+        return this.tableta;
     }
     
     public void rotar90(){
-        String[][] mat = this.ficha;
+        String[][] mat = this.getTableta();
         String temp = mat[0][0];
         mat[0][0] = mat[1][0];
         mat[1][0] = mat[1][1];
@@ -135,13 +135,13 @@ public class Tableta {
     
     @Override
     public String toString(){
-        String[][] ficha = this.getFicha();
+        String[][] tableta = this.getTableta();
         String devolverTableta = "";
-        for(int i = 0; i < ficha.length; i++) {
-            for(int j = 0; j < ficha[0].length; j++) {
-                devolverTableta = devolverTableta + ficha[i][j];
+        for(int i = 0; i < tableta.length; i++) {
+            for(int j = 0; j < tableta[0].length; j++) {
+                devolverTableta = devolverTableta + tableta[i][j];
             }
-            if(i < (ficha.length - 1)){
+            if(i < (tableta.length - 1)){
                 devolverTableta = devolverTableta + "\n";
             }
         }
@@ -149,7 +149,7 @@ public class Tableta {
     }
     
     public String devolverUnColor(int fila, int col) {
-        String[][] ficha = this.getFicha();
-        return ficha[fila][col];
+        String[][] tableta = this.getTableta();
+        return tableta[fila][col];
     }
 }
