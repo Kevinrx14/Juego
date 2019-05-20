@@ -241,6 +241,8 @@ public class Tablero {
             }
         }
 
+        System.out.println("hayAves: " + (hayAves && cont <= cantAves));
+
         return hayAves && cont <= cantAves;
     }
 
@@ -283,7 +285,7 @@ public class Tablero {
         if (tieneColor1 && tieneColor2 && enLinea && alineados(fila1, columna1, fila2, columna2)) {
             noHayAves = !hayAves(fila1, columna1, fila2, columna2, cantAves);
         }
-
+        System.out.println("noHayAves: " + (noHayAves));
         return (alineados(fila1, columna1, fila2, columna2) && tieneColor1 && tieneColor2 && noHayAves && enLinea);
     }
 
@@ -508,6 +510,7 @@ public class Tablero {
         }
         return cont;
     }
+
 
     public void pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
         for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
