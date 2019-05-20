@@ -830,15 +830,19 @@ public class Tablero {
         Chequeo si la fila en la que esta la tableta no se encuentra entre
         la fila que comienza el tablero de 5x5 y la fila en la que termina.
          */
-        if (coordTableta[0] < coordFila[0] || coordTableta[0] > coordFila[1]) {
-            validador = false;
+        if (coordFila[0] != coordFila[1]) {
+            if (coordTableta[0] < coordFila[0] || coordTableta[0] > coordFila[1]) {
+                validador = false;
+            }
         }
 
         /*
         Hago el mismo chequeo que arriba pero para las columnas
          */
-        if (coordTableta[1] < coordCol[0] || coordTableta[1] > coordCol[1]) {
-            validador = false;
+        if (coordCol[0] != coordCol[1]) {
+            if (coordTableta[1] < coordCol[0] || coordTableta[1] > coordCol[1]) {
+                validador = false;
+            }
         }
 
         return validador;
