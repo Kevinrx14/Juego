@@ -442,6 +442,7 @@ public class Tablero {
                     break;
             }
         }
+
         return (hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
 
     }
@@ -477,9 +478,9 @@ public class Tablero {
             filaColor2 = colorTableta(fila2, columna2, color)[0];
             columnaColor2 = colorTableta(fila2, columna2, color)[1];
             if (darOrientacionC(fila1, fila2) == 1) {
-                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
             } else {
-                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
             }
             p.getJugadores().get(indiceJugador).setCantAves(contador);
             running = false;
@@ -743,7 +744,6 @@ public class Tablero {
         la fila que comienza el tablero de 5x5 y la fila en la que termina.
          */
         if (coordTableta[0] < coordFila[0] || coordTableta[0] > coordFila[1]) {
-            System.out.println("fila");
             validador = false;
         }
 
@@ -751,7 +751,6 @@ public class Tablero {
         Hago el mismo chequeo que arriba pero para las columnas
          */
         if (coordTableta[1] < coordCol[0] || coordTableta[1] > coordCol[1]) {
-            System.out.println("col");
             validador = false;
         }
 
