@@ -660,9 +660,10 @@ public class Tablero {
         return false;
     }
 
-    public void extender(int fila, int columna, char direccion, int indiceJugador, Partida p) {
+    public boolean extender(int fila, int columna, char direccion, int indiceJugador, Partida p) {
         int contador = p.getJugadores().get(indiceJugador).getCantAves();
         String color = p.getJugadores().get(indiceJugador).getColorJugador();
+        Interfaz interfaz = new Interfaz();
         int columnaColor = -1;
         int filaColor = -1;
         boolean crece = true;
@@ -670,21 +671,31 @@ public class Tablero {
             crece = false;
         }
         boolean pintando = true;
-        while (canExtend(fila, columna, color, direccion, contador) && pintando) {
-            for (int j = 0; j < 2; j++) {
-                for (int k = 0; k < 2; k++) {
-                    if (color.equals(this.getTableta(fila, columna).devolverUnColor(j, k))) {
-                        filaColor = j;
-                        columnaColor = k;
+        boolean running = true;
+
+        if (canExtend(fila, columna, color, direccion, contador)) {
+            while (canExtend(fila, columna, color, direccion, contador) && pintando) {
+                for (int j = 0; j < 2; j++) {
+                    for (int k = 0; k < 2; k++) {
+                        if (color.equals(this.getTableta(fila, columna).devolverUnColor(j, k))) {
+                            filaColor = j;
+                            columnaColor = k;
+                        }
                     }
                 }
+                if (direccion == ('A') || direccion == ('B')) {
+                    pintando = pintarExtend(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1], this.validarExtension(columna, fila, crece, color)[2]);
+                } else {
+                    pintando = pintarExtend(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(fila, columna, crece, color)[1], this.validarExtension(fila, columna, crece, color)[2]);
+                }
             }
-            if (direccion == ('A') || direccion == ('B')) {
-                pintando = pintarExtend(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(columna, fila, crece, color)[1], this.validarExtension(columna, fila, crece, color)[2]);
-            } else {
-                pintando = pintarExtend(fila, columna, filaColor, columnaColor, direccion, color, this.validarExtension(fila, columna, crece, color)[1], this.validarExtension(fila, columna, crece, color)[2]);
-            }
+            running = false;
+        } else {
+            System.out.println("No se puede extender");
+            interfaz.sonidoError();
         }
+
+        return running;
     }
 
     public boolean sePuedePonerTableta(int fila, int col) {
