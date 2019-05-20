@@ -275,7 +275,14 @@ public class Partida {
             tipoMovimiento = movimiento.charAt(0);
             if (tipoMovimiento != 'X') {
                 if (tipoMovimiento == 'P') {
-                    indicacion1 = movimiento.substring(2);
+                    if (movimiento.charAt(1) == 'M') {
+                        indices = interfaz.getIndicesDeIndicacion(1, movimiento);
+                        indicacion1 = movimiento.substring(indices[0], indices[1] + 1);
+                        indices = interfaz.getIndicesDeIndicacion(2, movimiento);
+                        indicacion2 = movimiento.substring(indices[0] + 1, indices[1]);
+                    } else {
+                        indicacion1 = movimiento.substring(2);
+                    }
                 } else {
                     indices = interfaz.getIndicesDeIndicacion(1, movimiento);
                     indicacion1 = movimiento.substring(indices[0], indices[1]);
@@ -295,7 +302,7 @@ public class Partida {
                 //Poner ficha 
                 case 'P':
                     if (movimiento.charAt(1) == 'M') {
-                        running = ponerFichaArmada(movimiento);
+                        running = ponerFichaArmada(indicacion1, indicacion2);
                     } else {
                         running = ponerFicha(indicacion1);
                     }
@@ -355,11 +362,11 @@ public class Partida {
         return running;
     }
 
-    public boolean ponerFichaArmada(String movimiento) {
+    public boolean ponerFichaArmada(String indicacion1, String indicacion2) {
         Interfaz interfaz = new Interfaz();
         boolean running = true;
-        int[] posicion1 = this.traducirPosicion(movimiento.substring(3));
-        char[] ordenColores = this.indColores(movimiento.substring(6));
+        int[] posicion1 = this.traducirPosicion(indicacion1);
+        char[] ordenColores = this.indColores(indicacion2);
         int cantTabletas = this.getCantTab();
 
         if (cantTabletas > 0) {
@@ -386,15 +393,15 @@ public class Partida {
 
         return running;
     }
-    
+
     public boolean extender(String indicacion1, String indicacion2, int indiceJug) {
         int[] posicion = this.traducirPosicion(indicacion2);
         char direccion = indicacion1.charAt(0);
         String colorJug = this.getColorJugador(indiceJug);
         boolean running = false;
-        
+
         this.getTablero().extender(posicion[0], posicion[1], colorJug, direccion);
-        
+
         return running;
     }
 
