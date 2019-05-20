@@ -96,6 +96,7 @@ public class Interfaz {
                 max = this.getAves().getJugadores().size();
                 break;
 
+            //En caso que sea una opcion que no se necesita chequear
             default:
                 validador = true;
                 noAplica = true;
@@ -189,6 +190,7 @@ public class Interfaz {
             indices = this.getIndicesDeIndicacion(2, jugada);
             indicacion2 = jugada.substring(indices[0], indices[1]);
         } else {
+            //Esto aplica para la jugada de prueba PM
             if (jugada.length() >= 6 && jugada.length() <= 10) {
                 indices = this.getIndicesDeIndicacion(1, jugada);
                 indicacion1 = jugada.substring(indices[0], indices[1] + 1);
@@ -239,7 +241,6 @@ public class Interfaz {
                 }
                 break;
             //Extender 
-
             case 'E':
                 if (this.validadorDeDireccion(indicacion1)) {
                     if (this.validadorDePosicion(indicacion2)) {
@@ -385,7 +386,7 @@ public class Interfaz {
     }
 
     public void menuPrincipalTemplate() {
-        System.out.println("+-!-!-!-!- >|< AVES! 1.0 (Beta) >|< -!-!-!-!- +");
+        System.out.println("+-!-!-!-!-!-! >|< AVES!  1.0 >|< !-!-!-!-!-!- +");
         System.out.println("|><    ><    ><    ><    ><    ><    ><    >< |");
         System.out.println("|   ><    ><    ><    ><    ><    ><    ><    |");
         System.out.println("+--------M E N U    P R I N C I P A L-------- +");
@@ -539,7 +540,7 @@ public class Interfaz {
                 //Jugar
                 case 3:
                     if (this.sePuedeJugar()) {
-                        aves.jugar(this.getJugadoresPartida());
+                        aves.jugar(this.mostrarJugadoresPartida());
                     }
                     break;
 
@@ -587,6 +588,7 @@ public class Interfaz {
         } while (running);
     }
 
+    //De momento solo verifica si hay la cantidad suficiente de jugadores
     public boolean sePuedeJugar() {
         int[] configuracion = this.getAves().getConfiguracion();
         int cantTotalJug = this.getAves().getJugadores().size();
@@ -607,7 +609,7 @@ public class Interfaz {
         java.awt.Toolkit.getDefaultToolkit().beep();
     }
 
-    public ArrayList<Jugador> getJugadoresPartida() {
+    public ArrayList<Jugador> mostrarJugadoresPartida() {
         ArrayList<Jugador> jugadores = this.getAves().getJugadores();
         ArrayList<Jugador> jugadoresAux = new ArrayList<>();
         int[] configuracion = this.getAves().getConfiguracion();
