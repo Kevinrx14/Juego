@@ -402,10 +402,10 @@ public class Partida {
     public boolean conectar(String indicacion1, String indicacion2, int indiceJug) {
         int[] posicion1 = this.traducirPosicion(indicacion1);
         int[] posicion2 = this.traducirPosicion(indicacion2);
-        String colorJug = this.getColorJugador(indiceJug);
         boolean running = false;
 
-        this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indiceJug, this);
+        System.out.println(this.getCantAves());
+        running = this.getTablero().conectar(posicion1[0], posicion1[1], posicion2[0], posicion2[1], indiceJug, this);
 
         return running;
     }
