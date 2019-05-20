@@ -221,7 +221,7 @@ public class Interfaz {
                 }
 
                 break;
-            //Poner ficha 
+            //Poner tableta 
             case 'P':
                 if (jugada.charAt(1) == 'M') {
                     if (this.validadorDePosicion(indicacion1)) {
