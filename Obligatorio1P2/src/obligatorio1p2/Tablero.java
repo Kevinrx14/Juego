@@ -242,8 +242,12 @@ public class Tablero {
                 }
             }
         }
-        System.out.println("hayAves: " + (hayAves && cont <= cantAves));
-        return hayAves && cont <= cantAves;
+        if(cont%2!=0){
+            cont=((cont-1)/2)+1;
+        }else{
+            cont=cont/2;
+        }
+        return hayAves || cont > cantAves;
     }
 
     public boolean canConect(int fila1, int columna1, int fila2, int columna2, String color, int cantAves) {
@@ -454,14 +458,14 @@ public class Tablero {
         return orientacion;
     }
 
-    public void conectar(int fila1, int columna1, int fila2, int columna2, int indiceJugador, Partida p) {
+    public boolean conectar(int fila1, int columna1, int fila2, int columna2, int indiceJugador, Partida p) {
         int contador = p.getJugadores().get(indiceJugador).getCantAves();
         String color = p.getJugadores().get(indiceJugador).getColorJugador();
         int columnaColor1 = -1;
         int filaColor1 = -1;
         int columnaColor2 = -1;
         int filaColor2 = -1;
-
+        boolean ret=true;
         if (canConect(fila1, columna1, fila2, columna2, color, contador)) {
             filaColor1 = colorTableta(fila1, columna1, color)[0];
             columnaColor1 = colorTableta(fila1, columna1, color)[1];
@@ -473,8 +477,11 @@ public class Tablero {
                 this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, columnaColor2, color);
                 contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
             }
+        }else{
+            ret=false;
         }
         p.getJugadores().get(indiceJugador).setCantAves(contador);
+        return ret;
     }
 
     public int pintarHorizontal(int fila1, int columna1, int columna2, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
@@ -519,7 +526,7 @@ public class Tablero {
     public void pintarVertical(int fila1, int fila2, int columna1, int filaColor1, int columnaColor1, int filaColor2, int columnaColor2, String color) {
         for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
             if (i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2) && (filaColor1 == 1 || filaColor2 == 0)) {
-                if (filaColor1 == 1) {
+                if (filaColor1 == 1) {                   
                     this.getTableta(Math.min(fila1, fila2), columna1).dibujarAve(filaColor1, columnaColor1, color);
                 } else {
                     for (int j = 0; j < 2; j++) {
