@@ -12,7 +12,6 @@ public class Partida {
     private int cantTab;
     private int tipoTerm;
     private int cantTurnos;
-    private int indiceGanador;
 
     public Partida(
             int cantJugadores,
@@ -154,30 +153,11 @@ public class Partida {
         this.tipoTerm = tipoTerm;
     }
 
-    public int getIndiceGanador() {
-        return this.indiceGanador;
-    }
-
-    public void setIndiceGanador(int indice) {
-        this.indiceGanador = indice;
-    }
-
-    public String getGanador() {
-        ArrayList<Jugador> jugadores = this.getJugadores();
-        String alias = "";
-
-        if (this.getIndiceGanador() == -1) {
-            alias = jugadores.get(this.getIndiceGanador()).getAlias();
-        }
-
-        return alias;
-    }
-
     public void iniciar() {
-        for(int i = 0; i < this.getCantJug(); i++) {
+        for (int i = 0; i < this.getCantJug(); i++) {
             this.mostrarColorYJugador(i);
         }
-        
+
         switch (this.getTipoTerm()) {
             case 1:
                 this.partidaConTerminacionTablero();
@@ -191,6 +171,9 @@ public class Partida {
                 this.partidaConTerminacionTurnos();
                 break;
         }
+        
+        System.out.println(tablero.toString());
+        this.terminarPartida();
     }
 
     public void partidaConTerminacionTurnos() {
@@ -261,7 +244,7 @@ public class Partida {
             }
         } while (running);
     }
-    
+
     public void mostrarColorYJugador(int indice) {
         String colorJug = this.getColorJugador(indice);
         String alias = this.getJugadores().get(indice).getAlias();
@@ -429,32 +412,48 @@ public class Partida {
         fila = posicion.charAt(0);
         devolverPosicion[1] = Integer.parseInt(posicion.substring(1)) - 1;
 
-        for(int i = 0; i < filasChar.length; i++) {
-            if(fila == filasChar[i]) {
+        for (int i = 0; i < filasChar.length; i++) {
+            if (fila == filasChar[i]) {
                 devolverPosicion[0] = i;
             }
         }
-        
+
         return devolverPosicion;
     }
 
     public void terminarPartida() {
         ArrayList<Jugador> jugadores = this.getJugadores();
+        ArrayList<Integer> listaIndicesJug = new ArrayList<>();
         String alias;
         int aux;
         int mayor = 0;
-        int indiceJug = 0;
 
         for (int i = 0; i < jugadores.size(); i++) {
             aux = jugadores.get(i).getCantAves();
             if (aux > mayor) {
                 mayor = aux;
-                indiceJug = i;
+                listaIndicesJug = new ArrayList<>();
+                listaIndicesJug.add(i);
+            } else {
+                if (aux == mayor) {
+                    listaIndicesJug.add(i);
+                }
             }
         }
 
-        this.setIndiceGanador(indiceJug);
-        alias = jugadores.get(indiceJug).getAlias();
-        System.out.println("El ganador es " + alias + "con " + mayor + " aves");
+        if (listaIndicesJug.size() == 1) {
+            alias = jugadores.get(listaIndicesJug.get(0)).getAlias();
+            System.out.println("El ganador es " + alias + "con " + mayor + " aves");
+        } else {
+            System.out.print("Hubo empate entre ");
+            for (int i = 0; i < listaIndicesJug.size(); i++) {
+                alias = this.getJugadores().get(listaIndicesJug.get(i)).getAlias();
+                System.out.print(alias + " ");
+                if(i == listaIndicesJug.size() - 2) {
+                    System.out.print("y ");
+                }
+            }
+            System.out.println("");
+        }
     }
 }
