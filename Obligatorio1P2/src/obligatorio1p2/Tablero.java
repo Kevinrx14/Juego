@@ -347,14 +347,11 @@ public class Tablero {
 
     public int[] validarExtension(int constante, int variable, boolean crece, String color) {
         int retorno[] = new int[3];
-        System.out.println("esta" + crece);
         if (crece == false) {
             for (int i = variable; i > 0; i--) {
-                System.out.println(i);
                 for (int j = 1; j >= 0; j--) {
                     for (int k = 1; k >= 0; k--) {
                         if (this.getTableta(i, constante) != null && this.getTableta(i - 1, constante) != null) {
-                            System.out.println((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i - 1, constante).hayAvesYColor(j, k, color)) + " " + i + " " + constante + " " + k + " " + j);
                             if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i - 1, constante).hayAvesYColor(j, k, color))) {
                                 retorno[0] = 1;
                                 retorno[1] = i;
@@ -415,14 +412,12 @@ public class Tablero {
         int colExt = -1;
         int filaColor = colorTableta(fila, columna, color)[0];
         int colColor = colorTableta(fila, columna, color)[1];
-        System.out.println(tieneColor(fila, columna, color) && direccion == 'A');
         if (tieneColor(fila, columna, color)) {
             switch (direccion) {
                 case 'A':
                     hayExtremo = validarExtension(columna, fila, false, color)[0];
                     filaExt = validarExtension(columna, fila, false, color)[1];
                     colExt = validarExtension(columna, fila, false, color)[2];
-                    System.out.println(filaExt + " " + colExt);
                     hayTabletas = hayTabletas(fila, filaExt, columna, false);
 
                     break;
@@ -447,10 +442,7 @@ public class Tablero {
                     break;
             }
         }
-        System.out.println("hayExt " + hayExtremo);
-        System.out.println("hayTabletas " + hayTabletas);
-        System.out.println("tieneColor " + tieneColor(fila, columna, color));
-        System.out.println("enLineaF " + enLineaF(filaColor, colColor));
+        
         return (hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
 
     }
@@ -544,7 +536,6 @@ public class Tablero {
                     }
                 }
                 if (filaColor2 == 0) {
-                    System.out.println(filaColor2 + " + " + columnaColor2 + " " + color);
                     this.getTableta(Math.max(fila1, fila2), columna1).dibujarAve(filaColor2, columnaColor2, color);
                     cont++;
                 } else {
@@ -813,7 +804,6 @@ public class Tablero {
         la fila que comienza el tablero de 5x5 y la fila en la que termina.
          */
         if (coordTableta[0] < coordFila[0] || coordTableta[0] > coordFila[1]) {
-            System.out.println("fila");
             validador = false;
         }
 
@@ -821,7 +811,6 @@ public class Tablero {
         Hago el mismo chequeo que arriba pero para las columnas
          */
         if (coordTableta[1] < coordCol[0] || coordTableta[1] > coordCol[1]) {
-            System.out.println("col");
             validador = false;
         }
 
