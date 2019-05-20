@@ -242,7 +242,9 @@ public class Tablero {
                 }
             }
         }
+
         System.out.println("hayAves: " + (hayAves && cont <= cantAves));
+
         return hayAves && cont <= cantAves;
     }
 
@@ -486,30 +488,26 @@ public class Tablero {
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
-                        {
-                            this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, j, color);
-                            cont++;
-                        }
+                        this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                        cont++;
                     }
                 }
+
                 if (columnaColor2 == 0) {
                     this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, columnaColor2, color);
                     cont++;
                 } else {
                     for (int j = 0; j < 2; j++) {
-                        {
-                            this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor1, j, color);
-                            cont++;
-                        }
+                        this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor1, j, color);
+                        cont++;
                     }
                 }
             } else {
                 for (int j = 0; j < 2; j++) {
-                    {
-                        this.getTableta(fila1, i).dibujarAve(filaColor1, j, color);
-                        cont++;
-                    }
+                    this.getTableta(fila1, i).dibujarAve(filaColor1, j, color);
+                    cont++;
                 }
+
             }
         }
         return cont;
