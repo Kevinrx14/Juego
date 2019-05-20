@@ -346,11 +346,12 @@ public class Tablero {
     }
 
     public int[] validarExtension(int constante, int variable, boolean crece, String color) {
-        int retorno[] = new int[3];
+        int retorno[] = new int[4];
         if (crece == false) {
             for (int i = variable; i > 0; i--) {
                 for (int j = 1; j >= 0; j--) {
                     for (int k = 1; k >= 0; k--) {
+                        retorno[3]++;
                         if (this.getTableta(i, constante) != null && this.getTableta(i - 1, constante) != null) {
                             if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i - 1, constante).hayAvesYColor(j, k, color))) {
                                 retorno[0] = 1;
@@ -378,6 +379,7 @@ public class Tablero {
             for (int i = variable; i < 0; i++) {
                 for (int j = 0; j < 2; j++) {
                     for (int k = 0; k < 2; k++) {
+                        retorno[3]++;
                         if (this.getTableta(i, constante) != null && this.getTableta(i + 1, constante) != null) {
                             if ((this.getTableta(i, constante).hayAvesYColor(j, k, color) && this.getTableta(i + 1, constante).hayAvesYColor(j, k, color))) {
                                 retorno[0] = 1;
@@ -402,11 +404,17 @@ public class Tablero {
                 }
             }
         }
+        if (retorno[3] % 2 != 0) {
+            retorno[3] = ((retorno[3] - 1) / 2) + 1;
+        } else {
+            retorno[3] = retorno[3] / 2;
+        }
         return retorno;
     }
 
-    public boolean canExtend(int fila, int columna, String color, char direccion) {
+    public boolean canExtend(int fila, int columna, String color, char direccion, int cantAves) {
         boolean hayTabletas = true;
+        int avesRequeridas=0;
         int hayExtremo = 0;
         int filaExt = -1;
         int colExt = -1;
@@ -419,30 +427,33 @@ public class Tablero {
                     filaExt = validarExtension(columna, fila, false, color)[1];
                     colExt = validarExtension(columna, fila, false, color)[2];
                     hayTabletas = hayTabletas(fila, filaExt, columna, false);
-
+                    avesRequeridas=validarExtension(columna, fila, false, color)[3];
                     break;
                 case 'B':
                     hayExtremo = validarExtension(columna, fila, true, color)[0];
                     filaExt = validarExtension(columna, fila, true, color)[1];
                     colExt = validarExtension(columna, fila, true, color)[2];
                     hayTabletas = hayTabletas(fila, filaExt, columna, true);
+                    avesRequeridas=validarExtension(columna, fila, true, color)[3];
                     break;
                 case 'D':
                     hayExtremo = validarExtension(fila, columna, true, color)[0];
                     filaExt = validarExtension(fila, columna, true, color)[1];
                     colExt = validarExtension(fila, columna, true, color)[2];
                     hayTabletas = hayTabletas(columna, colExt, fila, true);
+                    avesRequeridas= validarExtension(fila, columna, true, color)[3];
                     break;
                 case 'I':
                     hayExtremo = validarExtension(fila, columna, false, color)[0];
                     filaExt = validarExtension(fila, columna, false, color)[1];
                     colExt = validarExtension(fila, columna, false, color)[2];
                     hayTabletas = hayTabletas(columna, colExt, fila, false);
-
+                    avesRequeridas = validarExtension(fila, columna, false, color)[3];
                     break;
             }
+            
         }
-        return (hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
+        return (avesRequeridas<=cantAves && hayTabletas && hayExtremo == 1 && tieneColor(fila, columna, color) && enLineaF(filaColor, colColor));
 
     }
 
@@ -477,9 +488,9 @@ public class Tablero {
             filaColor2 = colorTableta(fila2, columna2, color)[0];
             columnaColor2 = colorTableta(fila2, columna2, color)[1];
             if (darOrientacionC(fila1, fila2) == 1) {
-                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarHorizontal(fila1, columna1, columna2, filaColor1, columnaColor1, filaColor1, filaColor2, color);
             } else {
-                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor2, filaColor2, color);
+                contador = contador - this.pintarVertical(fila1, fila2, columna1, filaColor1, columnaColor1, filaColor1, filaColor2, color);
             }
             p.getJugadores().get(indiceJugador).setCantAves(contador);
             running = false;
@@ -499,8 +510,8 @@ public class Tablero {
             empieza=columnaColor1;
         }
         for (int i = Math.min(columna1, columna2); i <= Math.max(columna1, columna2); i++) {
-            if (i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2) && (termina == 0 || empieza == 1)) {
-                if (termina == 0) {
+            if ((i == Math.min(columna1, columna2) || i == Math.max(columna1, columna2)) && (termina == 1 || empieza == 0)) {
+                if (termina == 1) {
                     this.getTableta(fila1, Math.min(columna1, columna2)).dibujarAve(filaColor1, termina, color);
                     cont++;
                 } else {
@@ -510,7 +521,7 @@ public class Tablero {
                     }
                 }
 
-                if (empieza==1) {
+                if (empieza==0) {
                     this.getTableta(fila1, Math.max(columna1, columna2)).dibujarAve(filaColor2, empieza, color);
                     cont++;
                 } else {
@@ -542,8 +553,8 @@ public class Tablero {
             empieza=filaColor1;
         }
         for (int i = Math.min(fila1, fila2); i <= Math.max(fila1, fila2); i++) {
-            if (i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2) && (empieza == 1 || termina == 0)) {
-                if (termina == 0) {
+            if ((i == Math.min(fila1, fila2) || i == Math.max(fila1, fila2)) && (empieza == 0 || termina == 1)) {
+                if (termina == 1) {
                     this.getTableta(Math.min(fila1, fila2), columna1).dibujarAve(termina, columnaColor1, color);
                     cont++;
                 } else {
@@ -552,7 +563,7 @@ public class Tablero {
                         cont++;
                     }
                 }
-                if (empieza == 1) {
+                if (empieza == 0) {
                     this.getTableta(Math.max(fila1, fila2), columna1).dibujarAve(empieza, columnaColor2, color);
                     cont++;
                 } else {
@@ -584,7 +595,9 @@ public class Tablero {
         return false;
     }
 
-    public void extender(int fila, int columna, String color, char direccion) {
+    public void extender(int fila, int columna, char direccion, int indiceJugador, Partida p) {
+        int contador = p.getJugadores().get(indiceJugador).getCantAves();
+        String color = p.getJugadores().get(indiceJugador).getColorJugador();
         int columnaColor = -1;
         int filaColor = -1;
         boolean crece = true;
@@ -592,7 +605,7 @@ public class Tablero {
             crece = false;
         }
         boolean pintando = true;
-        while (canExtend(fila, columna, color, direccion) && pintando) {
+        while (canExtend(fila, columna, color, direccion, contador) && pintando) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
                     if (color.equals(this.getTableta(fila, columna).devolverUnColor(j, k))) {
