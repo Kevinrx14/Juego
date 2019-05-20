@@ -42,7 +42,7 @@ public class Aves {
     3 - Tableta por jugador
     4 - Tipo de terminacion
     5 - Cantidad de turnos
-    */
+     */
     public void setUnaPartida(ArrayList<Jugador> jugadores) {
         int[] configuracion = this.getConfiguracion();
         this.partidas.add(new Partida(

@@ -55,7 +55,7 @@ public class Jugador implements Comparable {
     public void setCatRot(int catRot) {
         this.cantRot = catRot;
     }
-    
+
     public int getTotalPartidas() {
         return this.totalPartidas;
     }
@@ -63,11 +63,11 @@ public class Jugador implements Comparable {
     public void setTotalPartidas(int unaCant) {
         this.totalPartidas = unaCant;
     }
-    
+
     public String getColorJugador() {
         return this.colorJug;
     }
-    
+
     public void setColorJug(String color) {
         this.colorJug = color;
     }

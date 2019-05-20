@@ -400,7 +400,7 @@ public class Partida {
         boolean running;
 
         running = this.getTablero().extender(posicion[0], posicion[1], direccion, indiceJug, this);
-        
+
         return running;
     }
 
