@@ -386,7 +386,7 @@ public class Interfaz {
     }
 
     public void menuPrincipalTemplate() {
-        System.out.println("+-!-!-!-!- >|< AVES! 1.0 (Beta) >|< -!-!-!-!- +");
+        System.out.println("+-!-!-!-!-!-! >|< AVES!  1.0 >|< !-!-!-!-!-!- +");
         System.out.println("|><    ><    ><    ><    ><    ><    ><    >< |");
         System.out.println("|   ><    ><    ><    ><    ><    ><    ><    |");
         System.out.println("+--------M E N U    P R I N C I P A L-------- +");
